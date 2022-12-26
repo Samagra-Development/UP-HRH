@@ -4,6 +4,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    fontFamily: {
+      regular: ['Mulish-Regular'],
+      medium: ['Mulish-medium'],
+      bold: ['Mulish-bold']
+    },
     extend: {
       colors: {
         primary: '#F8913D',

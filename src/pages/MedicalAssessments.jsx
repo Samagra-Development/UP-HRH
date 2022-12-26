@@ -25,7 +25,7 @@ const MedicalAssessments = () => {
             }, 3000);
             return;
         }
-        if (!data.pocMobile || data.pocMobile.length != 10) {
+        if (!data.pocMobile || data.pocMobile.length !== 10) {
             setError("Please enter a valid mobile number");
             setTimeout(() => {
                 setError("");
@@ -37,7 +37,7 @@ const MedicalAssessments = () => {
 
     useEffect(() => {
         setData({
-            district: "BAREILY",
+            district: "BAREILLY",
             instituteName: "Hustle University",
             pocName: "Andrew Tate",
             pocMobile: "9654591151"
@@ -50,23 +50,23 @@ const MedicalAssessments = () => {
                 <div className="flex flex-col w-full px-5 items-start">
                     <FontAwesomeIcon icon={faArrowLeft} className="text-2xl text-secondary" onClick={() => navigate("/welcome-medical-assessor")} />
                 </div>
-                <p className="text-secondary text-3xl font-semibold mt-4">Today's Assessments</p>
+                <p className="text-secondary text-[28px] font-bold mt-4">Today's Assessments</p>
                 <p className="text-primary text-lg font-semibold">{data?.district}</p>
-                <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-2 mt-4 lg:w-[80%]">
-                    <div className="flex flex-col w-80 py-3">
-                        <span className="text-secondary pl-0.5 pb-2">Institute Name</span>
+                <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-4 mt-4">
+                    <div className="flex flex-col py-3 w-full">
+                        <span className="text-secondary pb-2 font-medium">Institute Name</span>
                         <input type="text" placeholder="Enter institute name" className="border-2 border-primary p-3.5" value={data?.instituteName} onChange={e => setData({ ...data, instituteName: e.target.value })} />
                     </div>
-                    <div className="flex flex-col w-80 py-3">
-                        <span className="text-secondary pl-0.5 pb-2">POC Name</span>
+                    <div className="flex flex-col py-3 w-full">
+                        <span className="text-secondary pb-2 font-medium">POC Name</span>
                         <input type="text" placeholder="Enter POC name" className="border-2 border-primary p-3.5" value={data?.pocName} onChange={e => setData({ ...data, pocName: e.target.value })} />
                     </div>
-                    <div className="flex flex-col w-80 py-3 mb-[-10px]">
-                        <span className="text-secondary pl-0.5 pb-2">POC Mobile</span>
+                    <div className="flex flex-col py-3 w-full mb-[-10px]">
+                        <span className="text-secondary pb-2 font-medium">POC Mobile</span>
                         <input type="number" placeholder="Enter POC mobile" className="border-2 border-primary p-3.5" value={data?.pocMobile} onChange={e => setData({ ...data, pocMobile: e.target.value })} />
                     </div>
                     {error && <span className="text-rose-600 mb-[-10px] mt-[15px] animate__animated animate__headShake">{error}</span>}
-                    <Button text="Start Assessing" styles="w-80" onClick={startAssess} />
+                    <Button text="Start Assessing" onClick={startAssess} />
                 </div>
             </div>
         </CommonLayout>

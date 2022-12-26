@@ -24,8 +24,8 @@ const UpcomingMedicalAssessments = () => {
                 <div className="flex flex-col w-full px-5 items-start">
                     <FontAwesomeIcon icon={faArrowLeft} className="text-2xl text-secondary" onClick={() => navigate("/welcome-medical-assessor")} />
                 </div>
-                <p className="text-secondary text-3xl font-semibold mt-4">Upcoming Assessments</p>
-                <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-2 mt-4 lg:w-[80%]">
+                <p className="text-secondary text-[25px] font-bold mt-4">Upcoming Assessments</p>
+                <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-4 mt-6 lg:w-[80%] font-medium">
                     <div className="w-full flex flex-row items-center justify-center gap-1 mt-2">
                         <div className=" py-3 bg-primary text-white w-[150px] text-center">Date</div>
                         <div className=" py-3 bg-primary text-white w-[150px] text-center">District</div>
