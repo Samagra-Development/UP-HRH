@@ -1,17 +1,29 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
 import './App.css';
+import { createContext, useState } from "react";
+import LoginMedical from "./pages/LoginMedical";
+import MedicalAssessor from "./pages/MedicalAssessor";
+import MedicalAssessments from "./pages/MedicalAssessments";
+import UpcomingMedicalAssessments from "./pages/UpcomingMedicalAssessments";
+
+export const StateContext = createContext();
 
 function App() {
+  const [state, setState] = useState();
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
+      <StateContext.Provider value={{ state, setState }}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login-medical" element={<LoginMedical />} />
+            <Route path="/welcome-medical-assessor" element={<MedicalAssessor />} />
+            <Route path="/medical-assessments" element={<MedicalAssessments />} />
+            <Route path="/upcoming-medical-assessments" element={<UpcomingMedicalAssessments />} />
+          </Routes>
+        </BrowserRouter>
+      </StateContext.Provider>
     </div>
   );
 }

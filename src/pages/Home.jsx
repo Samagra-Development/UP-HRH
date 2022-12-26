@@ -1,23 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import CommonLayout from "../components/CommonLayout";
 
 const Home = () => {
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate("/login");
+  const handleClick = (route) => {
+    navigate(route);
   };
   return (
-    <div className="min-h-screen">
-      <div className="h-[15vh] bg-tertiary"></div>
-      <div className="flex justify-center items-center h-[85vh] bg-tertiary rounded-tr-3xl">
-        <div className="bg-white px-8 py-11 w-[80vw]">
-          <Button text={"Medical Assessor"} onClick={handleClick} />
-          <br />
-          <Button text={"Non-Medical Assessor"} />
-        </div>
+    <CommonLayout>
+      <div className="flex flex-col px-5 py-8 items-center">
+        <img src="/assets/homeVector.png" className="h-60 lg:h-80" />
+        <Button text="Medical Assessor" styles="w-80 lg:w-[70%] lg:mt-[70px]" onClick={() => handleClick('/login-medical')} />
+        <Button text="Non-Medical Assessor" styles="w-80 lg:w-[70%] lg:mt-[70px]" onClick={() => handleClick('/login-non-medical')} />
       </div>
-    </div>
+    </CommonLayout>
   );
 };
 
