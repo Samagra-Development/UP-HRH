@@ -13,7 +13,7 @@ const Home = () => {
       <div className="flex flex-col px-5 py-8 items-center">
         <img
           src="/assets/homeVector.png"
-          className="h-60 lg:h-80 my-5"
+          className="h-60 lg:h-80 my-5 lg:mt-[70px]"
           alt="illustration"
         />
         <Button
@@ -23,7 +23,7 @@ const Home = () => {
         />
         <Button
           text="Non-Medical Assessor"
-          styles="w-80 lg:w-[70%] lg:mt-[70px]"
+          styles="w-80 lg:w-[70%] lg:mt-[30px]"
           onClick={() => handleClick("/login-non-medical")}
         />
       </div>

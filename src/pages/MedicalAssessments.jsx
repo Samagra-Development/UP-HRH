@@ -54,7 +54,7 @@ const MedicalAssessments = () => {
             onClick={() => navigate("/welcome-medical-assessor")}
           />
         </div>
-        <p className="text-secondary text-[28px] font-bold mt-4">
+        <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px]">
           Today's Assessments
         </p>
         <p className="text-primary text-lg font-semibold">{data?.district}</p>

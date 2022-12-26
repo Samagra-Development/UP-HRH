@@ -2,7 +2,7 @@ import React from "react";
 
 const CommonLayout = (props) => {
   return (
-    <div className="bg-tertiary h-screen w-screen flex flex-col lg:w-[55vw] lg:m-auto">
+    <div className="bg-tertiary h-screen w-screen flex flex-col lg:w-[52vw] md:w-[80vw] md:m-auto lg:m-auto">
       <div className="w-full flex h-[18%] flex-row justify-between">
         <img
           src="/assets/redGolLogo.png"

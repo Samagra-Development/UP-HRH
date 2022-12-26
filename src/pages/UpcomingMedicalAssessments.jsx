@@ -28,7 +28,7 @@ const UpcomingMedicalAssessments = () => {
             onClick={() => navigate("/welcome-medical-assessor")}
           />
         </div>
-        <p className="text-secondary text-[25px] font-bold mt-4">
+        <p className="text-secondary text-[25px] font-bold mt-4 lg:text-[45px]">
           Upcoming Assessments
         </p>
         <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-4 mt-6 lg:w-[80%] font-medium">
