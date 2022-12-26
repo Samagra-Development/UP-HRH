@@ -6,6 +6,7 @@ import LoginMedical from "./pages/LoginMedical";
 import MedicalAssessor from "./pages/MedicalAssessor";
 import MedicalAssessments from "./pages/MedicalAssessments";
 import UpcomingMedicalAssessments from "./pages/UpcomingMedicalAssessments";
+import Form from "./pages/Form";
 
 export const StateContext = createContext();
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/welcome-medical-assessor" element={<MedicalAssessor />} />
             <Route path="/medical-assessments" element={<MedicalAssessments />} />
             <Route path="/upcoming-medical-assessments" element={<UpcomingMedicalAssessments />} />
+            <Route path="/form" element={<Form />} />
           </Routes>
         </BrowserRouter>
       </StateContext.Provider>

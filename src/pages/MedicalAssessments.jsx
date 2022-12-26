@@ -32,6 +32,7 @@ const MedicalAssessments = () => {
       }, 3000);
       return;
     }
+    navigate("/form");
   };
 
   useEffect(() => {
