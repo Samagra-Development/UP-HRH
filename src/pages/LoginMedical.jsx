@@ -25,7 +25,7 @@ const LoginMedical = () => {
   return (
     <CommonLayout>
       <div className="flex flex-col px-5 py-8 items-center">
-        <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[70px]">
+        <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[50px]">
           Welcome Back
         </p>
         <p className="text-primary text-md lg:text-[20px] lg:mt-[20px] font-medium">
