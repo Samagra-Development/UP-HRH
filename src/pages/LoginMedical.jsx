@@ -25,10 +25,10 @@ const LoginMedical = () => {
   return (
     <CommonLayout>
       <div className="flex flex-col px-5 py-8 items-center">
-        <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[50px]">
+        <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px]">
           Welcome Back
         </p>
-        <p className="text-primary text-md lg:text-[20px] lg:mt-[20px] font-medium">
+        <p className="text-primary text-md lg:text-[20px] font-medium">
           Please enter your details
         </p>
         <div className="flex flex-col w-80 py-5 mt-5 lg:w-[70%]">

@@ -25,7 +25,7 @@ const MedicalAssessor = () => {
           className="h-[200px] mt-4 lg:h-[300px]"
           alt="illustration"
         />
-        <p className="text-secondary text-[34px] font-bold mt-8">
+        <p className="text-secondary text-[34px] font-bold mt-8 lg:text-[45px]">
           Welcome Assessor
         </p>
         <p className="text-primary text-md mb-2">
