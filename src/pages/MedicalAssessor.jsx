@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 const MedicalAssessor = () => {
   const navigate = useNavigate();
@@ -13,10 +13,10 @@ const MedicalAssessor = () => {
   return (
     <CommonLayout>
       <div className="flex flex-col px-5 py-8 items-center">
-        <div className="flex flex-col w-full px-5 items-start">
+        <div className="flex flex-col w-full px-2 items-start">
           <FontAwesomeIcon
-            icon={faArrowLeft}
-            className="text-2xl text-secondary"
+            icon={faChevronLeft}
+            className="text-2xl text-gray-300"
             onClick={() => navigate("/login-medical")}
           />
         </div>
