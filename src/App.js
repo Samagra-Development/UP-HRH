@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import './App.css';
 import { createContext, useState } from "react";
@@ -10,6 +10,11 @@ import Form from "./pages/Form";
 
 export const StateContext = createContext();
 
+const PrivateRoute = ({ children }) => {
+  const isAuthenticated = localStorage.getItem("userData") ? true : false;
+  return isAuthenticated ? children : <Navigate to="/" />;
+};
+
 function App() {
   const [state, setState] = useState();
   return (
@@ -19,14 +24,14 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login-medical" element={<LoginMedical />} />
-            <Route path="/welcome-medical-assessor" element={<MedicalAssessor />} />
-            <Route path="/medical-assessments" element={<MedicalAssessments />} />
-            <Route path="/upcoming-medical-assessments" element={<UpcomingMedicalAssessments />} />
-            <Route path="/form" element={<Form />} />
+            <Route path="/welcome-medical-assessor" element={<PrivateRoute><MedicalAssessor /></PrivateRoute>} />
+            <Route path="/medical-assessments" element={<PrivateRoute><MedicalAssessments /></PrivateRoute>} />
+            <Route path="/upcoming-medical-assessments" element={<PrivateRoute><UpcomingMedicalAssessments /></PrivateRoute>} />
+            <Route path="/form" element={<PrivateRoute><Form /></PrivateRoute>} />
           </Routes>
         </BrowserRouter>
-      </StateContext.Provider>
-    </div>
+      </StateContext.Provider >
+    </div >
   );
 }
 

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
+import { loginMedical, testHasuraQuery } from "../api";
 
 const LoginMedical = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const LoginMedical = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!username || !password) {
       setError("Either username or password is missing");
       setTimeout(() => {
@@ -19,7 +20,27 @@ const LoginMedical = () => {
       }, 3000);
       return;
     }
-    navigate("/welcome-medical-assessor");
+    const loginRes = await loginMedical(username, password);
+
+    if (loginRes?.params?.errMsg && loginRes.responseCode == "FAILURE") {
+      setError(loginRes?.params?.errMsg);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+      return;
+    }
+    if (loginRes.responseCode == "OK" && loginRes.result) {
+      localStorage.setItem("userData", JSON.stringify(loginRes.result.data.user))
+      const res = await testHasuraQuery();
+      navigate("/welcome-medical-assessor");
+      return;
+    }
+
+    setError("An internal server error occured");
+    console.log(loginRes)
+    setTimeout(() => {
+      setError("");
+    }, 3000);
   };
 
   return (
