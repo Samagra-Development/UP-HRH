@@ -4,10 +4,18 @@ import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { getMedicalAssessments } from "../api";
 
 const MedicalAssessments = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({
+    district: '',
+    instituteName: '',
+    nursing: '',
+    paramedical: '',
+    type: ''
+  });
   const [error, setError] = useState("");
 
   const startAssess = (route) => {
@@ -35,13 +43,24 @@ const MedicalAssessments = () => {
     navigate("/form");
   };
 
+  const getTodayAssessments = async () => {
+    setLoading(true);
+    const res = await getMedicalAssessments();
+    if (res?.data?.institutes?.[0]) {
+      let ass = res?.data?.institutes?.[0];
+      setData({
+        district: ass.district,
+        instituteName: ass.name,
+        nursing: ass.nursing,
+        paramedical: ass.paramedical,
+        type: ass.type
+      })
+    } else setData(null)
+    setLoading(false);
+  }
+
   useEffect(() => {
-    setData({
-      district: "BAREILLY",
-      instituteName: "Hustle University",
-      pocName: "Andrew Tate",
-      pocMobile: "9654591151",
-    });
+    getTodayAssessments();
   }, []);
 
   return (
@@ -57,8 +76,8 @@ const MedicalAssessments = () => {
         <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px]">
           Today's Assessments
         </p>
-        <p className="text-primary text-lg font-semibold">{data?.district}</p>
-        <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4">
+        <p className="text-primary text-3xl font-semibold">{data?.district}</p>
+        {!loading && data && <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4">
           <div className="flex flex-col py-3 w-full">
             <span className="text-secondary pb-2 font-medium">
               Institute Name
@@ -67,6 +86,7 @@ const MedicalAssessments = () => {
               type="text"
               placeholder="Enter institute name"
               className="border-2 border-primary p-3.5"
+              disabled
               value={data?.instituteName}
               onChange={(e) =>
                 setData({ ...data, instituteName: e.target.value })
@@ -74,6 +94,39 @@ const MedicalAssessments = () => {
             />
           </div>
           <div className="flex flex-col py-3 w-full">
+            <span className="text-secondary pb-2 font-medium">Institute Type</span>
+            <input
+              type="text"
+              disabled
+              placeholder="Enter POC name"
+              className="border-2 border-primary p-3.5"
+              value={data?.type}
+              onChange={(e) => setData({ ...data, type: e.target.value })}
+            />
+          </div>
+          <div className="flex flex-col py-3 w-full">
+            <span className="text-secondary pb-2 font-medium">Is Nursing</span>
+            <input
+              type="text"
+              disabled
+              placeholder="Enter POC name"
+              className="border-2 border-primary p-3.5"
+              value={data?.nursing}
+              onChange={(e) => setData({ ...data, nursing: e.target.value })}
+            />
+          </div>
+          <div className="flex flex-col py-3 w-full">
+            <span className="text-secondary pb-2 font-medium">Is Paramedical</span>
+            <input
+              type="text"
+              placeholder="Enter POC name"
+              disabled
+              className="border-2 border-primary p-3.5"
+              value={data?.paramedical}
+              onChange={(e) => setData({ ...data, paramedical: e.target.value })}
+            />
+          </div>
+          {/* <div className="flex flex-col py-3 w-full">
             <span className="text-secondary pb-2 font-medium">POC Name</span>
             <input
               type="text"
@@ -82,8 +135,8 @@ const MedicalAssessments = () => {
               value={data?.pocName}
               onChange={(e) => setData({ ...data, pocName: e.target.value })}
             />
-          </div>
-          <div className="flex flex-col py-3 w-full mb-[-10px]">
+          </div> */}
+          {/* <div className="flex flex-col py-3 w-full mb-[-10px]">
             <span className="text-secondary pb-2 font-medium">POC Mobile</span>
             <input
               type="number"
@@ -92,14 +145,15 @@ const MedicalAssessments = () => {
               value={data?.pocMobile}
               onChange={(e) => setData({ ...data, pocMobile: e.target.value })}
             />
-          </div>
+          </div> */}
           {error && (
             <span className="text-rose-600 mb-[-10px] mt-[15px] animate__animated animate__headShake">
               {error}
             </span>
           )}
           <Button text="Start Assessing" onClick={startAssess} />
-        </div>
+        </div>}
+        {!loading && !data && <p className="text-3xl py-10">No Assessments Today</p>}
       </div>
     </CommonLayout>
   );

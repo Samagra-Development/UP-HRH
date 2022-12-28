@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
-import { loginMedical, testHasuraQuery } from "../api";
+import { loginMedical } from "../api";
 
 const LoginMedical = () => {
   const navigate = useNavigate();
@@ -31,7 +31,6 @@ const LoginMedical = () => {
     }
     if (loginRes.responseCode == "OK" && loginRes.result) {
       localStorage.setItem("userData", JSON.stringify(loginRes.result.data.user))
-      const res = await testHasuraQuery();
       navigate("/welcome-medical-assessor");
       return;
     }
