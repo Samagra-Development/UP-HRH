@@ -16,31 +16,9 @@ const MedicalAssessments = () => {
     paramedical: '',
     type: ''
   });
-  const [error, setError] = useState("");
 
   const startAssess = (route) => {
-    // if (!data.instituteName) {
-    //   setError("Please Enter Institute Name");
-    //   setTimeout(() => {
-    //     setError("");
-    //   }, 3000);
-    //   return;
-    // }
-    // if (!data.pocName) {
-    //   setError("Please Enter POC Name");
-    //   setTimeout(() => {
-    //     setError("");
-    //   }, 3000);
-    //   return;
-    // }
-    // if (!data.pocMobile || data.pocMobile.length !== 10) {
-    //   setError("Please enter a valid mobile number");
-    //   setTimeout(() => {
-    //     setError("");
-    //   }, 3000);
-    //   return;
-    // }
-    navigate("/form");
+    navigate("/capture-location");
   };
 
   const getTodayAssessments = async () => {
@@ -88,9 +66,6 @@ const MedicalAssessments = () => {
               className="border-2 border-primary p-3.5"
               disabled
               value={data?.instituteName}
-              onChange={(e) =>
-                setData({ ...data, instituteName: e.target.value })
-              }
             />
           </div>
           <div className="flex flex-col py-3 w-full">
@@ -101,7 +76,6 @@ const MedicalAssessments = () => {
               placeholder="Enter POC name"
               className="border-2 border-primary p-3.5"
               value={data?.type}
-              onChange={(e) => setData({ ...data, type: e.target.value })}
             />
           </div>
           <div className="flex flex-col py-3 w-full">
@@ -112,7 +86,6 @@ const MedicalAssessments = () => {
               placeholder="Enter POC name"
               className="border-2 border-primary p-3.5"
               value={data?.nursing}
-              onChange={(e) => setData({ ...data, nursing: e.target.value })}
             />
           </div>
           <div className="flex flex-col py-3 w-full">
@@ -123,7 +96,6 @@ const MedicalAssessments = () => {
               disabled
               className="border-2 border-primary p-3.5"
               value={data?.paramedical}
-              onChange={(e) => setData({ ...data, paramedical: e.target.value })}
             />
           </div>
           {/* <div className="flex flex-col py-3 w-full">
@@ -146,11 +118,6 @@ const MedicalAssessments = () => {
               onChange={(e) => setData({ ...data, pocMobile: e.target.value })}
             />
           </div> */}
-          {error && (
-            <span className="text-rose-600 mb-[-10px] mt-[15px] animate__animated animate__headShake">
-              {error}
-            </span>
-          )}
           <Button text="Start Assessing" onClick={startAssess} />
         </div>}
         {!loading && !data && <p className="text-3xl py-10">No Assessments Today</p>}
