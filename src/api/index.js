@@ -30,6 +30,8 @@ export const getMedicalAssessments = () => {
           type
           application_id
           district
+          latitude
+          longitude
         }
       }
       `,

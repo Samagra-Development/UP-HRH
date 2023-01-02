@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { getMedicalAssessments } from "../api";
+import { StateContext } from "../App";
 
 const MedicalAssessments = () => {
+  const { state, setState } = useContext(StateContext)
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
@@ -14,10 +16,13 @@ const MedicalAssessments = () => {
     instituteName: '',
     nursing: '',
     paramedical: '',
-    type: ''
+    type: '',
+    latitude: null,
+    longitude: null
   });
 
-  const startAssess = (route) => {
+  const startAssess = () => {
+    setState({ ...state, todayAssessment: { ...data } })
     navigate("/capture-location");
   };
 
@@ -31,7 +36,9 @@ const MedicalAssessments = () => {
         instituteName: ass.name,
         nursing: ass.nursing,
         paramedical: ass.paramedical,
-        type: ass.type
+        type: ass.type,
+        latitude: ass.latitude,
+        longitude: ass.longitude
       })
     } else setData(null)
     setLoading(false);

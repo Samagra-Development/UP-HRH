@@ -8,6 +8,7 @@ import MedicalAssessments from "./pages/MedicalAssessments";
 import UpcomingMedicalAssessments from "./pages/UpcomingMedicalAssessments";
 import Form from "./pages/Form";
 import CaptureLocation from "./pages/CaptureLocation";
+import MedicalAssessmentsOptions from "./pages/MedicalAssessmentsOptions";
 
 export const StateContext = createContext();
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/upcoming-medical-assessments" element={<PrivateRoute><UpcomingMedicalAssessments /></PrivateRoute>} />
             <Route path="/form" element={<PrivateRoute><Form /></PrivateRoute>} />
             <Route path="/capture-location" element={<PrivateRoute><CaptureLocation /></PrivateRoute>} />
+            <Route path="/medical-assessment-options" element={<PrivateRoute><MedicalAssessmentsOptions /></PrivateRoute>} />
           </Routes>
         </BrowserRouter>
       </StateContext.Provider >
