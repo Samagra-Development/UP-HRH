@@ -19,27 +19,27 @@ const MedicalAssessments = () => {
   const [error, setError] = useState("");
 
   const startAssess = (route) => {
-    if (!data.instituteName) {
-      setError("Please Enter Institute Name");
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      return;
-    }
-    if (!data.pocName) {
-      setError("Please Enter POC Name");
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      return;
-    }
-    if (!data.pocMobile || data.pocMobile.length !== 10) {
-      setError("Please enter a valid mobile number");
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      return;
-    }
+    // if (!data.instituteName) {
+    //   setError("Please Enter Institute Name");
+    //   setTimeout(() => {
+    //     setError("");
+    //   }, 3000);
+    //   return;
+    // }
+    // if (!data.pocName) {
+    //   setError("Please Enter POC Name");
+    //   setTimeout(() => {
+    //     setError("");
+    //   }, 3000);
+    //   return;
+    // }
+    // if (!data.pocMobile || data.pocMobile.length !== 10) {
+    //   setError("Please enter a valid mobile number");
+    //   setTimeout(() => {
+    //     setError("");
+    //   }, 3000);
+    //   return;
+    // }
     navigate("/form");
   };
 
