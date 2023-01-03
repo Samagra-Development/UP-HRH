@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { StateContext } from "../App";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 const CaptureLocation = () => {
   const [lat, setLat] = useState(0);
@@ -117,7 +119,13 @@ const CaptureLocation = () => {
   return (
     <CommonLayout>
       <div className="flex flex-col px-5 py-8 items-center">
-        <i className="fa-sharp fa-solid fa-location-dot"></i>
+        <div className="flex flex-col w-full px-2 items-start">
+          <FontAwesomeIcon
+            icon={faChevronLeft}
+            className="text-2xl text-gray-300"
+            onClick={() => navigate("/medical-assessments")}
+          />
+        </div>
         <img
           src="/assets/locationGirl.png"
           className="h-[200px] mt-4 lg:h-[300px]"
