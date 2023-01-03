@@ -25,7 +25,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login-medical" element={<LoginMedical />} />
+            <Route path="/login" element={<LoginMedical />} />
             <Route path="/welcome-medical-assessor" element={<PrivateRoute><MedicalAssessor /></PrivateRoute>} />
             <Route path="/medical-assessments" element={<PrivateRoute><MedicalAssessments /></PrivateRoute>} />
             <Route path="/upcoming-medical-assessments" element={<PrivateRoute><UpcomingMedicalAssessments /></PrivateRoute>} />

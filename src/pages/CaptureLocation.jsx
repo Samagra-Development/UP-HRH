@@ -117,7 +117,7 @@ const CaptureLocation = () => {
   return (
     <CommonLayout>
       <div className="flex flex-col px-5 py-8 items-center">
-        <i class="fa-sharp fa-solid fa-location-dot"></i>
+        <i className="fa-sharp fa-solid fa-location-dot"></i>
         <img
           src="/assets/locationGirl.png"
           className="h-[200px] mt-4 lg:h-[300px]"
@@ -128,8 +128,6 @@ const CaptureLocation = () => {
             src={`https://maps.google.com/maps?q=${lat},${long}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
             width="100%"
             height={200}
-            frameborder="0"
-            allowfullscreen
             loading="lazy"
             title="map"
             className="mt-5"

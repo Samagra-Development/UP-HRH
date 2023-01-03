@@ -19,12 +19,12 @@ const Home = () => {
         <Button
           text="Medical Assessor"
           styles="w-80 lg:w-[70%] lg:mt-[70px]"
-          onClick={() => handleClick("/login-medical")}
+          onClick={() => handleClick("/login")}
         />
         <Button
           text="Non-Medical Assessor"
           styles="w-80 lg:w-[70%] lg:mt-[30px]"
-          onClick={() => handleClick("/login-non-medical")}
+          onClick={() => handleClick("/login")}
         />
       </div>
     </CommonLayout>

@@ -17,7 +17,7 @@ const MedicalAssessor = () => {
           <FontAwesomeIcon
             icon={faChevronLeft}
             className="text-2xl text-gray-300"
-            onClick={() => navigate("/login-medical")}
+            onClick={() => navigate("/login")}
           />
         </div>
         <img
