@@ -47,8 +47,8 @@ const CommonLayout = (props) => {
       </div>
       {logoutModal && <CommonModal>
         <div>
-          <p className="text-secondary text-xl text-semibold">Continue to logout?</p>
-          <div className="flex flex-row justify-end w-full py-4">
+          <p className="text-secondary text-xl text-semibold font-medium text-center">Continue to logout?</p>
+          <div className="flex flex-row justify-center w-full py-4">
             <div className="border border-primary text-primary py-1 px-7 mr-2 cursor-pointer" onClick={() => logout()}>Yes</div>
             <div className="border border-primary bg-primary text-white py-1 px-7 cursor-pointer" onClick={() => showLogoutModal(false)}>No</div>
           </div>
