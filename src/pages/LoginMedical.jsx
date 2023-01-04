@@ -5,6 +5,7 @@ import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { loginMedical } from "../api";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 const LoginMedical = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const LoginMedical = () => {
   };
 
   return (
-    <CommonLayout>
+    <CommonLayout back="/">
       <div className="flex flex-col px-5 py-8 items-center">
         <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px]">
           Welcome Back
@@ -86,12 +87,7 @@ const LoginMedical = () => {
           styles="w-80 lg:w-[70%]"
           onClick={handleLogin}
         />
-        <p
-          className="text-secondary py-4 font-medium"
-          onClick={() => navigate("/")}
-        >
-          Go back
-        </p>
+        <p className="text-secondary py-5" onClick={() => navigate('/forgot-password')}>Forgot Password?</p>
       </div>
     </CommonLayout>
   );

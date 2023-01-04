@@ -11,15 +11,8 @@ const MedicalAssessor = () => {
     navigate(route);
   };
   return (
-    <CommonLayout>
+    <CommonLayout back="/login">
       <div className="flex flex-col px-5 py-8 items-center">
-        <div className="flex flex-col w-full px-2 items-start">
-          <FontAwesomeIcon
-            icon={faChevronLeft}
-            className="text-2xl text-gray-300"
-            onClick={() => navigate("/login")}
-          />
-        </div>
         <img
           src="/assets/medicalAssessorWelcome.png"
           className="h-[200px] mt-4 lg:h-[300px]"

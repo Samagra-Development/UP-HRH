@@ -49,15 +49,8 @@ const MedicalAssessments = () => {
   }, []);
 
   return (
-    <CommonLayout>
+    <CommonLayout back="/welcome-medical-assessor">
       <div className="flex flex-col px-5 py-8 items-center">
-        <div className="flex flex-col w-full px-2 items-start">
-          <FontAwesomeIcon
-            icon={faChevronLeft}
-            className="text-2xl text-gray-300"
-            onClick={() => navigate("/welcome-medical-assessor")}
-          />
-        </div>
         <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px]">
           Today's Assessments
         </p>

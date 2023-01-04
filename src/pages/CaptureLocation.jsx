@@ -118,15 +118,8 @@ const CaptureLocation = () => {
     }, [lat, long]);
 
     return (
-        <CommonLayout>
+        <CommonLayout back="/medical-assessments">
             <div className="flex flex-col px-5 py-8 items-center">
-                <div className="flex flex-col w-full px-2 items-start">
-                    <FontAwesomeIcon
-                        icon={faChevronLeft}
-                        className="text-2xl text-gray-300"
-                        onClick={() => navigate("/medical-assessments")}
-                    />
-                </div>
                 <img
                     src="/assets/locationGirl.png"
                     className="h-[200px] mt-4 lg:h-[300px]"
@@ -150,11 +143,11 @@ const CaptureLocation = () => {
                 {!showMap && distance > 500 && <Button
                     text="Capture Location"
                     onClick={getLocation}
-                    styles={loading ? "bg-white text-primary opacity-75" : ""}
+                    styles={loading ? "bg-white text-primary opacity-75 w-80 lg:w-[60%]" : "w-80 lg:w-[60%]"}
                 />}
                 <Button
                     text="Continue"
-                    styles={disabled ? "bg-white text-primary opacity-75" : ""}
+                    styles={disabled ? "bg-white text-primary opacity-75 w-80 lg:w-[60%]" : "w-80 lg:w-[60%]"}
                     onClick={handleSubmit}
                 />
             </div>
