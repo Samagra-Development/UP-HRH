@@ -123,7 +123,7 @@ const Paramedical = () => {
   }, [data]);
 
   return (
-    <CommonLayout>
+    <CommonLayout back="/medical-assessment-options">
       <div className="flex flex-col items-center">
         {!loading && data && (
           <>

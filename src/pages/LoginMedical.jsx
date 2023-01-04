@@ -37,14 +37,13 @@ const LoginMedical = () => {
     }
 
     setError("An internal server error occured");
-    console.log(loginRes)
     setTimeout(() => {
       setError("");
     }, 3000);
   };
 
   return (
-    <CommonLayout back="/">
+    <CommonLayout back="/" logoutDisabled>
       <div className="flex flex-col px-5 py-8 items-center">
         <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px]">
           Welcome Back

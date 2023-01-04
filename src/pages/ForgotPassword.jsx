@@ -66,7 +66,7 @@ const ForgotPassword = () => {
     }
 
     return (
-        <CommonLayout back={'/'}>
+        <CommonLayout back={'/'} logoutDisabled>
             {!otpPage && !changePassPage && !passChanged && <div className="flex flex-col px-10 py-8 h-100 justify-between h-[90%]">
                 <div className="w-full">
                     <p className="text-secondary text-2xl font-semibold">Enter your registered mobile number</p>

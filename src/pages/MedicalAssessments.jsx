@@ -62,7 +62,6 @@ const MedicalAssessments = () => {
             </span>
             <input
               type="text"
-              placeholder="Enter institute name"
               className="border-2 border-primary p-3.5"
               disabled
               value={data?.instituteName}
@@ -73,7 +72,6 @@ const MedicalAssessments = () => {
             <input
               type="text"
               disabled
-              placeholder="Enter POC name"
               className="border-2 border-primary p-3.5"
               value={data?.type}
             />
@@ -83,7 +81,6 @@ const MedicalAssessments = () => {
             <input
               type="text"
               disabled
-              placeholder="Enter POC name"
               className="border-2 border-primary p-3.5"
               value={data?.nursing}
             />
@@ -92,7 +89,6 @@ const MedicalAssessments = () => {
             <span className="text-secondary pb-2 font-medium">Is Paramedical</span>
             <input
               type="text"
-              placeholder="Enter POC name"
               disabled
               className="border-2 border-primary p-3.5"
               value={data?.paramedical}

@@ -9,7 +9,7 @@ const Home = () => {
     navigate(route);
   };
   return (
-    <CommonLayout>
+    <CommonLayout backDisabled={true}>
       <div className="flex flex-col px-5 py-8 items-center">
         <img
           src="/assets/homeVector.png"

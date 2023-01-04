@@ -42,6 +42,7 @@ function App() {
             <Route path="/paramedical" element={<PrivateRoute><Paramedical /></PrivateRoute>} />
             <Route path="/osce-1" element={<PrivateRoute><Osce1 /></PrivateRoute>} />
             <Route path="/osce-2" element={<PrivateRoute><Osce2 /></PrivateRoute>} />
+            <Route path="/*" element={<Home />} />
           </Routes>
         </BrowserRouter>
       </StateContext.Provider >

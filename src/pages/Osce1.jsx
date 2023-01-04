@@ -3,7 +3,7 @@ import CommonLayout from "../components/CommonLayout";
 
 const Osce1 = () => {
   return (
-    <CommonLayout>
+    <CommonLayout back="/medical-assessment-options">
       <div className="flex flex-col items-center">
         <iframe
           title="Location Form"
