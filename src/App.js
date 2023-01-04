@@ -10,6 +10,10 @@ import Form from "./pages/Form";
 import CaptureLocation from "./pages/CaptureLocation";
 import MedicalAssessmentsOptions from "./pages/MedicalAssessmentsOptions";
 import ForgotPassword from "./pages/ForgotPassword";
+import Nursing from "./pages/Nursing";
+import Paramedical from "./pages/Paramedical";
+import Osce1 from "./pages/Osce1";
+import Osce2 from "./pages/Osce2";
 
 export const StateContext = createContext();
 
@@ -34,6 +38,10 @@ function App() {
             <Route path="/capture-location" element={<PrivateRoute><CaptureLocation /></PrivateRoute>} />
             <Route path="/medical-assessment-options" element={<PrivateRoute><MedicalAssessmentsOptions /></PrivateRoute>} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/nursing" element={<PrivateRoute><Nursing /></PrivateRoute>} />
+            <Route path="/paramedical" element={<PrivateRoute><Paramedical /></PrivateRoute>} />
+            <Route path="/osce-1" element={<PrivateRoute><Osce1 /></PrivateRoute>} />
+            <Route path="/osce-2" element={<PrivateRoute><Osce2 /></PrivateRoute>} />
           </Routes>
         </BrowserRouter>
       </StateContext.Provider >
