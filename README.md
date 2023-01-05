@@ -5,10 +5,10 @@
 - [Fusionauth](https://fusionauth.io/docs/v1/tech/)
 
 ## Tech Stack
-- React.js
-- Tailwind
-- GraphQL
-- Hasura
+- [React.js](https://reactjs.org/docs/getting-started.html)
+- [Tailwind](https://tailwindcss.com/docs/installation)
+- [GraphQL](https://graphql.org/code/#javascript)
+- [Hasura](https://hasura.io/docs/latest/index/)
 
 ## Installation Guide
 
