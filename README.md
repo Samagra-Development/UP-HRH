@@ -1,8 +1,8 @@
 # Ratings Application
 
 ## Lego Blocks
-- Workflow Manager ()
-- Fusionauth
+- [Workflow Manager (Enketo)](https://github.com/SakshamHaryana-SE/enketo)
+- [Fusionauth](https://fusionauth.io/docs/v1/tech/)
 
 ## Tech Stack
 - React.js
