@@ -1,70 +1,95 @@
-# Getting Started with Create React App
+# Ratings Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Lego Blocks
+- Workflow Manager ()
+- Fusionauth
 
-## Available Scripts
+## Tech Stack
+- React.js
+- Tailwind
+- GraphQL
+- Hasura
 
-In the project directory, you can run:
+## Installation Guide
 
-### `npm start`
+## Requirements :scroll:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Your machine should have [Yarn](https://classic.yarnpkg.com/en/docs/install/#windows-stable) (preferable) or [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [Docker](https://docs.docker.com/get-docker/) installed.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation Steps :walking:
 
-### `npm test`
+### 1. Fork it :fork_and_knife:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You can get your own fork/copy of [UP-HRH](https://github.com/Samagra-Development/UP-HRH) by using the <kbd><b>Fork</b></kbd> button.
 
-### `npm run build`
+### 2. Clone it :busts_in_silhouette:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You need to clone (download) it to a local machine using
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```sh
+git clone https://github.com/Your_Username/UP-HRH.git
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+> This makes a local copy of the repository in your machine.
 
-### `npm run eject`
+Once you have cloned the `UP-HRH` repository in GitHub, move to that folder first using the change directory command.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```sh
+# This will change directory to a folder UP-HRH
+cd UP-HRH
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Move to this folder for all other commands.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 3. Set it up :arrow_up:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Run the following commands to see that _your local copy_ has a reference to _your forked remote repository_ in GitHub :octocat:
 
-## Learn More
+```sh
+git remote -v
+origin  https://github.com/Your_Username/UP-HRH.git (fetch)
+origin  https://github.com/Your_Username/UP-HRH.git (push)
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Now, add a reference to the original [UP-HRHUI](https://github.com/Samagra-Development/UP-HRH) repository using
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```sh
+git remote add upstream https://github.com/Samagra-Development/UP-HRH.git
+```
 
-### Code Splitting
+> This adds a new remote named **_upstream_**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+See the changes using
 
-### Analyzing the Bundle Size
+```sh
+git remote -v
+origin    https://github.com/Your_Username/UP-HRH.git (fetch)
+origin    https://github.com/Your_Username/UP-HRH.git (push)
+upstream  https://github.com/Samagra-Development/UP-HRH.git (fetch)
+upstream  https://github.com/Samagra-Development/UP-HRH.git (push)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 4. Run it :checkered_flag:
 
-### Making a Progressive Web App
+Using Yarn (preferable)
+```sh
+# To install all the dependencies
+yarn install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# To start the application
+yarn start
+```
 
-### Advanced Configuration
+**OR**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+using NPM
+```sh
+# To install all the dependencies
+npm install
 
-### Deployment
+# To start the application
+npm start
+```
+The React application will start on port 3000.
+Go to: http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
