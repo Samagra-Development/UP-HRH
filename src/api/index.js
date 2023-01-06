@@ -18,6 +18,32 @@ export const loginMedical = async (username, pass) => {
   }
 }
 
+export const sendOtpToMobile = async (mobile) => {
+  try {
+    const res = await axios.post(BASE_URL + "changePassword/sendOTP", {
+      username: mobile
+    }, { headers: { 'x-application-id': applicationId } });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+export const verifyOtpSavePassword = async (mobile, pass, otp) => {
+  try {
+    const res = await axios.patch(BASE_URL + "changePassword/update", {
+      username: mobile,
+      password: pass,
+      OTP: otp
+    }, { headers: { 'x-application-id': applicationId } });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
 export const getMedicalAssessments = () => {
   const query = {
     query: `
