@@ -16,6 +16,7 @@ const CaptureLocation = () => {
     const [distance, setDistance] = useState(9999);
     const [error, setError] = useState(false);
     const navigate = useNavigate();
+    const isMobile = window.innerWidth < 769;
     const getLocation = () => {
         if (navigator.geolocation && !loading) {
             setLoading(true);
@@ -43,6 +44,7 @@ const CaptureLocation = () => {
             });
         } else {
             setError(`Please allow location access.`);
+            setLoading(false);
             setTimeout(() => {
                 setError(false);
             }, 5000);
@@ -101,9 +103,8 @@ const CaptureLocation = () => {
         }
         if (distance > 500) {
             setError(
-                `You're currently ${distance < 1000 ? Math.ceil(distance) : (distance / 1000).toFixed(2)}${distance < 1000 ? 'm' : 'kms'} away from institute which is outside the range of 500m. Please try again once you're in vicinity of the institute`
+                `Please ensure you are within the institute premises`
             );
-
             setTimeout(() => {
                 setError(false);
             }, 5000);
@@ -122,17 +123,18 @@ const CaptureLocation = () => {
             <div className="flex flex-col px-5 py-8 items-center">
                 <img
                     src="/assets/locationGirl.png"
-                    className="h-[200px] mt-4 lg:h-[300px]"
+                    className="h-[200px] mt-4 lg:h-[300px] animate__animated animate__fadeInDown"
                     alt="locationGirl"
                 />
+                {!showMap && loading && <div className="w-[60%] h-[200px] bg-gray-200 flex"><div className="loader"></div></div>}
                 {showMap && (
                     <iframe
                         src={`https://maps.google.com/maps?q=${lat},${long}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                        width="100%"
+                        width={isMobile ? '100%' : '60%'}
                         height={200}
                         loading="lazy"
                         title="map"
-                        className="mt-5"
+                        className="mt-5 animate__animated animate__fadeIn"
                     />
                 )}
                 {error && (
@@ -143,13 +145,31 @@ const CaptureLocation = () => {
                 {!showMap && distance > 500 && <Button
                     text="Capture Location"
                     onClick={getLocation}
-                    styles={loading ? "bg-white text-primary opacity-75 w-80 lg:w-[60%]" : "w-80 lg:w-[60%]"}
+                    styles={loading ? "bg-white text-primary opacity-75 w-80 lg:w-[60%]" : "w-80 lg:w-[60%] animate__animated animate__fadeInDown"}
                 />}
                 <Button
                     text="Continue"
-                    styles={disabled ? "bg-white text-primary opacity-75 w-80 lg:w-[60%]" : "w-80 lg:w-[60%]"}
+                    styles={disabled ? "bg-white text-primary opacity-75 w-80 lg:w-[60%] animate__animated animate__fadeInDown" : "w-80 lg:w-[60%]"}
                     onClick={handleSubmit}
                 />
+                <style>
+                    {`
+                    .loader {
+                        border: 8px solid #FFF; /* Light grey */
+                        border-top: 8px solid #F8913D; /* Blue */
+                        border-radius: 50%;
+                        width: 60px;
+                        height: 60px;
+                        animation: spin 2s linear infinite;
+                        margin: auto;
+                      }
+                      
+                      @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                      }
+                    `}
+                </style>
             </div>
         </CommonLayout>
     );

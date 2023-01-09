@@ -18,17 +18,19 @@ const MedicalAssessmentsOptions = () => {
     role && (
       <CommonLayout back="/medical-assessments">
         <div className="flex flex-col px-5 py-8 items-center">
-          <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center">
+          <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select your assessment type
           </p>
           <Button
             text="Nursing Form"
+            styles="lg:w-[70%] animate__animated animate__fadeInDown"
             onClick={() => {
               handleNavigation("/nursing");
             }}
           />
           <Button
             text="Paramedical Form"
+            styles="lg:w-[70%] animate__animated animate__fadeInDown"
             onClick={() => {
               handleNavigation("/paramedical");
             }}
@@ -36,6 +38,7 @@ const MedicalAssessmentsOptions = () => {
           {role === "Medical" && (
             <Button
               text="OSCE 1"
+              styles="lg:w-[70%] animate__animated animate__fadeInDown"
               onClick={() => {
                 handleNavigation("/osce-1");
               }}
@@ -44,6 +47,7 @@ const MedicalAssessmentsOptions = () => {
           {role === "Medical" && (
             <Button
               text="OSCE 2"
+              styles="lg:w-[70%] animate__animated animate__fadeInDown"
               onClick={() => {
                 handleNavigation("/osce-2");
               }}

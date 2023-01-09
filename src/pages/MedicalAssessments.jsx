@@ -51,12 +51,12 @@ const MedicalAssessments = () => {
   return (
     <CommonLayout back="/welcome-medical-assessor">
       <div className="flex flex-col px-5 py-8 items-center">
-        <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px]">
+        <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px] animate__animated animate__fadeInDown">
           Today's Assessments
         </p>
-        <p className="text-primary text-3xl font-semibold">{data?.district}</p>
-        {!loading && data && <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4">
-          <div className="flex flex-col py-3 w-full">
+        <p className="text-primary text-3xl font-semibold animate__animated animate__fadeInDown">{data?.district}</p>
+        {!loading && data && <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow">
+          <div className="flex flex-col py-3 w-full ">
             <span className="text-secondary pb-2 font-medium">
               Institute Name
             </span>

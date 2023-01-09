@@ -45,13 +45,13 @@ const LoginMedical = () => {
   return (
     <CommonLayout back="/" logoutDisabled>
       <div className="flex flex-col px-5 py-8 items-center">
-        <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px]">
+        <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] animate__animated animate__fadeInDown">
           Welcome Back
         </p>
-        <p className="text-primary text-md lg:text-[20px] font-medium">
+        <p className="text-primary text-md lg:text-[20px] font-medium animate__animated animate__fadeInDown">
           Please enter your details
         </p>
-        <div className="flex flex-col w-80 py-5 mt-5 lg:w-[70%]">
+        <div className="flex flex-col w-80 py-5 mt-5 lg:w-[70%] animate__animated animate__fadeInDown" >
           <span className="text-secondary pl-0.5 pb-2">
             <FontAwesomeIcon icon={faUser} /> &nbsp;Username
           </span>
@@ -63,7 +63,7 @@ const LoginMedical = () => {
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div className="flex flex-col w-80 pt-3 lg:w-[70%]">
+        <div className="flex flex-col w-80 pt-3 lg:w-[70%] animate__animated animate__fadeInDown">
           <span className="text-secondary pl-0.5 pb-2">
             <FontAwesomeIcon icon={faLock} />
             &nbsp; Password
@@ -74,6 +74,11 @@ const LoginMedical = () => {
             className="border-2 border-primary p-3.5 mb-5"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              console.log(e.key)
+              if (e.key == "Enter")
+                handleLogin();
+            }}
           />
         </div>
         {error && (
@@ -83,10 +88,10 @@ const LoginMedical = () => {
         )}
         <Button
           text={"Sign In"}
-          styles="w-80 lg:w-[70%]"
+          styles="w-80 lg:w-[70%] animate__animated animate__fadeInDown"
           onClick={handleLogin}
         />
-        <p className="text-secondary py-5" onClick={() => navigate('/forgot-password')}>Forgot Password?</p>
+        <p className="text-secondary py-5 animate__animated animate__fadeInDown" onClick={() => navigate('/forgot-password')}>Forgot Password?</p>
       </div>
     </CommonLayout>
   );
