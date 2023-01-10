@@ -130,7 +130,7 @@ const Nursing = () => {
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
               title="Location Form"
-              src={`http://enketo-ratings-tech.samagra.io/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>

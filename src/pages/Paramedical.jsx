@@ -8,7 +8,7 @@ const Paramedical = () => {
   const getFormURI = (form, ofsd, prefillSpec) => {
     console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
-      `http://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
+      `${process.env.REACT_APP_ENKETO_URL}/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
       )}&prefillSpec=${encodeFunction(prefillSpec)}`
     );
@@ -130,7 +130,7 @@ const Paramedical = () => {
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
               title="Location Form"
-              src={`http://enketo-ratings-tech.samagra.io/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              src={`https://enketo-ratings-tech.samagra.io/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>
