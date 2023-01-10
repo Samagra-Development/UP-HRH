@@ -17,7 +17,7 @@ const CaptureLocation = () => {
     const [error, setError] = useState(false);
     const navigate = useNavigate();
     const isMobile = window.innerWidth < 769;
-    
+
     const getLocation = () => {
         if (navigator.geolocation && !loading) {
             setLoading(true);
@@ -83,10 +83,6 @@ const CaptureLocation = () => {
     }
 
     const handleSubmit = () => {
-        if (state?.todayAssessment?.instituteName == 'UP Medical College109') {
-            navigate('/medical-assessment-options')
-            return;
-        }
         if (
             !state?.todayAssessment?.latitude ||
             !state?.todayAssessment?.longitude
