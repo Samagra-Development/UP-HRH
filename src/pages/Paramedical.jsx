@@ -8,7 +8,7 @@ const Paramedical = () => {
   const getFormURI = (form, ofsd, prefillSpec) => {
     console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
-      `${process.env.REACT_APP_ENKETO_URL}/prefill?form=${form}&onFormSuccessData=${encodeFunction(
+      `http://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
       )}&prefillSpec=${encodeFunction(prefillSpec)}`
     );

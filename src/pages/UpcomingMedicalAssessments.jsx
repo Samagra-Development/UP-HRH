@@ -6,9 +6,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { getMedicalAssessmentsUpcoming } from "../api";
 
 const UpcomingMedicalAssessments = () => {
-  const navigate = useNavigate();
   const [tableData, setTableData] = useState();
-  const [dimensions, setDimensions] = useState({ height: window.innerHeight, width: window.innerWidth });
 
   const getData = async () => {
     const res = await getMedicalAssessmentsUpcoming();
@@ -19,16 +17,6 @@ const UpcomingMedicalAssessments = () => {
   useEffect(() => {
     getData();
   }, []);
-
-  const setScreenDimensions = () => {
-    setDimensions({
-      height: window.innerHeight,
-      width: window.innerWidth
-    })
-  }
-
-  window.addEventListener("resize", setScreenDimensions)
-
 
   return (
     <CommonLayout back="/welcome-medical-assessor">
@@ -46,15 +34,6 @@ const UpcomingMedicalAssessments = () => {
                 <th className="text-sm font-medium text-white px-6 py-4">
                   District
                 </th>
-                {dimensions?.width > 769 && <th className="text-sm font-medium text-white px-6 py-4">
-                  Name
-                </th>}
-                {dimensions?.width > 769 && <th className="text-sm font-medium text-white px-6 py-4">
-                  Paramedical
-                </th>}
-                {dimensions?.width > 769 && <th className="text-sm font-medium text-white px-6 py-4">
-                  Nursing
-                </th>}
               </tr>
             </thead >
             <tbody>
@@ -65,15 +44,6 @@ const UpcomingMedicalAssessments = () => {
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                   {el.district}
                 </td>
-                {dimensions?.width > 769 && <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {el.name}
-                </td>}
-                {dimensions?.width > 769 && <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {el.paramedical}
-                </td>}
-                {dimensions?.width > 769 && <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {el.nursing}
-                </td>}
               </tr >)}
             </tbody>
           </table>
