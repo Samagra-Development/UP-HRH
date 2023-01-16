@@ -8,7 +8,7 @@ const Form = () => {
        
         <iframe
           title="Location Form"
-          src="http://enketo-ratings-tech.samagra.io/preview?xform=http%3A%2F%2Fenketo-manager-ratings-tech.samagra.io%2Fprefill%3Fform%3Dlocation"
+          src="https://enketo-ratings-tech.samagra.io/preview?xform=https%3A%2F%2Fenketo-manager-ratings-tech.samagra.io%2Fprefill%3Fform%3Dlocation"
           style={{ height: "80vh", width: "100%", marginTop: "20px" }}
         />
       </div>
