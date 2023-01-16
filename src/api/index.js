@@ -85,3 +85,43 @@ export const getMedicalAssessmentsUpcoming = () => {
   };
   return makeHasuraCalls(query);
 };
+
+export const createUser = async (data) => {
+  try {
+    const body = {
+      registration: {
+        applicationId: applicationId,
+        usernameStatus: 'ACTIVE',
+        roles: [data.role]
+      },
+      user: {
+        password: data?.password,
+        username: data?.mobile,
+        mobilePhone: data?.mobile,
+      }
+    };
+
+    const userRes = await axios.post(BASE_URL + 'signup', body, { headers: { 'x-application-id': applicationId } });
+
+    if (userRes?.data?.responseCode === "OK") {
+      return userRes.data;
+    } else if (userRes?.data?.status != 200) {
+      const errorStrings = [];
+      const errors = userRes?.data?.exception?.fieldErrors;
+      Object.keys(errors).forEach(key => {
+        errorStrings.push(errors[key]?.[0]?.message);
+      })
+      return errorStrings.join(". \n");
+
+    }
+  } catch (error) {
+    console.log('Create Catch', error);
+    const errorStrings = [];
+    const errors = error?.response?.data?.exception?.fieldErrors;
+    Object.keys(errors).forEach(key => {
+      errorStrings.push(errors[key]?.[0]?.message);
+    })
+    return errorStrings.join(". \n") || "An error occured while creating user. Try again";
+  }
+  return null;
+}
