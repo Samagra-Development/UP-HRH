@@ -87,27 +87,27 @@ const ForgotPassword = () => {
         <CommonLayout back={'/'} logoutDisabled>
             {!otpPage && !changePassPage && !passChanged && <div className="flex flex-col px-10 py-8 h-100 justify-between h-[90%]">
                 <div className="w-full">
-                    <p className="text-secondary text-2xl font-semibold">Enter your registered mobile number</p>
+                    <p className="text-secondary text-2xl font-bold">Enter your registered mobile number</p>
                     <input className={`${error && 'border-red-400 animate__animated animate__headShake'} border-2 rounded px-3 py-4 text-xl mt-10 w-full`} value={mobile} onChange={(e) => handleMobileInput(e.target.value)} />
-                    {error && <p className="text-red-500 text-sm font-semibold py-1">{error.length ? error : 'Please enter a valid mobile number'}</p>}
+                    {error && <p className="text-red-500 text-sm font-bold py-1">{error.length ? error : 'Please enter a valid mobile number'}</p>}
                 </div>
                 <Button text='Next' onClick={showPassScreen} />
             </div >}
             {!otpPage && changePassPage && !passChanged && <div className="flex flex-col px-10 py-8 h-100 justify-between h-[90%]">
                 <div className="w-full">
-                    <p className="text-secondary text-xl font-semibold">Change Password Here</p>
+                    <p className="text-secondary text-xl font-bold">Change Password Here</p>
                     <input className={`border ${(error?.err1 || error?.err) && 'border-2 border-red-400 animate__animated animate__headShake'} border-primary rounded px-3 py-3 text-lg mt-10 w-full`} placeholder="New Password" value={newPass} onChange={(e) => setNewPass(e.target.value)} />
-                    {(error?.err1 || error?.err) && <p className="text-red-500 text-sm font-semibold py-1">{error?.err1 || error?.err}</p>}
+                    {(error?.err1 || error?.err) && <p className="text-red-500 text-sm font-bold py-1">{error?.err1 || error?.err}</p>}
                     <input className={`border ${(error?.err2 || error?.err) && 'border-2 border-red-400 animate__animated animate__headShake'} border-primary rounded px-3 py-3 text-lg mt-10 w-full`} placeholder="Confirm New Password" value={newPassConfirm} onChange={(e) => setNewPassConfirm(e.target.value)} />
-                    {(error?.err2 || error?.err) && <p className="text-red-500 text-sm font-semibold py-1">{error?.err2 || error?.err}</p>}
+                    {(error?.err2 || error?.err) && <p className="text-red-500 text-sm font-bold py-1">{error?.err2 || error?.err}</p>}
                     {error.length ? error : ''}
                 </div>
                 <Button text='Next' onClick={sendOtp} />
             </div >}
             {otpPage && !passChanged && <div className="flex flex-col px-10 py-8 h-100 justify-between h-[90%]">
                 <div className="w-full">
-                    <p className="text-secondary text-xl lg:text-2xl font-semibold">Enter OTP sent on </p>
-                    <p className="text-primary text-2xl lg:text-3xl font-semibold py-4">{mobile || '9654591151'}</p>
+                    <p className="text-secondary text-xl lg:text-2xl font-bold">Enter OTP sent on </p>
+                    <p className="text-primary text-2xl lg:text-3xl font-bold py-4">{mobile || '9654591151'}</p>
                     <style>
                         {`
                             .error-otp {
@@ -134,14 +134,14 @@ const ForgotPassword = () => {
                         errorStyle={"animate__animated animate__headShake error-otp"}
                         shouldAutoFocus={true}
                     />
-                    {error && <p className="text-red-500 text-sm font-semibold py-1">{error} </p>}
+                    {error && <p className="text-red-500 text-sm font-bold py-1">{error} </p>}
                 </div>
                 <Button text='Verify OTP' onClick={verifyOtpAndChangePassword} />
             </div >}
             {passChanged && <div className="flex flex-col px-10 py-8 h-100 justify-between h-[90%]">
                 <div className="w-full">
-                    <p className="text-secondary text-xl font-semibold">Your password has been changed successfully</p>
-                    <p className="text-primary text-xl py-8 font-semibold" onClick={() => navigate("/")}>Click here to login</p>
+                    <p className="text-secondary text-xl font-bold">Your password has been changed successfully</p>
+                    <p className="text-primary text-xl py-8 font-bold" onClick={() => navigate("/")}>Click here to login</p>
                 </div>
             </div >}
         </CommonLayout >
