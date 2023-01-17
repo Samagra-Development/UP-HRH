@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import './App.css';
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import LoginMedical from "./pages/LoginMedical";
 import MedicalAssessor from "./pages/MedicalAssessor";
 import MedicalAssessments from "./pages/MedicalAssessments";
@@ -18,8 +18,24 @@ import Register from "./pages/Register";
 
 export const StateContext = createContext();
 
-const PrivateRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem("userData") ? true : false;
+const PrivateRoute = ({ children, route }) => {
+  const { state } = useContext(StateContext);
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const isAuthenticated = userData ? true : false;
+  console.log(state);
+
+  if (route == 'nursing' && isAuthenticated) {
+    if (!state?.userData?.nursingFilled)
+      return children;
+    else
+      return <Navigate to="/" />
+  }
+  if (route == 'paramedicla' && isAuthenticated) {
+    if (state?.userData?.paramedFilled)
+      return <Navigate to="/" />
+    else
+      return children
+  }
   return isAuthenticated ? children : <Navigate to="/" />;
 };
 
@@ -40,8 +56,8 @@ function App() {
             <Route path="/capture-location" element={<PrivateRoute><CaptureLocation /></PrivateRoute>} />
             <Route path="/medical-assessment-options" element={<PrivateRoute><MedicalAssessmentsOptions /></PrivateRoute>} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/nursing" element={<PrivateRoute><Nursing /></PrivateRoute>} />
-            <Route path="/paramedical" element={<PrivateRoute><Paramedical /></PrivateRoute>} />
+            <Route path="/nursing" element={<PrivateRoute route='nursing'><Nursing /></PrivateRoute>} />
+            <Route path="/paramedical" element={<PrivateRoute route='paramedical'><Paramedical /></PrivateRoute>} />
             <Route path="/osce-1" element={<PrivateRoute><Osce1 /></PrivateRoute>} />
             <Route path="/osce-2" element={<PrivateRoute><Osce2 /></PrivateRoute>} />
             <Route path="/*" element={<Home />} />

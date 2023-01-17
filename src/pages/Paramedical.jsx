@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CommonLayout from "../components/CommonLayout";
 import formSpecJSON from "../configs/paraMedical.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments } from "../api";
+import { getMedicalAssessments, saveParamedicalFormSubmissions } from "../api";
+import { StateContext } from "../App";
 
 const Paramedical = () => {
+  const { state } = useContext(StateContext)
   const getFormURI = (form, ofsd, prefillSpec) => {
     console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
@@ -51,6 +53,21 @@ const Paramedical = () => {
       }
       */
       const { nextForm, formData, onSuccessData, onFailureData } = data;
+
+      if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+
+        saveParamedicalFormSubmissions({
+          assessor_id: userData?.user?.id,
+          username: userData?.user?.username,
+          submission_date: new Date(),
+          institute_id: state?.todayAssessment?.id,
+          form_data: JSON.stringify(data.formData)
+        })
+        setTimeout(() => navigate('/medical-assessment-options'), 2000)
+      }
+
+
       if (nextForm.type === "form") {
         setFormId(nextForm.id);
         setOnFormSuccessData(onSuccessData);

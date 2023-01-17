@@ -32,6 +32,7 @@ const MedicalAssessments = () => {
     if (res?.data?.institutes?.[0]) {
       let ass = res?.data?.institutes?.[0];
       setData({
+        id: ass.id,
         district: ass.district,
         instituteName: ass.name,
         nursing: ass.nursing,
@@ -43,7 +44,6 @@ const MedicalAssessments = () => {
     } else setData(null)
     setLoading(false);
   }
-
   useEffect(() => {
     getTodayAssessments();
   }, []);

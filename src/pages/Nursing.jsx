@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CommonLayout from "../components/CommonLayout";
 import formSpecJSON from "../configs/nursing.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments } from "../api";
+import { getMedicalAssessments, saveNursingFormSubmissions } from "../api";
+import { StateContext } from "../App";
 
 const Nursing = () => {
+  const { state } = useContext(StateContext)
+  console.log(state);
   const getFormURI = (form, ofsd, prefillSpec) => {
-    console.log(form, ofsd, prefillSpec);
+    // console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
       `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
@@ -43,14 +46,31 @@ const Nursing = () => {
   });
 
   function afterFormSubmit(e) {
+    // console.log(e)
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+    console.log("data", data);
     try {
       /* message = {
         nextForm: "formID",
         formData: {},
       }
       */
+
       const { nextForm, formData, onSuccessData, onFailureData } = data;
+
+      if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+
+        saveNursingFormSubmissions({
+          assessor_id: userData?.user?.id,
+          username: userData?.user?.username,
+          submission_date: new Date(),
+          institute_id: state?.todayAssessment?.id,
+          form_data: JSON.stringify(data.formData)
+        })
+        setTimeout(() => navigate('/medical-assessment-options'), 2000)
+      }
+
       if (nextForm.type === "form") {
         setFormId(nextForm.id);
         setOnFormSuccessData(onSuccessData);
@@ -73,7 +93,6 @@ const Nursing = () => {
   }
 
   const eventTriggered = (e) => {
-    console.log("event triggered with data in create", e);
     afterFormSubmit(e);
   };
   const bindEventListener = () => {
@@ -127,7 +146,7 @@ const Nursing = () => {
       <div className="flex flex-col items-center">
         {!loading && data && (
           <>
-            {console.log(formSpec.forms[formId].prefill)}
+            {/* {console.log(formSpec.forms[formId].prefill)} */}
             <iframe
               title="Location Form"
               src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}

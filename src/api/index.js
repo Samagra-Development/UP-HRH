@@ -49,6 +49,7 @@ export const getMedicalAssessments = () => {
     query: `
       query ($date: date) {
         institutes(where: {schedule_date: {_eq: $date}}) {
+          id
           name
           nursing
           schedule_date
@@ -71,6 +72,7 @@ export const getMedicalAssessmentsUpcoming = () => {
     query: `
       query {
         institutes(order_by: {schedule_date: asc}){
+          id
           name
           nursing
           schedule_date
@@ -125,3 +127,52 @@ export const createUser = async (data) => {
   }
   return null;
 }
+
+export const saveNursingFormSubmissions = (data) => {
+  const query = {
+    query: `mutation ($object: [nursing_submissions_insert_input!] = {}) {
+      insert_nursing_submissions(objects: $object) {
+        returning {
+          id
+          created_at
+        }
+      }
+    }`,
+    variables: { object: data }
+  };
+  return makeHasuraCalls(query);
+};
+
+export const saveParamedicalFormSubmissions = (data) => {
+  const query = {
+    query: `mutation ($object: [paramedical_submissions_insert_input!] = {}) {
+      insert_paramedical_submissions(objects: $object) {
+        returning {
+          id
+          created_at
+        }
+      }
+    }`,
+    variables: { object: data }
+  };
+  return makeHasuraCalls(query);
+};
+
+export const getAssessmentStatus = () => {
+  const query = {
+    query: `
+      {
+        q1: nursing_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
+          id
+          created_at
+        }
+        q2: paramedical_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
+          id
+          created_at
+        }
+      }
+      `,
+    variables: {}
+  };
+  return makeHasuraCalls(query);
+};
