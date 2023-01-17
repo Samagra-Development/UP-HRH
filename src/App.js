@@ -25,16 +25,17 @@ const PrivateRoute = ({ children, route }) => {
   console.log(state);
 
   if (route == 'nursing' && isAuthenticated) {
-    if (!state?.userData?.nursingFilled)
+    console.log("ss")
+    if (state && state.userData && !state.userData.nursingFilled)
       return children;
     else
       return <Navigate to="/" />
   }
-  if (route == 'paramedicla' && isAuthenticated) {
-    if (state?.userData?.paramedFilled)
-      return <Navigate to="/" />
-    else
+  if (route == 'paramedical' && isAuthenticated) {
+    if (state && state.userData && !state.userData.paramedFilled)
       return children
+    else
+      return <Navigate to="/" />
   }
   return isAuthenticated ? children : <Navigate to="/" />;
 };
