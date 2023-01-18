@@ -21,11 +21,11 @@ const Home = () => {
           styles="w-80 lg:w-[70%] lg:mt-[70px] animate__animated animate__fadeInDown"
           onClick={() => handleClick("/login")}
         />
-        <Button
+        {/* <Button
           text="Register"
           styles="w-80 lg:w-[70%] lg:mt-[30px] animate__animated animate__fadeInDown"
           onClick={() => handleClick("/register")}
-        />
+        /> */}
       </div>
     </CommonLayout>
   );

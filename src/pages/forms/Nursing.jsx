@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import CommonLayout from "../components/CommonLayout";
-import formSpecJSON from "../configs/nursing.json";
+import CommonLayout from "../../components/CommonLayout";
+import formSpecJSON from "../../configs/nursing.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments, saveNursingFormSubmissions } from "../api";
-import { StateContext } from "../App";
+import { getMedicalAssessments, saveNursingFormSubmissions } from "../../api";
+import { StateContext } from "../../App";
 
 const Nursing = () => {
   const { state } = useContext(StateContext)
@@ -146,7 +146,7 @@ const Nursing = () => {
       <div className="flex flex-col items-center">
         {!loading && data && (
           <>
-            {/* {console.log(formSpec.forms[formId].prefill)} */}
+            {console.log(formSpec.forms[formId].prefill)}
             <iframe
               title="Location Form"
               src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}

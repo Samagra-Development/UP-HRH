@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CommonLayout from "../components/CommonLayout";
+import CommonLayout from "../../components/CommonLayout";
 
 const Osce1 = () => {
   const forms = [
@@ -20,9 +20,9 @@ const Osce1 = () => {
   }, []);
   console.log(forms[formId])
   return (
-    <CommonLayout back="/medical-assessment-options">
+    <CommonLayout back="/osce-options">
       {formId && (
-        <div className="flex flex-col items-center">         
+        <div className="flex flex-col items-center">
           <iframe
             title="Location Form"
             src={`${process.env.REACT_APP_ENKETO_URL}/preview?xform=https%3A%2F%2Fenketo-manager-ratings-tech.samagra.io%2Fprefill%3Fform%3D${forms[formId]}`}

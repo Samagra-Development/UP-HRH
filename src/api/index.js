@@ -164,10 +164,12 @@ export const getAssessmentStatus = () => {
       {
         q1: nursing_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
           id
+          form_name
           created_at
         }
         q2: paramedical_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
           id
+          form_name
           created_at
         }
       }

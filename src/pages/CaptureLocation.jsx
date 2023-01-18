@@ -83,34 +83,34 @@ const CaptureLocation = () => {
     }
 
     const handleSubmit = () => {
-        if (
-            !state?.todayAssessment?.latitude ||
-            !state?.todayAssessment?.longitude
-        ) {
-            setError(
-                `Institute co-ordinates are missing. Please try again from start`
-            );
-            setTimeout(() => {
-                setError(false);
-            }, 5000);
-            return;
-        }
-        if (!lat || !long) {
-            setError(`Please capture location before continuing`);
-            setTimeout(() => {
-                setError(false);
-            }, 5000);
-            return;
-        }
-        if (distance > 500) {
-            setError(
-                `Please ensure you are within the institute premises`
-            );
-            setTimeout(() => {
-                setError(false);
-            }, 5000);
-            return;
-        }
+        // if (
+        //     !state?.todayAssessment?.latitude ||
+        //     !state?.todayAssessment?.longitude
+        // ) {
+        //     setError(
+        //         `Institute co-ordinates are missing. Please try again from start`
+        //     );
+        //     setTimeout(() => {
+        //         setError(false);
+        //     }, 5000);
+        //     return;
+        // }
+        // if (!lat || !long) {
+        //     setError(`Please capture location before continuing`);
+        //     setTimeout(() => {
+        //         setError(false);
+        //     }, 5000);
+        //     return;
+        // }
+        // if (distance > 500) {
+        //     setError(
+        //         `Please ensure you are within the institute premises`
+        //     );
+        //     setTimeout(() => {
+        //         setError(false);
+        //     }, 5000);
+        //     return;
+        // }
         navigate("/medical-assessment-options");
     };
 

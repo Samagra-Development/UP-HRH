@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import CommonLayout from "../components/CommonLayout";
-import formSpecJSON from "../configs/paraMedical.json";
+import CommonLayout from "../../components/CommonLayout";
+import formSpecJSON from "../../configs/paraMedical.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments, saveParamedicalFormSubmissions } from "../api";
-import { StateContext } from "../App";
+import { getMedicalAssessments, saveParamedicalFormSubmissions } from "../../api";
+import { StateContext } from "../../App";
 
 const Paramedical = () => {
   const { state } = useContext(StateContext)
@@ -140,7 +140,7 @@ const Paramedical = () => {
   }, [data]);
 
   return (
-    <CommonLayout back="/medical-assessment-options">
+    <CommonLayout back="/paramedical-options">
       <div className="flex flex-col items-center">
         {!loading && data && (
           <>

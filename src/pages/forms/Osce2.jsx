@@ -1,9 +1,9 @@
 import React from "react";
-import CommonLayout from "../components/CommonLayout";
+import CommonLayout from "../../components/CommonLayout";
 
 const Osce2 = () => {
   return (
-    <CommonLayout back="/medical-assessment-options">
+    <CommonLayout back="/osce-options">
       <div className="flex flex-col items-center">
         <iframe
           title="Location Form"
