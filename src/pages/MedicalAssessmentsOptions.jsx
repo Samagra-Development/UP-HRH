@@ -32,7 +32,8 @@ const MedicalAssessmentsOptions = () => {
 
   useEffect(() => {
     // getFilledArole === "Medical" ssessmentStatus();
-    const user = JSON.parse(localStorage.getItem("userData"))?.user?.registrations[0]?.roles[0];
+    const user = JSON.parse(localStorage.getItem("userData"))?.user
+      ?.registrations[0]?.roles[0];
     setRole(() => user);
   }, []);
 
@@ -40,30 +41,41 @@ const MedicalAssessmentsOptions = () => {
     role && (
       <CommonLayout back="/medical-assessments">
         <div className="flex flex-col px-5 py-8 items-center">
+          <img
+            src="/assets/forms.png "
+            className="h-60 lg:h-80 my-5 lg:mt-[70px]"
+            alt="illustration"
+          />
           <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select form type
           </p>
-          {state?.todayAssessment?.nursing == "Yes" && < Button
-            text="Nursing Forms"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
-            onClick={() => {
-              handleNavigation("/nursing-options");
-            }}
-          />}
-          {state?.todayAssessment?.paramedical == "Yes" && <Button
-            text="Paramedical Forms"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
-            onClick={() => {
-              handleNavigation("/paramedical-options");
-            }}
-          />}
-          {role === "Medical" && <Button
-            text="OSCE Forms"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
-            onClick={() => {
-              handleNavigation("/osce-options");
-            }}
-          />}
+          {state?.todayAssessment?.nursing == "Yes" && (
+            <Button
+              text="Nursing Forms"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
+              onClick={() => {
+                handleNavigation("/nursing-options");
+              }}
+            />
+          )}
+          {state?.todayAssessment?.paramedical == "Yes" && (
+            <Button
+              text="Paramedical Forms"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
+              onClick={() => {
+                handleNavigation("/paramedical-options");
+              }}
+            />
+          )}
+          {role === "Medical" && (
+            <Button
+              text="OSCE Forms"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
+              onClick={() => {
+                handleNavigation("/osce-options");
+              }}
+            />
+          )}
           {/* {!loading && state?.todayAssessment?.nursing == "Yes" && <Button
             text="Nursing Form"
             styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.nursingFilled ? 'disabled-btn' : ''}`}
