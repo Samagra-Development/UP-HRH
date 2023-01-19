@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
-import CommonLayout from "../components/CommonLayout";
-import formSpecJSON from "../configs/paraMedical.json";
+import React, { useState, useEffect, useContext } from "react";
+import CommonLayout from "../../components/CommonLayout";
+import formSpecJSON from "../../configs/nursing.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments, getPrefillXML } from "../api";
+import { getMedicalAssessments, saveNursingFormSubmissions } from "../../api";
+import { StateContext } from "../../App";
 
-const Paramedical = () => {
+const Nursing = () => {
+  const { state } = useContext(StateContext);
+  console.log(state);
   const getFormURI = (form, ofsd, prefillSpec) => {
-    console.log(form, ofsd, prefillSpec);
+    // console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
       `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
@@ -43,14 +46,31 @@ const Paramedical = () => {
   });
 
   function afterFormSubmit(e) {
+    // console.log(e)
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+    console.log("data", data);
     try {
       /* message = {
         nextForm: "formID",
         formData: {},
       }
       */
+
       const { nextForm, formData, onSuccessData, onFailureData } = data;
+
+      if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+
+        saveNursingFormSubmissions({
+          assessor_id: userData?.user?.id,
+          username: userData?.user?.username,
+          submission_date: new Date(),
+          institute_id: state?.todayAssessment?.id,
+          form_data: JSON.stringify(data.formData),
+        });
+        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+      }
+
       if (nextForm.type === "form") {
         setFormId(nextForm.id);
         setOnFormSuccessData(onSuccessData);
@@ -75,11 +95,10 @@ const Paramedical = () => {
   const eventTriggered = (e) => {
     if (e.origin == "https://enketo-ratings-tech.samagra.io") {
       console.log("event triggered", JSON.parse(e.data).formXML);
-      localStorage.setItem("paramedical", JSON.parse(e.data).formXML);
+      localStorage.setItem("enketo", JSON.parse(e.data).formXML);
     }
     afterFormSubmit(e);
   };
-
   const bindEventListener = () => {
     window.addEventListener("message", eventTriggered);
   };
@@ -101,25 +120,16 @@ const Paramedical = () => {
         latitude: assess.latitude,
         longitude: assess.longitude,
       });
-      if (localStorage.getItem("paramedical")) {
-        const data = await getPrefillXML(
+      formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
+      formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+      setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+      setEncodedFormURI(
+        getFormURI(
           formId,
           formSpec.forms[formId].onSuccess,
-          localStorage.getItem("paramedical")
-        );
-        console.log(data);
-      } else {
-        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
-        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
-        setEncodedFormURI(
-          getFormURI(
-            formId,
-            formSpec.forms[formId].onSuccess,
-            formSpec.forms[formId].prefill
-          )
-        );
-      }
+          formSpec.forms[formId].prefill
+        )
+      );
     } else setData(null);
     setLoading(false);
   };
@@ -142,8 +152,8 @@ const Paramedical = () => {
           <>
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
-              title="Location Form"
-              src={`https://enketo-ratings-tech.samagra.io/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              title="Nursing Form"
+              src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>
@@ -153,4 +163,4 @@ const Paramedical = () => {
   );
 };
 
-export default Paramedical;
+export default Nursing;

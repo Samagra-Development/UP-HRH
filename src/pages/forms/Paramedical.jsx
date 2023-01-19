@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from "react";
-import CommonLayout from "../components/CommonLayout";
-import formSpecJSON from "../configs/nursing.json";
+import React, { useState, useEffect, useContext } from "react";
+import CommonLayout from "../../components/CommonLayout";
+import formSpecJSON from "../../configs/paraMedical.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments } from "../api";
+import {
+  getMedicalAssessments,
+  getPrefillXML,
+  saveParamedicalFormSubmissions,
+} from "../api";
+import { StateContext } from "../../App";
 
-const Nursing = () => {
+const Paramedical = () => {
+  const { state } = useContext(StateContext);
   const getFormURI = (form, ofsd, prefillSpec) => {
     console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
@@ -51,6 +57,20 @@ const Nursing = () => {
       }
       */
       const { nextForm, formData, onSuccessData, onFailureData } = data;
+
+      if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+
+        saveParamedicalFormSubmissions({
+          assessor_id: userData?.user?.id,
+          username: userData?.user?.username,
+          submission_date: new Date(),
+          institute_id: state?.todayAssessment?.id,
+          form_data: JSON.stringify(data.formData),
+        });
+        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+      }
+
       if (nextForm.type === "form") {
         setFormId(nextForm.id);
         setOnFormSuccessData(onSuccessData);
@@ -75,10 +95,11 @@ const Nursing = () => {
   const eventTriggered = (e) => {
     if (e.origin == "https://enketo-ratings-tech.samagra.io") {
       console.log("event triggered", JSON.parse(e.data).formXML);
-      localStorage.setItem("enketo", JSON.parse(e.data).formXML);
+      localStorage.setItem("paramedical", JSON.parse(e.data).formXML);
     }
     afterFormSubmit(e);
   };
+
   const bindEventListener = () => {
     window.addEventListener("message", eventTriggered);
   };
@@ -100,16 +121,25 @@ const Nursing = () => {
         latitude: assess.latitude,
         longitude: assess.longitude,
       });
-      formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-      formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
-      setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
-      setEncodedFormURI(
-        getFormURI(
+      if (localStorage.getItem("paramedical")) {
+        const data = await getPrefillXML(
           formId,
           formSpec.forms[formId].onSuccess,
-          formSpec.forms[formId].prefill
-        )
-      );
+          localStorage.getItem("paramedical")
+        );
+        console.log(data);
+      } else {
+        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
+        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+        setEncodedFormURI(
+          getFormURI(
+            formId,
+            formSpec.forms[formId].onSuccess,
+            formSpec.forms[formId].prefill
+          )
+        );
+      }
     } else setData(null);
     setLoading(false);
   };
@@ -126,14 +156,14 @@ const Nursing = () => {
   }, [data]);
 
   return (
-    <CommonLayout back="/medical-assessment-options">
+    <CommonLayout back="/paramedical-options">
       <div className="flex flex-col items-center">
         {!loading && data && (
           <>
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
-              title="Nursing Form"
-              src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              title="Location Form"
+              src={`https://enketo-ratings-tech.samagra.io/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>
@@ -143,4 +173,4 @@ const Nursing = () => {
   );
 };
 
-export default Nursing;
+export default Paramedical;
