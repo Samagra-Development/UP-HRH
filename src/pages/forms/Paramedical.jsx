@@ -6,7 +6,7 @@ import {
   getMedicalAssessments,
   getPrefillXML,
   saveParamedicalFormSubmissions,
-} from "../api";
+} from "../../api";
 import { StateContext } from "../../App";
 
 const Paramedical = () => {
