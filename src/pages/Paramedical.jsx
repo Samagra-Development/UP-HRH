@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import CommonLayout from "../components/CommonLayout";
 import formSpecJSON from "../configs/paraMedical.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments } from "../api";
+import { getMedicalAssessments, getPrefillXML } from "../api";
 
 const Paramedical = () => {
   const getFormURI = (form, ofsd, prefillSpec) => {
@@ -73,9 +73,13 @@ const Paramedical = () => {
   }
 
   const eventTriggered = (e) => {
-    console.log("event triggered with data in create", e);
+    if (e.origin == "https://enketo-ratings-tech.samagra.io") {
+      console.log("event triggered", JSON.parse(e.data).formXML);
+      localStorage.setItem("paramedical", JSON.parse(e.data).formXML);
+    }
     afterFormSubmit(e);
   };
+
   const bindEventListener = () => {
     window.addEventListener("message", eventTriggered);
   };
@@ -97,16 +101,25 @@ const Paramedical = () => {
         latitude: assess.latitude,
         longitude: assess.longitude,
       });
-      formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-      formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
-      setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
-      setEncodedFormURI(
-        getFormURI(
+      if (localStorage.getItem("paramedical")) {
+        const data = await getPrefillXML(
           formId,
           formSpec.forms[formId].onSuccess,
-          formSpec.forms[formId].prefill
-        )
-      );
+          localStorage.getItem("paramedical")
+        );
+        console.log(data);
+      } else {
+        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
+        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+        setEncodedFormURI(
+          getFormURI(
+            formId,
+            formSpec.forms[formId].onSuccess,
+            formSpec.forms[formId].prefill
+          )
+        );
+      }
     } else setData(null);
     setLoading(false);
   };

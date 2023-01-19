@@ -85,3 +85,17 @@ export const getMedicalAssessmentsUpcoming = () => {
   };
   return makeHasuraCalls(query);
 };
+
+export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
+  try {
+    const res = await axios.post(`https://enketo-manager-ratings-tech.samagra.io/prefillXML?form=${form}&onFormSuccessData=${encodeURI(JSON.stringify(onFormSuccessData))}`, {
+      prefillXML
+    }, { headers: {} });
+
+    console.log(res.data);
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}

@@ -73,7 +73,10 @@ const Nursing = () => {
   }
 
   const eventTriggered = (e) => {
-    console.log("event triggered with data in create", e);
+    if (e.origin == "https://enketo-ratings-tech.samagra.io") {
+      console.log("event triggered", JSON.parse(e.data).formXML);
+      localStorage.setItem("enketo", JSON.parse(e.data).formXML);
+    }
     afterFormSubmit(e);
   };
   const bindEventListener = () => {
@@ -129,7 +132,7 @@ const Nursing = () => {
           <>
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
-              title="Location Form"
+              title="Nursing Form"
               src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />

@@ -54,7 +54,7 @@ const MedicalAssessments = () => {
         <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px] animate__animated animate__fadeInDown">
           Today's Assessments
         </p>
-        <p className="text-primary text-3xl font-semibold animate__animated animate__fadeInDown">{data?.district}</p>
+        <p className="text-primary text-2xl font-bold animate__animated animate__fadeInDown">{data?.district}</p>
         {!loading && data && <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow">
           <div className="flex flex-col py-3 w-full ">
             <span className="text-secondary pb-2 font-medium">

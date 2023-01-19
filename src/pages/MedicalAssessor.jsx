@@ -13,7 +13,7 @@ const MedicalAssessor = () => {
       <div className="flex flex-col px-5 py-8 items-center">
         <img
           src="/assets/medicalAssessorWelcome.png"
-          className="h-[200px] mt-4 lg:h-[300px] animate__animated animate__fadeInDown"
+          className="h-[200px] mt-4 lg:h-[300px]"
           alt="illustration"
         />
         <p className="text-secondary text-[34px] font-bold mt-8 lg:text-[45px] animate__animated animate__fadeInDown">
