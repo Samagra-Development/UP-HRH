@@ -8,21 +8,21 @@ import { getMedicalAssessments } from "../api";
 import { StateContext } from "../App";
 
 const MedicalAssessments = () => {
-  const { state, setState } = useContext(StateContext)
+  const { state, setState } = useContext(StateContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
-    district: '',
-    instituteName: '',
-    nursing: '',
-    paramedical: '',
-    type: '',
+    district: "",
+    instituteName: "",
+    nursing: "",
+    paramedical: "",
+    type: "",
     latitude: null,
-    longitude: null
+    longitude: null,
   });
 
   const startAssess = () => {
-    setState({ ...state, todayAssessment: { ...data } })
+    setState({ ...state, todayAssessment: { ...data } });
     navigate("/capture-location");
   };
 
@@ -39,11 +39,11 @@ const MedicalAssessments = () => {
         paramedical: ass.paramedical,
         type: ass.type,
         latitude: ass.latitude,
-        longitude: ass.longitude
-      })
-    } else setData(null)
+        longitude: ass.longitude,
+      });
+    } else setData(null);
     setLoading(false);
-  }
+  };
   useEffect(() => {
     getTodayAssessments();
   }, []);
@@ -54,69 +54,61 @@ const MedicalAssessments = () => {
         <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px] animate__animated animate__fadeInDown">
           Today's Assessments
         </p>
-        <p className="text-primary text-2xl font-bold animate__animated animate__fadeInDown">{data?.district}</p>
-        {!loading && data && <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow">
-          <div className="flex flex-col py-3 w-full ">
-            <span className="text-secondary pb-2 font-medium">
-              Institute Name
-            </span>
-            <input
-              type="text"
-              className="border-2 border-primary p-3.5"
-              disabled
-              value={data?.instituteName}
-            />
+        <p className="text-primary text-2xl font-bold animate__animated animate__fadeInDown">
+          {data?.district}
+        </p>
+        {!loading && data && (
+          <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow">
+            <div className="flex flex-col py-3 w-full ">
+              <span className="text-secondary pb-2 font-medium">
+                Institute Name
+              </span>
+              <input
+                type="text"
+                className="border-2 border-primary p-3.5"
+                disabled
+                value={data?.instituteName}
+              />
+            </div>
+            <div className="flex flex-col py-3 w-full">
+              <span className="text-secondary pb-2 font-medium">
+                Institute Type
+              </span>
+              <input
+                type="text"
+                disabled
+                className="border-2 border-primary p-3.5"
+                value={data?.type}
+              />
+            </div>
+            <div className="flex flex-col py-3 w-full">
+              <span className="text-secondary pb-2 font-medium">
+                Is Nursing
+              </span>
+              <input
+                type="text"
+                disabled
+                className="border-2 border-primary p-3.5"
+                value={data?.nursing}
+              />
+            </div>
+            <div className="flex flex-col py-3 w-full">
+              <span className="text-secondary pb-2 font-medium">
+                Is Paramedical
+              </span>
+              <input
+                type="text"
+                disabled
+                className="border-2 border-primary p-3.5"
+                value={data?.paramedical}
+              />
+            </div>
+            <Button text="Start Assessing" onClick={startAssess} />
           </div>
-          <div className="flex flex-col py-3 w-full">
-            <span className="text-secondary pb-2 font-medium">Institute Type</span>
-            <input
-              type="text"
-              disabled
-              className="border-2 border-primary p-3.5"
-              value={data?.type}
-            />
-          </div>
-          <div className="flex flex-col py-3 w-full">
-            <span className="text-secondary pb-2 font-medium">Is Nursing</span>
-            <input
-              type="text"
-              disabled
-              className="border-2 border-primary p-3.5"
-              value={data?.nursing}
-            />
-          </div>
-          <div className="flex flex-col py-3 w-full">
-            <span className="text-secondary pb-2 font-medium">Is Paramedical</span>
-            <input
-              type="text"
-              disabled
-              className="border-2 border-primary p-3.5"
-              value={data?.paramedical}
-            />
-          </div>
-          {/* <div className="flex flex-col py-3 w-full">
-            <span className="text-secondary pb-2 font-medium">POC Name</span>
-            <input
-              type="text"
-              placeholder="Enter POC name"
-              className="border-2 border-primary p-3.5"
-              value={data?.pocName}
-              onChange={(e) => setData({ ...data, pocName: e.target.value })}
-            />
-          </div> */}
-          {/* <div className="flex flex-col py-3 w-full mb-[-10px]">
-            <span className="text-secondary pb-2 font-medium">POC Mobile</span>
-            <input
-              type="number"
-              placeholder="Enter POC mobile"
-              className="border-2 border-primary p-3.5"
-              value={data?.pocMobile}
-              onChange={(e) => setData({ ...data, pocMobile: e.target.value })}
-            />
-          </div> */}
-          <Button text="Start Assessing" onClick={startAssess} />
-        </div>}
-        {!loading && !data && <p className="text-3xl py-10">No Assessments Today</p>}
+        )}
+        {!loading && !data && (
+          <p className="text-3xl py-10">No Assessments Today</p>
+        )}
       </div>
     </CommonLayout>
   );

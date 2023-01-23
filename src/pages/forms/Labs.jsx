@@ -46,8 +46,7 @@ const Labs = () => {
         longitude: null,
     });
 
-    function afterFormSubmit(e) {
-        // console.log(e)
+    function afterFormSubmit(e) {        
         const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
         console.log("data", data);
         try {

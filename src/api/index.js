@@ -93,8 +93,6 @@ export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
     const res = await axios.post(`https://enketo-manager-ratings-tech.samagra.io/prefillXML?form=${form}&onFormSuccessData=${encodeURI(JSON.stringify(onFormSuccessData))}`, {
       prefillXML
     }, { headers: {} });
-
-    console.log(res.data);
     return res.data;
   } catch (err) {
     console.log(err);

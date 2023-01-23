@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import CommonModal from "../Modal";
 
@@ -11,8 +14,8 @@ const CommonLayout = (props) => {
   const logout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    navigate("/")
-  }
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -31,29 +34,47 @@ const CommonLayout = (props) => {
         </div>
         <div className="bg-white h-full w-full rounded-t-[60px]">
           <div className="flex flex-row w-full px-8 py-7 justify-between cursor-pointer">
-            {!props.backDisabled && <FontAwesomeIcon
-              icon={faChevronLeft}
-              className="text-2xl text-gray-300 lg:text-4xl"
-              onClick={() => navigate(props.back)}
-            />}
-            {!props.logoutDisabled && <FontAwesomeIcon
-              icon={faRightFromBracket}
-              className="text-2xl text-gray-300 lg:text-4xl"
-              onClick={() => showLogoutModal(true)}
-            />}
+            {!props.backDisabled && (
+              <FontAwesomeIcon
+                icon={faChevronLeft}
+                className="text-2xl text-gray-300 lg:text-4xl"
+                onClick={() => navigate(props.back)}
+              />
+            )}
+            {!props.logoutDisabled && (
+              <FontAwesomeIcon
+                icon={faRightFromBracket}
+                className="text-2xl text-gray-300 lg:text-4xl"
+                onClick={() => showLogoutModal(true)}
+              />
+            )}
           </div>
           {props.children}
         </div>
       </div>
-      {logoutModal && <CommonModal>
-        <div>
-          <p className="text-secondary text-xl lg:text-3xl text-semibold font-medium text-center">Continue to logout?</p>
-          <div className="flex flex-row justify-center w-full py-4">
-            <div className="border border-primary text-primary py-1 px-7 mr-2 cursor-pointer lg:px-16 lg:py-3 lg:text-xl" onClick={() => logout()}>Yes</div>
-            <div className="border border-primary bg-primary text-white py-1 px-7 cursor-pointer lg:px-16 lg:py-3 lg:text-xl" onClick={() => showLogoutModal(false)}>No</div>
+      {logoutModal && (
+        <CommonModal>
+          <div>
+            <p className="text-secondary text-xl lg:text-3xl text-semibold font-medium text-center">
+              Continue to logout?
+            </p>
+            <div className="flex flex-row justify-center w-full py-4">
+              <div
+                className="border border-primary text-primary py-1 px-7 mr-2 cursor-pointer lg:px-16 lg:py-3 lg:text-xl"
+                onClick={() => logout()}
+              >
+                Yes
+              </div>
+              <div
+                className="border border-primary bg-primary text-white py-1 px-7 cursor-pointer lg:px-16 lg:py-3 lg:text-xl"
+                onClick={() => showLogoutModal(false)}
+              >
+                No
+              </div>
+            </div>
           </div>
-        </div>
-      </CommonModal>}
+        </CommonModal>
+      )}
     </>
   );
 };
