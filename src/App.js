@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import './App.css';
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import LoginMedical from "./pages/LoginMedical";
 import MedicalAssessor from "./pages/MedicalAssessor";
 import MedicalAssessments from "./pages/MedicalAssessments";
@@ -26,26 +26,37 @@ import QualityOfProcesses from "./pages/forms/QualityOfProcesses";
 import Labs from "./pages/forms/Labs";
 import UnoccupiedBeds from "./pages/forms/UnoccupiedBeds";
 import VitalSigns from "./pages/forms/VitalSigns";
+import { getAssessmentStatus } from "./api";
 
 export const StateContext = createContext();
 
-const PrivateRoute = ({ children, odk }) => {
-  const { state } = useContext(StateContext);
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const isAuthenticated = userData ? true : false;
-  // console.log(state);
-
-  if (odk && isAuthenticated) {
-    if (state && state.userData && state.userData.filledForms && !state.userData.filledForms[odk])
-      return children;
-    else
-      return <Navigate to="/" />
-  }
-  return isAuthenticated ? children : <Navigate to="/" />;
-};
-
 function App() {
   const [state, setState] = useState();
+  const userData = localStorage.getItem("userData") ? JSON.parse(localStorage.getItem('userData')) : null;
+
+  const getFilledAssessmentStatus = async () => {
+    const res = await getAssessmentStatus();
+    const filledForms = {};
+    if (res?.data?.q1?.length) {
+      res.data.q1.forEach(el => filledForms[el.form_name] = true)
+    }
+    setState({ ...state, userData: { ...state?.userData, filledForms: { ...state?.filledForms, ...filledForms } } })
+  }
+
+  const PrivateRoute = ({ children, odk }) => {
+    const isAuthenticated = userData ? true : false;
+    if (odk) return canAccessOdkForm(odk) ? children : <Navigate to="/" />;
+    return isAuthenticated ? children : <Navigate to="/" />;
+  };
+
+  const canAccessOdkForm = (odk) => {
+    if (state?.userData?.filledForms && userData)
+      return !state.userData.filledForms[odk]
+    return true;
+  }
+
+  useEffect(() => getFilledAssessmentStatus, []);
+
   return (
     <div className="App">
       <StateContext.Provider value={{ state, setState }}>
