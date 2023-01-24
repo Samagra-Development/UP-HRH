@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {
   getMedicalAssessments,
   getPrefillXML,
-  saveParamedicalFormSubmissions,
+  saveNursingFormSubmissions,
 } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
