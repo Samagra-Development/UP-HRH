@@ -4,9 +4,10 @@ import formSpecJSON from "../../configs/nursing.json";
 import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveNursingFormSubmissions } from "../../api";
 import { StateContext } from "../../App";
+import XMLParser from "react-xml-parser";
 
 const Nursing = () => {
-  const { state } = useContext(StateContext);
+  const { state } = useContext(StateContext)
   console.log(state);
   const getFormURI = (form, ofsd, prefillSpec) => {
     // console.log(form, ofsd, prefillSpec);
@@ -17,6 +18,7 @@ const Nursing = () => {
     );
   };
   const formSpec = formSpecJSON;
+  console.log(formSpec)
   const navigate = useNavigate();
   const encodeFunction = (func) => encodeURIComponent(JSON.stringify(func));
   const startingForm = formSpec.start;
@@ -33,6 +35,7 @@ const Nursing = () => {
       formSpec.forms[formId].prefill
     )
   );
+  const [prefilledFormData, setPrefilledFormData] = useState();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
@@ -67,8 +70,9 @@ const Nursing = () => {
           submission_date: new Date(),
           institute_id: state?.todayAssessment?.id,
           form_data: JSON.stringify(data.formData),
-        });
-        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+          form_name: formSpec.start
+        })
+        setTimeout(() => navigate('/medical-assessment-options'), 2000)
       }
 
       if (nextForm.type === "form") {
@@ -88,14 +92,24 @@ const Nursing = () => {
         window.location.href = nextForm.url;
       }
     } catch (e) {
-      // console.log(e)
+      console.log(e)
     }
   }
 
   const eventTriggered = (e) => {
-    if (e.origin == "https://enketo-ratings-tech.samagra.io") {
-      console.log("event triggered", JSON.parse(e.data).formXML);
-      localStorage.setItem("enketo", JSON.parse(e.data).formXML);
+    if (
+      e.origin == "https://enketo-ratings-tech.samagra.io" &&
+      JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
+    ) {
+      var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
+      if (xml && xml?.children && xml?.children[0]?.children?.length > 0) {
+        let obj = {};
+        xml.children[0]?.children?.forEach((element) => {
+          obj[element.name] = element.value;
+        });
+        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setPrefilledFormData(JSON.stringify(obj));
+      }
     }
     afterFormSubmit(e);
   };
@@ -120,22 +134,36 @@ const Nursing = () => {
         latitude: assess.latitude,
         longitude: assess.longitude,
       });
-      formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-      formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
-      setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
-      setEncodedFormURI(
-        getFormURI(
-          formId,
-          formSpec.forms[formId].onSuccess,
-          formSpec.forms[formId].prefill
-        )
-      );
+      if (localStorage.getItem(startingForm)) {
+        const data = JSON.parse(localStorage.getItem(startingForm));
+        for (const key in data) {
+          if (data[key]) {
+            formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
+          }
+        }
+        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+        setEncodedFormURI(
+          getFormURI(
+            formId,
+            formSpec.forms[formId].onSuccess,
+            formSpec.forms[formId].prefill
+          )
+        );
+      } else {
+        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
+        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+      }
     } else setData(null);
     setLoading(false);
   };
 
   useEffect(() => {
     getTodayAssessments();
+    return () => {
+      setData(null);
+      setPrefilledFormData(null);
+    };
   }, []);
 
   useEffect(() => {
@@ -143,8 +171,7 @@ const Nursing = () => {
     return () => {
       detachEventBinding();
     };
-  }, [data]);
-
+  }, [prefilledFormData]);
   return (
     <CommonLayout back="/medical-assessment-options">
       <div className="flex flex-col items-center">

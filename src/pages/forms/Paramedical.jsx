@@ -8,11 +8,13 @@ import {
   saveParamedicalFormSubmissions,
 } from "../../api";
 import { StateContext } from "../../App";
+import XMLParser from "react-xml-parser";
 
 const Paramedical = () => {
-  const { state } = useContext(StateContext);
+  const { state } = useContext(StateContext)
+  console.log(state);
   const getFormURI = (form, ofsd, prefillSpec) => {
-    console.log(form, ofsd, prefillSpec);
+    // console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
       `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
@@ -20,6 +22,7 @@ const Paramedical = () => {
     );
   };
   const formSpec = formSpecJSON;
+  console.log(formSpec)
   const navigate = useNavigate();
   const encodeFunction = (func) => encodeURIComponent(JSON.stringify(func));
   const startingForm = formSpec.start;
@@ -36,6 +39,7 @@ const Paramedical = () => {
       formSpec.forms[formId].prefill
     )
   );
+  const [prefilledFormData, setPrefilledFormData] = useState();
 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
@@ -49,26 +53,30 @@ const Paramedical = () => {
   });
 
   function afterFormSubmit(e) {
+    // console.log(e)
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+    console.log("data", data);
     try {
       /* message = {
         nextForm: "formID",
         formData: {},
       }
       */
+
       const { nextForm, formData, onSuccessData, onFailureData } = data;
 
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
         const userData = JSON.parse(localStorage.getItem("userData"));
 
-        saveParamedicalFormSubmissions({
+        saveNursingFormSubmissions({
           assessor_id: userData?.user?.id,
           username: userData?.user?.username,
           submission_date: new Date(),
           institute_id: state?.todayAssessment?.id,
           form_data: JSON.stringify(data.formData),
-        });
-        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+          form_name: formSpec.start
+        })
+        setTimeout(() => navigate('/medical-assessment-options'), 2000)
       }
 
       if (nextForm.type === "form") {
@@ -88,18 +96,27 @@ const Paramedical = () => {
         window.location.href = nextForm.url;
       }
     } catch (e) {
-      // console.log(e)
+      console.log(e)
     }
   }
 
   const eventTriggered = (e) => {
-    if (e.origin == "https://enketo-ratings-tech.samagra.io") {
-      console.log("event triggered", JSON.parse(e.data).formXML);
-      localStorage.setItem("paramedical", JSON.parse(e.data).formXML);
+    if (
+      e.origin == "https://enketo-ratings-tech.samagra.io" &&
+      JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
+    ) {
+      var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
+      if (xml && xml?.children && xml?.children[0]?.children?.length > 0) {
+        let obj = {};
+        xml.children[0]?.children?.forEach((element) => {
+          obj[element.name] = element.value;
+        });
+        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setPrefilledFormData(JSON.stringify(obj));
+      }
     }
     afterFormSubmit(e);
   };
-
   const bindEventListener = () => {
     window.addEventListener("message", eventTriggered);
   };
@@ -121,16 +138,13 @@ const Paramedical = () => {
         latitude: assess.latitude,
         longitude: assess.longitude,
       });
-      if (localStorage.getItem("paramedical")) {
-        const data = await getPrefillXML(
-          formId,
-          formSpec.forms[formId].onSuccess,
-          localStorage.getItem("paramedical")
-        );
-        console.log(data);
-      } else {
-        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+      if (localStorage.getItem(startingForm)) {
+        const data = JSON.parse(localStorage.getItem(startingForm));
+        for (const key in data) {
+          if (data[key]) {
+            formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
+          }
+        }
         setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
         setEncodedFormURI(
           getFormURI(
@@ -139,6 +153,10 @@ const Paramedical = () => {
             formSpec.forms[formId].prefill
           )
         );
+      } else {
+        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
+        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
       }
     } else setData(null);
     setLoading(false);
@@ -146,6 +164,10 @@ const Paramedical = () => {
 
   useEffect(() => {
     getTodayAssessments();
+    return () => {
+      setData(null);
+      setPrefilledFormData(null);
+    };
   }, []);
 
   useEffect(() => {
@@ -153,7 +175,7 @@ const Paramedical = () => {
     return () => {
       detachEventBinding();
     };
-  }, [data]);
+  }, [prefilledFormData]);
 
   return (
     <CommonLayout back="/paramedical-options">

@@ -4,6 +4,7 @@ import formSpecJSON from "../../configs/labs.json";
 import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveNursingFormSubmissions } from "../../api";
 import { StateContext } from "../../App";
+import XMLParser from "react-xml-parser";
 
 const Labs = () => {
     const { state } = useContext(StateContext)
@@ -34,6 +35,7 @@ const Labs = () => {
             formSpec.forms[formId].prefill
         )
     );
+    const [prefilledFormData, setPrefilledFormData] = useState();
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({
@@ -46,7 +48,8 @@ const Labs = () => {
         longitude: null,
     });
 
-    function afterFormSubmit(e) {        
+    function afterFormSubmit(e) {
+        // console.log(e)
         const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
         console.log("data", data);
         try {
@@ -89,11 +92,25 @@ const Labs = () => {
                 window.location.href = nextForm.url;
             }
         } catch (e) {
-            // console.log(e)
+            console.log(e)
         }
     }
 
     const eventTriggered = (e) => {
+        if (
+            e.origin == "https://enketo-ratings-tech.samagra.io" &&
+            JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
+        ) {
+            var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
+            if (xml && xml?.children && xml?.children[0]?.children?.length > 0) {
+                let obj = {};
+                xml.children[0]?.children?.forEach((element) => {
+                    obj[element.name] = element.value;
+                });
+                localStorage.setItem(startingForm, JSON.stringify(obj));
+                setPrefilledFormData(JSON.stringify(obj));
+            }
+        }
         afterFormSubmit(e);
     };
     const bindEventListener = () => {
@@ -117,22 +134,36 @@ const Labs = () => {
                 latitude: assess.latitude,
                 longitude: assess.longitude,
             });
-            formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-            formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
-            setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
-            setEncodedFormURI(
-                getFormURI(
-                    formId,
-                    formSpec.forms[formId].onSuccess,
-                    formSpec.forms[formId].prefill
-                )
-            );
+            if (localStorage.getItem(startingForm)) {
+                const data = JSON.parse(localStorage.getItem(startingForm));
+                for (const key in data) {
+                    if (data[key]) {
+                        formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
+                    }
+                }
+                setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+                setEncodedFormURI(
+                    getFormURI(
+                        formId,
+                        formSpec.forms[formId].onSuccess,
+                        formSpec.forms[formId].prefill
+                    )
+                );
+            } else {
+                formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
+                formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+                setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+            }
         } else setData(null);
         setLoading(false);
     };
 
     useEffect(() => {
         getTodayAssessments();
+        return () => {
+            setData(null);
+            setPrefilledFormData(null);
+        };
     }, []);
 
     useEffect(() => {
@@ -140,7 +171,7 @@ const Labs = () => {
         return () => {
             detachEventBinding();
         };
-    }, [data]);
+    }, [prefilledFormData]);
 
     return (
         <CommonLayout back="/nursing-options">
