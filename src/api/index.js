@@ -48,17 +48,21 @@ export const getMedicalAssessments = () => {
   const query = {
     query: `
       query ($date: date) {
-        institutes(where: {schedule_date: {_eq: $date}}) {
+        assessment_schedule(where: {date: {_eq: $date}}) {
           id
-          name
-          nursing
-          schedule_date
-          paramedical
-          type
-          application_id
-          district
-          latitude
-          longitude
+          institute{
+            id
+            name
+            nursing
+            paramedical
+            type
+            district
+            latitude
+            longitude
+            gnm
+            anm
+            bsc
+          }
         }
       }
       `,
@@ -71,15 +75,22 @@ export const getMedicalAssessmentsUpcoming = () => {
   const query = {
     query: `
       query {
-        institutes(order_by: {schedule_date: asc}){
+        assessment_schedule(order_by: {date: asc}){
           id
-          name
-          nursing
-          schedule_date
-          paramedical
-          type
-          application_id
-          district
+          date
+          institute{
+            id
+            name
+            nursing
+            paramedical
+            type
+            district
+            latitude
+            longitude
+            gnm
+            anm
+            bsc
+          }
         }
       }
       `,
@@ -99,6 +110,31 @@ export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
     return err;
   }
 }
+
+export const getRandomOsceFormsTeacher = async (type) => {
+  try {
+    // const years = ['1st_year', '2nd_year', '3rd_year'];
+    const years = ['1st_year'];
+    const year = years[Math.floor(Math.random() * years.length)];
+    const res = await axios.get(`https://enketo-manager-ratings-tech.samagra.io/osceFormTeachers/${type}/${year}`);
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+export const getRandomOsceForm = async (type, year, speciality) => {
+  try {
+    let url = speciality ? `https://enketo-manager-ratings-tech.samagra.io/osceForm/${type}/${year}/${speciality}` : `https://enketo-manager-ratings-tech.samagra.io/osceForm/${type}/${year}`
+    const res = await axios.get(url);
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
 export const createUser = async (data) => {
   try {
     const body = {
@@ -139,25 +175,10 @@ export const createUser = async (data) => {
   return null;
 }
 
-export const saveNursingFormSubmissions = (data) => {
+export const saveFormSubmission = (data) => {
   const query = {
-    query: `mutation ($object: [nursing_submissions_insert_input!] = {}) {
-      insert_nursing_submissions(objects: $object) {
-        returning {
-          id
-          created_at
-        }
-      }
-    }`,
-    variables: { object: data }
-  };
-  return makeHasuraCalls(query);
-};
-
-export const saveParamedicalFormSubmissions = (data) => {
-  const query = {
-    query: `mutation ($object: [paramedical_submissions_insert_input!] = {}) {
-      insert_paramedical_submissions(objects: $object) {
+    query: `mutation ($object: [form_submissions_insert_input!] = {}) {
+      insert_form_submissions(objects: $object) {
         returning {
           id
           created_at
@@ -173,12 +194,7 @@ export const getAssessmentStatus = () => {
   const query = {
     query: `
       {
-        q1: nursing_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
-          id
-          form_name
-          created_at
-        }
-        q2: paramedical_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
+        form_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
           id
           form_name
           created_at
@@ -186,6 +202,45 @@ export const getAssessmentStatus = () => {
       }
       `,
     variables: {}
+  };
+  return makeHasuraCalls(query);
+};
+
+export const getAssignedForms = (course, assType) => {
+  const query = {
+    query: `
+      {
+        osce_assignment(where: {assignment_date: {_eq: "${new Date().toISOString().split('T')[0]}"}, _and: {assessment_type: {_eq: "${assType}"}, _and: {course_type: {_eq: "${course}"}}}}) {
+          assessment_type
+          assessor_id
+          assignment_date
+          course_type
+          created_at
+          id
+          institute_id
+          osce_name
+          updated_at
+        }
+      }
+      `,
+    variables: {}
+  };
+  return makeHasuraCalls(query);
+};
+
+export const assignOsceForm = (data) => {
+  const query = {
+    query: `
+    mutation ($object: [osce_assignment_insert_input!] = {}) {
+      insert_osce_assignment(objects: $object) {
+        returning {
+          id
+          created_at
+        }
+      }
+    }
+      `,
+    variables: { object: data }
   };
   return makeHasuraCalls(query);
 };

@@ -1,24 +1,47 @@
 import React, { useState, useEffect, useContext } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import formSpecJSON from "../../configs/labs.json";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 
-const Labs = () => {
-    const { state } = useContext(StateContext)
-    console.log(state);
+const GenericOsceForm = () => {
+    let { osceName } = useParams();
+
+    const formSpec = {
+        forms: {
+            [osceName]: {
+                skipOnSuccessMessage: true,
+                prefill: {},
+                submissionURL: "",
+                name: osceName,
+                successCheck: "async (formData) => { return true; }",
+                onSuccess: {
+                    notificationMessage: "Form submitted successfully",
+                    sideEffect: "async (formData) => { console.log(formData); }"
+                },
+                onFailure: {
+                    message: "Form submission failed",
+                    sideEffect: "async (formData) => { console.log(formData); }",
+                    next: {
+                        type: "url",
+                        id: "google"
+                    }
+                }
+            }
+        },
+        start: osceName,
+        metaData: {}
+    }
+
+    const { state } = useContext(StateContext);
     const getFormURI = (form, ofsd, prefillSpec) => {
-        // console.log(form, ofsd, prefillSpec);
         return encodeURIComponent(
             `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
                 ofsd
             )}&prefillSpec=${encodeFunction(prefillSpec)}`
         );
     };
-    const formSpec = formSpecJSON;
-    console.log(formSpec)
     const navigate = useNavigate();
     const encodeFunction = (func) => encodeURIComponent(JSON.stringify(func));
     const startingForm = formSpec.start;
@@ -49,18 +72,10 @@ const Labs = () => {
     });
 
     function afterFormSubmit(e) {
-        // console.log(e)
+        console.log("ABC", e.data);
         const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
-        console.log("data", data);
         try {
-            /* message = {
-              nextForm: "formID",
-              formData: {},
-            }
-            */
-
             const { nextForm, formData, onSuccessData, onFailureData } = data;
-
             if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
                 const userData = JSON.parse(localStorage.getItem("userData"));
 
@@ -70,9 +85,9 @@ const Labs = () => {
                     submission_date: new Date(),
                     institute_id: state?.todayAssessment?.id,
                     form_data: JSON.stringify(data.formData),
-                    form_name: formSpec.start
-                })
-                setTimeout(() => navigate('/medical-assessment-options'), 2000)
+                    form_name: formSpec.start,
+                });
+                setTimeout(() => navigate("/medical-assessment-options"), 2000);
             }
 
             if (nextForm.type === "form") {
@@ -92,7 +107,7 @@ const Labs = () => {
                 window.location.href = nextForm.url;
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
         }
     }
 
@@ -121,6 +136,7 @@ const Labs = () => {
     };
 
     const getTodayAssessments = async () => {
+        console.log("getTodayAssessments");
         setLoading(true);
         const res = await getMedicalAssessments();
         if (res?.data?.assessment_schedule?.[0]) {
@@ -177,7 +193,7 @@ const Labs = () => {
     }, [prefilledFormData]);
 
     return (
-        <CommonLayout back="/nursing-options">
+        <CommonLayout back="/osce-options">
             <div className="flex flex-col items-center">
                 {!loading && data && (
                     <>
@@ -194,4 +210,4 @@ const Labs = () => {
     );
 };
 
-export default Labs;
+export default GenericOsceForm;

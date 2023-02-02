@@ -3,7 +3,7 @@ import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import { StateContext } from "../App";
-import { getAssessmentStatus } from "../api";
+import { getAssessmentStatus, getMedicalAssessments } from "../api";
 
 const MedicalAssessmentsOptions = () => {
   const { state, setState } = useContext(StateContext);
@@ -30,6 +30,29 @@ const MedicalAssessmentsOptions = () => {
   //   setLoading(false);
   // }
 
+  const getTodayAssessments = async () => {
+    const res = await getMedicalAssessments();
+    if (res?.data?.assessment_schedule?.[0]) {
+      let ass = res?.data?.assessment_schedule?.[0];
+      setState({
+        ...state,
+        todayAssessment: {
+          id: ass.institute.id,
+          district: ass.institute.district,
+          instituteName: ass.institute.name,
+          nursing: ass.institute.nursing,
+          paramedical: ass.institute.paramedical,
+          gnm: ass.institute.gnm,
+          anm: ass.institute.gnm,
+          bsc: ass.institute.gnm,
+          type: ass.institute.type,
+          latitude: ass.institute.latitude,
+          longitude: ass.institute.longitude
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     // getFilledArole === "Medical" ssessmentStatus();
     const user = JSON.parse(localStorage.getItem("userData"))?.user
@@ -37,6 +60,11 @@ const MedicalAssessmentsOptions = () => {
     setRole(() => user);
   }, []);
 
+  useEffect(() => {
+    if (!state?.todayAssessment) {
+      getTodayAssessments();
+    }
+  }, [])
   return (
     role && (
       <CommonLayout back="/medical-assessments">
@@ -49,7 +77,7 @@ const MedicalAssessmentsOptions = () => {
           <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select form type
           </p>
-          {state?.todayAssessment?.nursing == "Yes" && (
+          {state?.todayAssessment?.nursing && (
             <Button
               text="Nursing Forms"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
@@ -58,7 +86,7 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           )}
-          {state?.todayAssessment?.paramedical == "Yes" && (
+          {state?.todayAssessment?.paramedical && (
             <Button
               text="Paramedical Forms"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}

@@ -21,8 +21,8 @@ const NursingOptions = () => {
         const res = await getAssessmentStatus();
         console.log(res.data);
         const filledForms = {};
-        if (res?.data?.q1?.length) {
-            res.data.q1.forEach(el => filledForms[el.form_name] = true)
+        if (res?.data?.form_submissions?.length) {
+            res.data.form_submissions.forEach(el => filledForms[el.form_name] = true)
         }
         setState({ ...state, userData: { ...state?.userData, filledForms: { ...state?.filledForms, ...filledForms } } })
         setLoading(false);

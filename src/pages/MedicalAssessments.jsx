@@ -27,17 +27,20 @@ const MedicalAssessments = () => {
   const getTodayAssessments = async () => {
     setLoading(true);
     const res = await getMedicalAssessments();
-    if (res?.data?.institutes?.[0]) {
-      let ass = res?.data?.institutes?.[0];
+    if (res?.data?.assessment_schedule?.[0]) {
+      let ass = res?.data?.assessment_schedule?.[0];
       setData({
-        id: ass.id,
-        district: ass.district,
-        instituteName: ass.name,
-        nursing: ass.nursing,
-        paramedical: ass.paramedical,
-        type: ass.type,
-        latitude: ass.latitude,
-        longitude: ass.longitude,
+        id: ass.institute.id,
+        district: ass.institute.district,
+        instituteName: ass.institute.name,
+        nursing: ass.institute.nursing,
+        paramedical: ass.institute.paramedical,
+        gnm: ass.institute.gnm,
+        anm: ass.institute.gnm,
+        bsc: ass.institute.gnm,
+        type: ass.institute.type,
+        latitude: ass.institute.latitude,
+        longitude: ass.institute.longitude,
       });
     } else setData(null);
     setLoading(false);
@@ -56,7 +59,7 @@ const MedicalAssessments = () => {
           {data?.district}
         </p>
         {!loading && data && (
-          <div className="h-full w-full bg-tertiary flex flex-col items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow">
+          <div className="h-full w-full bg-tertiary flex flex-col wrap items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow">
             <div className="flex flex-col py-3 w-full ">
               <span className="text-secondary pb-2 font-medium">
                 Institute Name
@@ -81,6 +84,18 @@ const MedicalAssessments = () => {
             </div>
             <div className="flex flex-col py-3 w-full">
               <span className="text-secondary pb-2 font-medium">
+                Courses offered
+              </span>
+              <div className="flex flex-row gap-2 flex-wrap">
+                {data?.gnm && <span className="px-5 py-1 bg-primary rounded text-white">GNM</span>}
+                {data?.anm && <span className="px-5 py-1 bg-primary rounded text-white">ANM</span>}
+                {data?.bsc && <span className="px-5 py-1 bg-primary rounded text-white">BSC</span>}
+                {data?.nursing && <span className="px-5 py-1 bg-primary rounded text-white">Nursing</span>}
+                {data?.paramedical && <span className="px-5 py-1 bg-primary rounded text-white">Paramedical</span>}
+              </div>
+            </div>
+            {/* <div className="flex flex-col py-3 w-full">
+              <span className="text-secondary pb-2 font-medium">
                 Is Nursing
               </span>
               <input
@@ -100,7 +115,7 @@ const MedicalAssessments = () => {
                 className="border-2 border-primary p-3.5"
                 value={data?.paramedical}
               />
-            </div>
+            </div> */}
             <Button text="Start Assessing" onClick={startAssess} />
           </div>
         )}

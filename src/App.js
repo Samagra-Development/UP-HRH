@@ -26,6 +26,7 @@ import QualityOfProcesses from "./pages/forms/QualityOfProcesses";
 import Labs from "./pages/forms/Labs";
 import UnoccupiedBeds from "./pages/forms/UnoccupiedBeds";
 import VitalSigns from "./pages/forms/VitalSigns";
+import GenericOsceForm from "./pages/forms/GenericOsceForm";
 
 export const StateContext = createContext();
 
@@ -35,12 +36,12 @@ const PrivateRoute = ({ children, odk }) => {
   const isAuthenticated = userData ? true : false;
   // console.log(state);
 
-  if (odk && isAuthenticated) {
-    if (state && state.userData && state.userData.filledForms && !state.userData.filledForms[odk])
-      return children;
-    else
-      return <Navigate to="/" />
-  }
+  // if (odk && isAuthenticated) {
+  //   if (state && state.userData && state.userData.filledForms && !state.userData.filledForms[odk])
+  //     return children;
+  //   else
+  //     return <Navigate to="/" />
+  // }
   return isAuthenticated ? children : <Navigate to="/" />;
 };
 
@@ -74,8 +75,9 @@ function App() {
             <Route path="/faculty-&-facilities" element={<PrivateRoute odk="non_medical_faculty_and_facilities"><FacultyFacilities /></PrivateRoute>} />
             <Route path="/quality-of-processes" element={<PrivateRoute odk="medical_quality_of_processes"><QualityOfProcesses /></PrivateRoute>} />
             <Route path="/labs" element={<PrivateRoute odk="medical_labs"><Labs /></PrivateRoute>} />
-            <Route path="/osce-unoccupied-beds" element={<PrivateRoute odk="osce_unoccupied_beds"><UnoccupiedBeds /></PrivateRoute>} />
-            <Route path="/vital-signs" element={<PrivateRoute odk="vital-signs"><VitalSigns /></PrivateRoute>} />
+            {/* <Route path="/osce-unoccupied-beds" element={<PrivateRoute odk="osce_unoccupied_beds"><UnoccupiedBeds /></PrivateRoute>} />
+            <Route path="/vital-signs" element={<PrivateRoute odk="vital-signs"><VitalSigns /></PrivateRoute>} /> */}
+            <Route path="/osceForm/:osceName" element={<PrivateRoute ><GenericOsceForm /></PrivateRoute>} />
             <Route path="/*" element={<Home />} />
           </Routes>
         </BrowserRouter>

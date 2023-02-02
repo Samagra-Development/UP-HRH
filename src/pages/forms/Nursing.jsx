@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import CommonLayout from "../../components/CommonLayout";
 import formSpecJSON from "../../configs/nursing.json";
 import { useNavigate } from "react-router-dom";
-import { getMedicalAssessments, saveNursingFormSubmissions } from "../../api";
+import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 
@@ -64,7 +64,7 @@ const Nursing = () => {
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
         const userData = JSON.parse(localStorage.getItem("userData"));
 
-        saveNursingFormSubmissions({
+        saveFormSubmission({
           assessor_id: userData?.user?.id,
           username: userData?.user?.username,
           submission_date: new Date(),
@@ -123,16 +123,19 @@ const Nursing = () => {
   const getTodayAssessments = async () => {
     setLoading(true);
     const res = await getMedicalAssessments();
-    if (res?.data?.institutes?.[0]) {
-      let assess = res?.data?.institutes?.[0];
+    if (res?.data?.assessment_schedule?.[0]) {
+      let assess = res?.data?.assessment_schedule?.[0];
       setData({
-        district: assess.district,
-        instituteName: assess.name,
-        nursing: assess.nursing,
-        paramedical: assess.paramedical,
-        type: assess.type,
-        latitude: assess.latitude,
-        longitude: assess.longitude,
+        district: assess.institute.district,
+        instituteName: assess.institute.name,
+        nursing: assess.institute.nursing,
+        paramedical: assess.institute.paramedical,
+        gnm: assess.institute.gnm,
+        anm: assess.institute.anm,
+        bsc: assess.institute.bsc,
+        type: assess.institute.type,
+        latitude: assess.institute.latitude,
+        longitude: assess.institute.longitude,
       });
       if (localStorage.getItem(startingForm)) {
         const data = JSON.parse(localStorage.getItem(startingForm));

@@ -10,7 +10,7 @@ const UpcomingMedicalAssessments = () => {
 
   const getData = async () => {
     const res = await getMedicalAssessmentsUpcoming();
-    if (res?.data?.institutes?.length) setTableData(res.data.institutes);
+    if (res?.data?.assessment_schedule?.length) setTableData(res.data.assessment_schedule);
     else setTableData([])
   }
 
@@ -39,10 +39,10 @@ const UpcomingMedicalAssessments = () => {
             <tbody>
               {tableData && tableData.map(el => <tr className="bg-white border-b">
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {el.schedule_date}
+                  {el.date}
                 </td>
                 <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                  {el.district}
+                  {el.institute.district}
                 </td>
               </tr >)}
             </tbody>

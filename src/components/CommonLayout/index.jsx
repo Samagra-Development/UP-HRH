@@ -38,7 +38,7 @@ const CommonLayout = (props) => {
               <FontAwesomeIcon
                 icon={faChevronLeft}
                 className="text-2xl text-gray-300 lg:text-4xl"
-                onClick={() => navigate(props.back)}
+                onClick={() => { props.backFunction ? props.backFunction() : navigate(props.back) }}
               />
             )}
             {!props.logoutDisabled && (
