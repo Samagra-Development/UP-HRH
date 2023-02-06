@@ -78,7 +78,7 @@ export const getMedicalAssessmentsUpcoming = () => {
   const query = {
     query: `
       query {
-        assessment_schedule(order_by: {date: asc}){
+        assessment_schedule(where: {date: {_gt: "${new Date().toISOString().split('T')[0]}"}}, order_by: {date: asc}){
           id
           date
           institute{
