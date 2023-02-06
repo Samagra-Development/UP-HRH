@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import formSpecJSON from "../../configs/paraMedical.json";
+import formSpecJSON from "../../configs/nursingNonMedical.json";
 import { useNavigate } from "react-router-dom";
 import {
   getMedicalAssessments,
@@ -10,19 +10,16 @@ import {
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 
-const Paramedical = () => {
-  const { state } = useContext(StateContext)
-  console.log(state);
+const NursingNonMedical = () => {
+  const { state } = useContext(StateContext);
+  const formSpec = formSpecJSON;
   const getFormURI = (form, ofsd, prefillSpec) => {
-    // console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
       `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
       )}&prefillSpec=${encodeFunction(prefillSpec)}`
     );
   };
-  const formSpec = formSpecJSON;
-  console.log(formSpec)
   const navigate = useNavigate();
   const encodeFunction = (func) => encodeURIComponent(JSON.stringify(func));
   const startingForm = formSpec.start;
@@ -42,7 +39,8 @@ const Paramedical = () => {
   const [prefilledFormData, setPrefilledFormData] = useState();
 
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({
+  const scheduleId = useRef();
+  const [assData, setData] = useState({
     district: "",
     instituteName: "",
     nursing: "",
@@ -53,33 +51,22 @@ const Paramedical = () => {
   });
 
   function afterFormSubmit(e) {
-    // console.log(e)
+    console.log("ABC", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
-    console.log("data", data);
     try {
-      /* message = {
-        nextForm: "formID",
-        formData: {},
-      }
-      */
-
       const { nextForm, formData, onSuccessData, onFailureData } = data;
-
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
         const userData = JSON.parse(localStorage.getItem("userData"));
 
         saveFormSubmission({
-          assessor_id: userData?.user?.id,
-          username: userData?.user?.username,
-          submission_date: new Date(),
-          institute_id: state?.todayAssessment?.id,
+          schedule_id: scheduleId.current,
           form_data: JSON.stringify(data.formData),
-          form_name: formSpec.start
-        })
-        setTimeout(() => navigate('/medical-assessment-options'), 2000)
+          form_name: formSpec.start,
+        });
+        setTimeout(() => navigate("/medical-assessment-options"), 2000);
       }
 
-      if (nextForm.type === "form") {
+      if (nextForm?.type === "form") {
         setFormId(nextForm.id);
         setOnFormSuccessData(onSuccessData);
         setOnFormFailureData(onFailureData);
@@ -96,7 +83,7 @@ const Paramedical = () => {
         window.location.href = nextForm.url;
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
   }
 
@@ -125,21 +112,22 @@ const Paramedical = () => {
   };
 
   const getTodayAssessments = async () => {
+    console.log("getTodayAssessments");
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
-      let assess = res?.data?.assessment_schedule?.[0];
+      let ass = res?.data?.assessment_schedule?.[0];
+      scheduleId.current = ass.id;
       setData({
-        district: assess.institute.district,
-        instituteName: assess.institute.name,
-        nursing: assess.institute.nursing,
-        paramedical: assess.institute.paramedical,
-        gnm: assess.institute.gnm,
-        anm: assess.institute.anm,
-        bsc: assess.institute.bsc,
-        type: assess.institute.type,
-        latitude: assess.institute.latitude,
-        longitude: assess.institute.longitude,
+        schedule_id: ass.id,
+        id: ass.institute.id,
+        district: ass.institute.district,
+        instituteName: ass.institute.name,
+        specialization: ass.institute?.institute_specializations?.[0]?.specializations,
+        courses: ass.institute?.institute_courses?.[0]?.courses,
+        type: ass.institute.type,
+        latitude: ass.institute.latitude,
+        longitude: ass.institute.longitude,
       });
       if (localStorage.getItem(startingForm)) {
         const data = JSON.parse(localStorage.getItem(startingForm));
@@ -157,8 +145,8 @@ const Paramedical = () => {
           )
         );
       } else {
-        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+        formSpec.forms[formId].prefill.dist = "`" + `${ass?.district}` + "`";
+        formSpec.forms[formId].prefill.name = "`" + `${ass?.name}` + "`";
         setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
       }
     } else setData(null);
@@ -181,9 +169,9 @@ const Paramedical = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/paramedical-options">
+    <CommonLayout back="/nursing-options">
       <div className="flex flex-col items-center">
-        {!loading && data && (
+        {!loading && assData && (
           <>
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
@@ -198,4 +186,4 @@ const Paramedical = () => {
   );
 };
 
-export default Paramedical;
+export default NursingNonMedical;

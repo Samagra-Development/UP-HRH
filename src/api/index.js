@@ -53,15 +53,18 @@ export const getMedicalAssessments = () => {
           institute{
             id
             name
-            nursing
-            paramedical
             type
             district
             latitude
             longitude
-            gnm
-            anm
-            bsc
+            institute_courses{
+              id
+              courses
+            }
+            institute_specializations {
+              id
+              specializations
+            }
           }
         }
       }
@@ -80,16 +83,7 @@ export const getMedicalAssessmentsUpcoming = () => {
           date
           institute{
             id
-            name
-            nursing
-            paramedical
-            type
             district
-            latitude
-            longitude
-            gnm
-            anm
-            bsc
           }
         }
       }
@@ -194,7 +188,7 @@ export const getAssessmentStatus = () => {
   const query = {
     query: `
       {
-        form_submissions(where: {submission_date: {_eq: "${new Date().toISOString().split('T')[0]}"}}) {
+        form_submissions(where: {assessment_schedule: {date: {_eq: "${new Date().toISOString().split('T')[0]}"}}}) {
           id
           form_name
           created_at
@@ -210,16 +204,11 @@ export const getAssignedForms = (course, assType) => {
   const query = {
     query: `
       {
-        osce_assignment(where: {assignment_date: {_eq: "${new Date().toISOString().split('T')[0]}"}, _and: {assessment_type: {_eq: "${assType}"}, _and: {course_type: {_eq: "${course}"}}}}) {
+        osce_assignment(where: {assessment_schedule: {date: {_eq: "${new Date().toISOString().split('T')[0]}"}}, _and: {assessment_type: {_eq: "${assType}"}, _and: {course_type: {_eq: "${course}"}}}}) {
           assessment_type
-          assessor_id
-          assignment_date
           course_type
-          created_at
           id
-          institute_id
-          osce_name
-          updated_at
+          osce_names
         }
       }
       `,

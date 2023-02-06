@@ -40,14 +40,11 @@ const MedicalAssessmentsOptions = () => {
           id: ass.institute.id,
           district: ass.institute.district,
           instituteName: ass.institute.name,
-          nursing: ass.institute.nursing,
-          paramedical: ass.institute.paramedical,
-          gnm: ass.institute.gnm,
-          anm: ass.institute.gnm,
-          bsc: ass.institute.gnm,
+          specialization: ass.institute?.institute_specializations?.[0]?.specializations,
+          courses: ass.institute?.institute_courses?.[0]?.courses,
           type: ass.institute.type,
           latitude: ass.institute.latitude,
-          longitude: ass.institute.longitude
+          longitude: ass.institute.longitude,
         }
       });
     }
@@ -77,7 +74,7 @@ const MedicalAssessmentsOptions = () => {
           <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select form type
           </p>
-          {state?.todayAssessment?.nursing && (
+          {state?.todayAssessment?.specialization?.includes("Nursing") && (
             <Button
               text="Nursing Forms"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
@@ -86,7 +83,7 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           )}
-          {state?.todayAssessment?.paramedical && (
+          {state?.todayAssessment?.specialization?.includes("Paramedical") && (
             <Button
               text="Paramedical Forms"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}

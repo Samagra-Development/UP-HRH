@@ -19,7 +19,6 @@ const NursingOptions = () => {
     const getFilledAssessmentStatus = async () => {
         setLoading(true);
         const res = await getAssessmentStatus();
-        console.log(res.data);
         const filledForms = {};
         if (res?.data?.form_submissions?.length) {
             res.data.form_submissions.forEach(el => filledForms[el.form_name] = true)
@@ -44,73 +43,25 @@ const NursingOptions = () => {
                         Select your assessment type
                     </p>
                     {!loading && role == "Non-Medical" && <Button
-                        text="Basic Infrastructure"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['non_medical_infrastructure'] ? 'disabled-btn' : ''}`}
+                        text="Non Medical Nursing Form"
+                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['nursing_non_medical'] ? 'disabled-btn' : ''}`}
                         onClick={() => {
-                            if (!state?.userData?.filledForms?.['non_medical_infrastructure'])
-                                handleNavigation("/basic-infrastructure");
+                            if (!state?.userData?.filledForms?.['nursing_non_medical'])
+                                handleNavigation("/nursing-non-medical");
                             else {
-                                setError("You've already filled basic infrastructure asessment for today");
-                                setTimeout(() => setError(''), 3000)
-                            }
-                        }}
-                    />}
-                    {!loading && role == "Non-Medical" && <Button
-                        text="Student Info"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['non_medical_student_info'] ? 'disabled-btn' : ''}`}
-                        onClick={() => {
-                            if (!state?.userData?.filledForms?.['non_medical_student_info'])
-                                handleNavigation("/student-info");
-                            else {
-                                setError("You've already filled Student Info asessment for today")
-                                setTimeout(() => setError(''), 3000)
-                            }
-                        }}
-                    />}
-                    {!loading && role == "Non-Medical" && <Button
-                        text="Facilities"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['non_medical_facilities'] ? 'disabled-btn' : ''}`}
-                        onClick={() => {
-                            if (!state?.userData?.filledForms?.['non_medical_facilities'])
-                                handleNavigation("/facilities");
-                            else {
-                                setError("You've already filled Facilities asessment for today")
-                                setTimeout(() => setError(''), 3000)
-                            }
-                        }}
-                    />}
-                    {!loading && role == "Non-Medical" && <Button
-                        text="Faculty & Facilities"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['non_medical_faculty_and_facilities'] ? 'disabled-btn' : ''}`}
-                        onClick={() => {
-                            if (!state?.userData?.filledForms?.['non_medical_faculty_and_facilities'])
-                                handleNavigation("/faculty-&-facilities");
-                            else {
-                                setError("You've already filled Faculty & Facilities asessment for today")
+                                setError("You've already filled Non Medical Nursing asessment for today");
                                 setTimeout(() => setError(''), 3000)
                             }
                         }}
                     />}
                     {!loading && role == "Medical" && <Button
-                        text="Quality Of Processes"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['medical_quality_of_processes'] ? 'disabled-btn' : ''}`}
+                        text="Medical Nursing Form"
+                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['nursing'] ? 'disabled-btn' : ''}`}
                         onClick={() => {
-                            if (!state?.userData?.filledForms?.['medical_quality_of_processes'])
-                                handleNavigation("/quality-of-processes");
+                            if (!state?.userData?.filledForms?.['nursing'])
+                                handleNavigation("/nursing");
                             else {
-                                setError("You've already filled Quality Of Processes assessment for this date.")
-                                setTimeout(() => setError(''), 3000)
-                            }
-                        }}
-                    />}
-                    {!loading && role == "Medical" && <Button
-                        text="Medical Labs"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['medical_labs'] ? 'disabled-btn' : ''}`}
-                        onClick={() => {
-                            if (!state?.userData?.filledForms?.['medical_labs'])
-                                handleNavigation("/labs");
-                            else {
-                                setError("You've already filled Labs assessment for this date.")
+                                setError("You've already filled Nursing assessment for this date.")
                                 setTimeout(() => setError(''), 3000)
                             }
                         }}

@@ -11,7 +11,7 @@ import CaptureLocation from "./pages/CaptureLocation";
 import MedicalAssessmentsOptions from "./pages/MedicalAssessmentsOptions";
 import ForgotPassword from "./pages/ForgotPassword";
 import Nursing from "./pages/forms/Nursing";
-import Paramedical from "./pages/forms/Paramedical";
+import Paramedical from "./pages/forms/NursingNonMedical";
 import Osce1 from "./pages/forms/Osce1";
 import Osce2 from "./pages/forms/Osce2";
 import Register from "./pages/Register";
@@ -24,9 +24,8 @@ import ParamedicalOptions from "./pages/ParamedicalOptions";
 import OsceOptions from "./pages/OsceOptions";
 import QualityOfProcesses from "./pages/forms/QualityOfProcesses";
 import Labs from "./pages/forms/Labs";
-import UnoccupiedBeds from "./pages/forms/UnoccupiedBeds";
-import VitalSigns from "./pages/forms/VitalSigns";
 import GenericOsceForm from "./pages/forms/GenericOsceForm";
+import NursingNonMedical from "./pages/forms/NursingNonMedical";
 
 export const StateContext = createContext();
 
@@ -66,6 +65,7 @@ function App() {
             <Route path="/osce-options" element={<PrivateRoute><OsceOptions /></PrivateRoute>} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/nursing" element={<PrivateRoute><Nursing /></PrivateRoute>} />
+            <Route path="/nursing-non-medical" element={<PrivateRoute><NursingNonMedical /></PrivateRoute>} />
             <Route path="/paramedical" element={<PrivateRoute><Paramedical /></PrivateRoute>} />
             <Route path="/osce-1" element={<PrivateRoute><Osce1 /></PrivateRoute>} />
             <Route path="/osce-2" element={<PrivateRoute><Osce2 /></PrivateRoute>} />

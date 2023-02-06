@@ -20,23 +20,19 @@ const OsceOptions = () => {
     const pullForms = async () => {
         const assignedForms = await getAssignedForms(course, assType);
         if (assignedForms?.data?.osce_assignment?.length) {
-            let forms = assignedForms?.data?.osce_assignment.map(el => `${el.osce_name}.xml`)
+            let forms = assignedForms?.data?.osce_assignment?.[0].osce_names
             setOsceForms(forms);
         } else {
             if (assType == 'teacher') {
                 const res = await getRandomOsceFormsTeacher(course);
                 if (res.length) {
                     setOsceForms(res)
-                    res.forEach(el => {
-                        assignOsceForm({
-                            assessor_id: userData?.user?.id,
-                            osce_name: el.slice(0, el.indexOf(".xml")),
-                            assignment_date: new Date(),
-                            assessment_type: assType,
-                            course_type: course,
-                            institute_id: state?.todayAssessment?.id
-                        });
-                    })
+                    assignOsceForm({
+                        osce_names: res,
+                        assessment_type: assType,
+                        course_type: course,
+                        schedule_id: state?.todayAssessment?.schedule_id
+                    });
                 }
             } else {
                 if (course == 'gnm' || course == 'bsc') {
@@ -45,16 +41,12 @@ const OsceOptions = () => {
                     const year3a = await getRandomOsceForm(course, "3rd_year", "midwivery");
                     const year3b = await getRandomOsceForm(course, "3rd_year", "pediatric");
                     const forms = [year1, year2, year3a, year3b];
-                    forms.forEach(el => {
-                        assignOsceForm({
-                            assessor_id: userData?.user?.id,
-                            osce_name: el.slice(0, el.indexOf(".xml")),
-                            assignment_date: new Date(),
-                            assessment_type: assType,
-                            course_type: course,
-                            institute_id: state?.todayAssessment?.id
-                        });
-                    })
+                    assignOsceForm({
+                        osce_names: "{" + forms.toString() + "}",
+                        assessment_type: assType,
+                        course_type: course,
+                        schedule_id: state?.todayAssessment?.schedule_id
+                    });
                     setOsceForms(forms);
                 }
                 if (course == 'anm') {
@@ -62,16 +54,12 @@ const OsceOptions = () => {
                     const year2a = await getRandomOsceForm(course, "2nd_year", "midwivery");
                     const year2b = await getRandomOsceForm(course, "2nd_year", 'pediatric');
                     const forms = [year1, year2a, year2b];
-                    forms.forEach(el => {
-                        assignOsceForm({
-                            assessor_id: userData?.user?.id,
-                            osce_name: el.slice(0, el.indexOf(".xml")),
-                            assignment_date: new Date(),
-                            assessment_type: assType,
-                            course_type: course,
-                            institute_id: state?.todayAssessment?.id
-                        });
-                    })
+                    assignOsceForm({
+                        osce_names: forms,
+                        assessment_type: assType,
+                        course_type: course,
+                        schedule_id: state?.todayAssessment?.schedule_id
+                    });
                     setOsceForms(forms);
                 }
             }
@@ -91,14 +79,12 @@ const OsceOptions = () => {
                         id: ass.institute.id,
                         district: ass.institute.district,
                         instituteName: ass.institute.name,
-                        nursing: ass.institute.nursing,
-                        paramedical: ass.institute.paramedical,
-                        gnm: ass.institute.gnm,
-                        anm: ass.institute.gnm,
-                        bsc: ass.institute.gnm,
+                        specialization: ass.institute?.institute_specializations?.[0]?.specializations,
+                        courses: ass.institute?.institute_courses?.[0]?.courses,
                         type: ass.institute.type,
                         latitude: ass.institute.latitude,
-                        longitude: ass.institute.longitude
+                        longitude: ass.institute.longitude,
+                        schedule_id: ass.id
                     }
                 }
             });
@@ -163,46 +149,11 @@ const OsceOptions = () => {
                     <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
                         Select Course Type
                     </p>
-                    {!loading && state?.todayAssessment?.gnm && <Button
-                        text="GNM"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['osce_unoccupied_beds'] ? 'disabled-btn' : ''}`}
-                        onClick={() => setCourse('gnm')}
-                    />}
-                    {!loading && state?.todayAssessment?.anm && <Button
-                        text="ANM"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['osce_unoccupied_beds'] ? 'disabled-btn' : ''}`}
-                        onClick={() => setCourse('anm')}
-                    />}
-                    {!loading && state?.todayAssessment?.bsc && <Button
-                        text="BSC"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['osce_unoccupied_beds'] ? 'disabled-btn' : ''}`}
-                        onClick={() => setCourse('bsc')}
-
-                    />}
-                    {/* {!loading && <Button
-                        text="Unoccupied Beds"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['osce_unoccupied_beds'] ? 'disabled-btn' : ''}`}
-                        onClick={() => {
-                            if (!state?.userData?.filledForms?.['osce_unoccupied_beds'])
-                                handleNavigation("/osce-unoccupied-beds");
-                            else {
-                                setError("You've already filled Unoccupied Beds assessment today")
-                                setTimeout(() => setError(''), 3000)
-                            }
-                        }}
-                    />}
-                    {!loading && <Button
-                        text="Vital Signs"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['osce_vital_signs'] ? 'disabled-btn' : ''}`}
-                        onClick={() => {
-                            if (!state?.userData?.filledForms?.['osce_vital_signs'])
-                                handleNavigation("/vital-signs");
-                            else {
-                                setError("You've already filled Vital Signs assessment today")
-                                setTimeout(() => setError(''), 3000)
-                            }
-                        }}
-                    />} */}
+                    {!loading && state?.todayAssessment?.courses?.map(el => <Button
+                        text={el}
+                        styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
+                        onClick={() => setCourse(el.toLowerCase())}
+                    />)}
                 </div>}
                 {!assType && course && <div className="flex flex-col px-5 py-8 items-center">
                     <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
@@ -210,12 +161,12 @@ const OsceOptions = () => {
                     </p>
                     <Button
                         text="Student"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['osce_unoccupied_beds'] ? 'disabled-btn' : ''}`}
+                        styles={`lg:w-[70%] animate__animated animate__fadeInDown `}
                         onClick={() => setAssType('student')}
                     />
                     <Button
                         text="Teacher"
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['osce_unoccupied_beds'] ? 'disabled-btn' : ''}`}
+                        styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
                         onClick={() => setAssType('teacher')}
                     />
                 </div>}
