@@ -19,14 +19,11 @@ const ParamedicalOptions = () => {
     const getFilledAssessmentStatus = async () => {
         setLoading(true);
         const res = await getAssessmentStatus();
-        console.log(res.data);
-        setState({
-            ...state, userData: {
-                ...state?.userData,
-                nursingFilled: res?.data?.q1?.length ? true : false,
-                paramedFilled: res?.data?.q2?.length ? true : false
-            }
-        })
+        const filledForms = {};
+        if (res?.data?.form_submissions?.length) {
+            res.data.form_submissions.forEach(el => filledForms[el.form_name] = true)
+        }
+        setState({ ...state, userData: { ...state?.userData, filledForms: { ...state?.filledForms, ...filledForms } } })
         setLoading(false);
     }
 
@@ -35,6 +32,7 @@ const ParamedicalOptions = () => {
         const user = JSON.parse(localStorage.getItem("userData"))?.user?.registrations[0]?.roles[0];
         setRole(() => user);
     }, []);
+
 
     return (
         role && (

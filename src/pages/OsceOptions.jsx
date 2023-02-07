@@ -23,6 +23,7 @@ const OsceOptions = () => {
             let forms = assignedForms?.data?.osce_assignment?.[0].osce_names
             setOsceForms(forms);
         } else {
+            console.log(course)
             if (assType == 'teacher') {
                 const res = await getRandomOsceFormsTeacher(course);
                 if (res.length) {
@@ -35,12 +36,13 @@ const OsceOptions = () => {
                     });
                 }
             } else {
-                if (course == 'gnm' || course == 'bsc') {
+                if (course == 'gnm' || course == 'b.sc') {
                     const year1 = await getRandomOsceForm(course, "1st_year");
                     const year2 = await getRandomOsceForm(course, "2nd_year");
-                    const year3a = await getRandomOsceForm(course, "3rd_year", "midwivery");
-                    const year3b = await getRandomOsceForm(course, "3rd_year", "pediatric");
+                    const year3a = await getRandomOsceForm(course, "3rd_year", course == 'gnm' ? "midwifery" : 'pediatric');
+                    const year3b = await getRandomOsceForm(course, course == 'gnm' ? "3rd_year" : '4th_year', course == 'gnm' ? "child_heath_nursing" : 'midwifery');
                     const forms = [year1, year2, year3a, year3b];
+                    console.log(forms)
                     assignOsceForm({
                         osce_names: "{" + forms.toString() + "}",
                         assessment_type: assType,
@@ -51,7 +53,7 @@ const OsceOptions = () => {
                 }
                 if (course == 'anm') {
                     const year1 = await getRandomOsceForm(course, "1st_year");
-                    const year2a = await getRandomOsceForm(course, "2nd_year", "midwivery");
+                    const year2a = await getRandomOsceForm(course, "2nd_year", "midwifery");
                     const year2b = await getRandomOsceForm(course, "2nd_year", 'pediatric');
                     const forms = [year1, year2a, year2b];
                     assignOsceForm({
@@ -122,7 +124,7 @@ const OsceOptions = () => {
     const getFormText = (el) => {
         if (el) {
             let formName = "";
-            formName = el.slice(el.indexOf("_") + 1, el.indexOf(".")).split("_").join(" ");
+            formName = el.slice(el.indexOf("_") + 1, el.lastIndexOf(".")).split("_").join(" ");
             return formName;
         }
         return "";
@@ -152,7 +154,7 @@ const OsceOptions = () => {
                     {!loading && state?.todayAssessment?.courses?.map(el => <Button
                         text={el}
                         styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
-                        onClick={() => setCourse(el.toLowerCase())}
+                        onClick={() => { if (el == 'BSC') { setCourse('b.sc') } else setCourse(el.toLowerCase()) }}
                     />)}
                 </div>}
                 {!assType && course && <div className="flex flex-col px-5 py-8 items-center">
