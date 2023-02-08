@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
@@ -14,6 +14,7 @@ const OsceOptions = () => {
     const [assType, setAssType] = useState("");
     const [osceForms, setOsceForms] = useState("");
     const userData = JSON.parse(localStorage.getItem("userData"));
+    const scheduleId = useRef();
 
     const navigate = useNavigate();
 
@@ -23,16 +24,16 @@ const OsceOptions = () => {
             let forms = assignedForms?.data?.osce_assignment?.[0].osce_names
             setOsceForms(forms);
         } else {
-            console.log(course)
+            // console.log(course)
             if (assType == 'teacher') {
                 const res = await getRandomOsceFormsTeacher(course);
                 if (res.length) {
                     setOsceForms(res)
                     assignOsceForm({
-                        osce_names: res,
+                        osce_names: "{" + res.toString() + "}",
                         assessment_type: assType,
                         course_type: course,
-                        schedule_id: state?.todayAssessment?.schedule_id
+                        schedule_id: scheduleId.current
                     });
                 }
             } else {
@@ -42,12 +43,12 @@ const OsceOptions = () => {
                     const year3a = await getRandomOsceForm(course, "3rd_year", course == 'gnm' ? "midwifery" : 'pediatric');
                     const year3b = await getRandomOsceForm(course, course == 'gnm' ? "3rd_year" : '4th_year', course == 'gnm' ? "child_heath_nursing" : 'midwifery');
                     const forms = [year1, year2, year3a, year3b];
-                    console.log(forms)
+                    // console.log(forms)
                     assignOsceForm({
                         osce_names: "{" + forms.toString() + "}",
                         assessment_type: assType,
                         course_type: course,
-                        schedule_id: state?.todayAssessment?.schedule_id
+                        schedule_id: scheduleId.current
                     });
                     setOsceForms(forms);
                 }
@@ -57,10 +58,10 @@ const OsceOptions = () => {
                     const year2b = await getRandomOsceForm(course, "2nd_year", 'pediatric');
                     const forms = [year1, year2a, year2b];
                     assignOsceForm({
-                        osce_names: forms,
+                        osce_names: "{" + forms.toString() + "}",
                         assessment_type: assType,
                         course_type: course,
-                        schedule_id: state?.todayAssessment?.schedule_id
+                        schedule_id: scheduleId.current
                     });
                     setOsceForms(forms);
                 }
@@ -73,6 +74,7 @@ const OsceOptions = () => {
         const res = await getMedicalAssessments();
         if (res?.data?.assessment_schedule?.[0]) {
             let ass = res?.data?.assessment_schedule?.[0];
+            scheduleId.current = ass.id;
             setState(prevState => {
                 return {
                     ...prevState,
@@ -97,7 +99,7 @@ const OsceOptions = () => {
     const getFilledAssessmentStatus = async () => {
         setLoading(true);
         const res = await getAssessmentStatus();
-        console.log(res.data);
+        // console.log(res.data);
         const filledForms = {};
         if (res?.data?.form_submissions?.length) {
             res.data.form_submissions.forEach(el => filledForms[el.form_name] = true)
@@ -110,9 +112,8 @@ const OsceOptions = () => {
         getFilledAssessmentStatus();
         const user = JSON.parse(localStorage.getItem("userData"))?.user?.registrations[0]?.roles[0];
         setRole(() => user);
-        if (!state?.todayAssessment) {
-            getTodayAssessments();
-        }
+        getTodayAssessments();
+
     }, []);
 
     useEffect(() => {
