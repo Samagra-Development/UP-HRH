@@ -28,14 +28,15 @@ const MedicalAssessments = () => {
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
-      let ass = res?.data?.assessment_schedule?.[0];
+      let ass = res?.data?.assessment_schedule?.[0];      
       setData({
         id: ass.institute.id,
         district: ass.institute.district,
         instituteName: ass.institute.name,
-        specialization: ass.institute?.institute_specializations?.[0]?.specializations,
-        courses: ass.institute?.institute_courses?.[0]?.courses,
-        type: ass.institute.type,
+        specialization:
+          ass.institute?.institute_specializations?.[0]?.specializations,
+        courses: ass.institute?.institute_types?.[0]?.types,
+        type: ass.institute.sector,
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
@@ -84,17 +85,27 @@ const MedicalAssessments = () => {
                 Institute Specialization
               </span>
               <div className="flex flex-row gap-2 flex-wrap">
-                {data?.specialization?.map(el => <span className="px-5 py-1 bg-primary rounded text-white">{el}</span>)}
+                {data?.specialization?.map((el) => (
+                  <span className="px-5 py-1 bg-primary rounded text-white">
+                    {el}
+                  </span>
+                ))}
               </div>
             </div>
-            {data?.courses?.length && <div className="flex flex-col py-3 w-full">
-              <span className="text-secondary pb-2 font-medium">
-                Courses offered
-              </span>
-              <div className="flex flex-row gap-2 flex-wrap">
-                {data?.courses?.map(el => <span className="px-5 py-1 bg-primary rounded text-white">{el}</span>)}
+            {data?.courses?.length && (
+              <div className="flex flex-col py-3 w-full">
+                <span className="text-secondary pb-2 font-medium">
+                  Courses offered
+                </span>
+                <div className="flex flex-row gap-2 flex-wrap">
+                  {data?.courses?.map((el) => (
+                    <span className="px-5 py-1 bg-primary rounded text-white">
+                      {el}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>}
+            )}
             {/* <div className="flex flex-col py-3 w-full">
               <span className="text-secondary pb-2 font-medium">
                 Is Nursing

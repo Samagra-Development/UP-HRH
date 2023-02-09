@@ -53,13 +53,13 @@ export const getMedicalAssessments = () => {
           institute{
             id
             name
-            type
+            sector
             district
             latitude
             longitude
-            institute_courses{
+            institute_types{
               id
-              courses
+              types
             }
             institute_specializations {
               id

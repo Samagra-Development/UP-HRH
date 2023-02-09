@@ -46,8 +46,7 @@ const Nursing = () => {
     longitude: null,
   });
 
-  function afterFormSubmit(e) {
-    console.log("ABC", e.data);
+  function afterFormSubmit(e) {    
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
@@ -84,6 +83,9 @@ const Nursing = () => {
   }
 
   const eventTriggered = (e) => {
+    console.log("------------------------------------");
+    console.log(e);
+    console.log("------------------------------------");
     if (
       e.origin == "https://enketo-ratings-tech.samagra.io" &&
       JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
@@ -107,8 +109,7 @@ const Nursing = () => {
     window.removeEventListener("message", eventTriggered);
   };
 
-  const getTodayAssessments = async () => {
-    console.log("getTodayAssessments");
+  const getTodayAssessments = async () => {    
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
@@ -120,8 +121,8 @@ const Nursing = () => {
         district: ass.institute.district,
         instituteName: ass.institute.name,
         specialization: ass.institute?.institute_specializations?.[0]?.specializations,
-        courses: ass.institute?.institute_courses?.[0]?.courses,
-        type: ass.institute.type,
+        courses: ass.institute?.institute_types?.[0]?.types,
+        type: ass.institute.sector,
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
@@ -168,8 +169,7 @@ const Nursing = () => {
     <CommonLayout back="/nursing-options">
       <div className="flex flex-col items-center">
         {!loading && assData && (
-          <>
-            {console.log(formSpec.forms[formId].prefill)}
+          <>            
             <iframe
               title="form"
               src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}

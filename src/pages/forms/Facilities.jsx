@@ -133,7 +133,7 @@ const Facilities = () => {
                 gnm: assess.institute.gnm,
                 anm: assess.institute.anm,
                 bsc: assess.institute.bsc,
-                type: assess.institute.type,
+                type: assess.institute.sector,
                 latitude: assess.institute.latitude,
                 longitude: assess.institute.longitude,
             });

@@ -124,8 +124,8 @@ const NursingNonMedical = () => {
         district: ass.institute.district,
         instituteName: ass.institute.name,
         specialization: ass.institute?.institute_specializations?.[0]?.specializations,
-        courses: ass.institute?.institute_courses?.[0]?.courses,
-        type: ass.institute.type,
+        courses: ass.institute?.institute_types?.[0]?.types,
+        type: ass.institute.sector,
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
