@@ -9,17 +9,14 @@ institute_poc = {}
 institute_specialization = defaultdict(set)
 institute_type = defaultdict(set)
 
-testLatitude = 19.0760
-testLongitude = 72.8777
-
-with open("input/Institute_Details.csv", 'r') as file:
+with open("input/InstituteData.csv", 'r') as file:
     csvreader = csv.reader(file)
     for row in csvreader:
-        institudeId = row[1]
+        institudeId = row[0]
         institutes[institudeId] = {
-            "district": row[0],
-            "latitude": testLatitude,
-            "longitude": testLongitude,
+            "district": row[1],
+            "latitude": row[14],
+            "longitude": row[15],
             "name": row[2],
             "sector": row[8],
             "email": row[13],
