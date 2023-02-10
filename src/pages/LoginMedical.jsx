@@ -13,7 +13,14 @@ const LoginMedical = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  function userIsAdminForPortal(registrations) {
+    //console.log(registrations)
+    const currentRegistration = registrations[0];
+    return currentRegistration !== null && currentRegistration.roles.includes("Admin");
+  }
+
   const handleLogin = async () => {
+    console.log("Hello World")
     if (!username || !password) {
       setError("Either username or password is missing");
       setTimeout(() => {
@@ -31,8 +38,15 @@ const LoginMedical = () => {
       return;
     }
     if (loginRes.responseCode == "OK" && loginRes.result) {
-      localStorage.setItem("userData", JSON.stringify(loginRes.result.data.user))
-      navigate("/welcome-medical-assessor");
+      let loggedInUser = loginRes.result.data.user
+      localStorage.setItem("userData", JSON.stringify(loggedInUser))
+      console.log(loggedInUser)
+      if (userIsAdminForPortal(loggedInUser.user.registrations)) {
+        navigate("/admin");
+      }
+      else {
+        navigate("/welcome-medical-assessor");
+      }
       return;
     }
 
