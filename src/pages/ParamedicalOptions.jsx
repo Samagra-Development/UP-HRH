@@ -41,6 +41,30 @@ const ParamedicalOptions = () => {
                     <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
                         Select your assessment type
                     </p>
+                    {!loading && role != "Non-Medical" && <Button
+                        text="Non Medical Paramedical Form"
+                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['paramedical_non_medical'] ? 'disabled-btn' : ''}`}
+                        onClick={() => {
+                            if (!state?.userData?.filledForms?.['paramedical_non_medical'])
+                                handleNavigation("/paramedical-non-medical");
+                            else {
+                                setError("You've already filled Non Medical Paramedical asessment for today");
+                                setTimeout(() => setError(''), 3000)
+                            }
+                        }}
+                    />}
+                    {!loading && role == "Medical" && <Button
+                        text="Medical Paramedical Form"
+                        styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['paramedical'] ? 'disabled-btn' : ''}`}
+                        onClick={() => {
+                            if (!state?.userData?.filledForms?.['paramedical'])
+                                handleNavigation("/paramedical");
+                            else {
+                                setError("You've already filled Paramedical assessment for this date.")
+                                setTimeout(() => setError(''), 3000)
+                            }
+                        }}
+                    />}
                     {error && (
                         <span className="text-white animate__animated animate__headShake bg-rose-600 font-medium px-4 py-2 mt-5 text-center ">
                             {error}
