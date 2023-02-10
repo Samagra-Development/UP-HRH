@@ -41,7 +41,7 @@ const ParamedicalOptions = () => {
                     <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
                         Select your assessment type
                     </p>
-                    {!loading && role != "Non-Medical" && <Button
+                    {!loading && role == "Non-Medical" && <Button
                         text="Non Medical Paramedical Form"
                         styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.['paramedical_non_medical'] ? 'disabled-btn' : ''}`}
                         onClick={() => {
