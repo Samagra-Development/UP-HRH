@@ -244,7 +244,12 @@ export const getFormSubmissions = () => {
           form_data
           form_name
           created_at
+          assessment_schedule {
+            institute_id
+            user_id
+          }
       }
+    }
       `,
     variables: {}
   };
