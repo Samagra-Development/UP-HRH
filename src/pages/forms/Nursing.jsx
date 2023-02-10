@@ -6,12 +6,15 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 
+const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL
+const ENKETO_URL = process.env.REACT_APP_ENKETO_URL
+
 const Nursing = () => {
   const { state } = useContext(StateContext);
   const formSpec = formSpecJSON;
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
-      `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
+      `${ENKETO_MANAGER_URL}/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
       )}&prefillSpec=${encodeFunction(prefillSpec)}`
     );
@@ -46,7 +49,7 @@ const Nursing = () => {
     longitude: null,
   });
 
-  function afterFormSubmit(e) {    
+  function afterFormSubmit(e) {
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
@@ -87,7 +90,7 @@ const Nursing = () => {
     console.log(e);
     console.log("------------------------------------");
     if (
-      e.origin == "https://enketo-ratings-tech.samagra.io" &&
+      e.origin == ENKETO_URL &&
       JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
     ) {
       var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
@@ -109,7 +112,7 @@ const Nursing = () => {
     window.removeEventListener("message", eventTriggered);
   };
 
-  const getTodayAssessments = async () => {    
+  const getTodayAssessments = async () => {
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
@@ -169,7 +172,7 @@ const Nursing = () => {
     <CommonLayout back="/nursing-options">
       <div className="flex flex-col items-center">
         {!loading && assData && (
-          <>            
+          <>
             <iframe
               title="form"
               src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}

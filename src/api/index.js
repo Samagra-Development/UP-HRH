@@ -3,6 +3,8 @@ import { makeHasuraCalls } from "../utils";
 
 const BASE_URL = process.env.REACT_APP_USER_SERVICE_URL;
 const applicationId = process.env.REACT_APP_APPLICATION_ID;
+const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL
+const ENKETO_URL = process.env.REACT_APP_ENKETO_URL
 
 export const loginMedical = async (username, pass) => {
   try {
@@ -95,7 +97,7 @@ export const getMedicalAssessmentsUpcoming = () => {
 
 export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
   try {
-    const res = await axios.post(`https://enketo-manager-ratings-tech.samagra.io/prefillXML?form=${form}&onFormSuccessData=${encodeURI(JSON.stringify(onFormSuccessData))}`, {
+    const res = await axios.post(`${ENKETO_MANAGER_URL}/prefillXML?form=${form}&onFormSuccessData=${encodeURI(JSON.stringify(onFormSuccessData))}`, {
       prefillXML
     }, { headers: {} });
     return res.data;
@@ -110,7 +112,7 @@ export const getRandomOsceFormsTeacher = async (type) => {
     // const years = ['1st_year', '2nd_year', '3rd_year'];
     const years = ['1st_year'];
     const year = years[Math.floor(Math.random() * years.length)];
-    const res = await axios.get(`https://enketo-manager-ratings-tech.samagra.io/osceFormTeachers/${type}/${year}`);
+    const res = await axios.get(`${ENKETO_MANAGER_URL}/osceFormTeachers/${type}/${year}`);
     return res.data;
   } catch (err) {
     console.log(err);
@@ -120,7 +122,7 @@ export const getRandomOsceFormsTeacher = async (type) => {
 
 export const getRandomOsceForm = async (type, year, speciality) => {
   try {
-    let url = speciality ? `https://enketo-manager-ratings-tech.samagra.io/osceForm/${type}/${year}/${speciality}` : `https://enketo-manager-ratings-tech.samagra.io/osceForm/${type}/${year}`
+    let url = speciality ? `${ENKETO_MANAGER_URL}/osceForm/${type}/${year}/${speciality}` : `${ENKETO_MANAGER_URL}/osceForm/${type}/${year}`
     const res = await axios.get(url);
     return res.data;
   } catch (err) {

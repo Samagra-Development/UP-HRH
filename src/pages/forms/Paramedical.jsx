@@ -9,12 +9,15 @@ import {
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 
+const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL
+const ENKETO_URL = process.env.REACT_APP_ENKETO_URL
+
 const Paramedical = () => {
   const { state } = useContext(StateContext);
   const formSpec = formSpecJSON;
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
-      `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
+      `${ENKETO_MANAGER_URL}/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
       )}&prefillSpec=${encodeFunction(prefillSpec)}`
     );
@@ -88,7 +91,7 @@ const Paramedical = () => {
 
   const eventTriggered = (e) => {
     if (
-      e.origin == "https://enketo-ratings-tech.samagra.io" &&
+      e.origin == ENKETO_URL &&
       JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
     ) {
       var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
@@ -175,7 +178,7 @@ const Paramedical = () => {
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
               title="Location Form"
-              src={`https://enketo-ratings-tech.samagra.io/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>
