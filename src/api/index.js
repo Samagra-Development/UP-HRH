@@ -235,3 +235,23 @@ export const assignOsceForm = (data) => {
   };
   return makeHasuraCalls(query);
 };
+
+export const getFormSubmissions = () => {
+  const query = {
+    query: `
+      query {
+        form_submissions(order_by: {created_at : desc}){
+          form_data
+          form_name
+          created_at
+          assessment_schedule {
+            institute_id
+            user_id
+          }
+      }
+    }
+      `,
+    variables: {}
+  };
+  return makeHasuraCalls(query);
+};

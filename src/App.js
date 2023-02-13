@@ -27,6 +27,7 @@ import Labs from "./pages/forms/Labs";
 import GenericOsceForm from "./pages/forms/GenericOsceForm";
 import NursingNonMedical from "./pages/forms/NursingNonMedical";
 import ParamedicalNonMedical from "./pages/forms/ParamedicalNonMedical";
+import Admin from "./pages/Admin";
 
 export const StateContext = createContext();
 
@@ -80,6 +81,7 @@ function App() {
             {/* <Route path="/osce-unoccupied-beds" element={<PrivateRoute odk="osce_unoccupied_beds"><UnoccupiedBeds /></PrivateRoute>} />
             <Route path="/vital-signs" element={<PrivateRoute odk="vital-signs"><VitalSigns /></PrivateRoute>} /> */}
             <Route path="/osceForm/:osceName" element={<PrivateRoute ><GenericOsceForm /></PrivateRoute>} />
+            <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
             <Route path="/*" element={<Home />} />
           </Routes>
         </BrowserRouter>
