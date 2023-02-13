@@ -246,7 +246,7 @@ export const getFormSubmissions = () => {
           created_at
           assessment_schedule {
             institute_id
-            user_id
+            assessor_code
           }
       }
     }

@@ -14,7 +14,7 @@ const FormSubmissionsData = () => {
     formSubmissionResponse.forEach(item => {
       let formDataJson = JSON.parse(item.form_data);
       formDataJson["institute_id"] = item.assessment_schedule.institute_id;
-      formDataJson["user_id"] = item.assessment_schedule.user_id;
+      formDataJson["assessor_code"] = item.assessment_schedule.assessor_code;
       formDataJson["created_at"] = item.created_at;
       formDataJson["form_name"] = item.form_name;
       formSubmissionsJson.push(formDataJson);
