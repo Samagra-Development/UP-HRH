@@ -9,6 +9,7 @@ import {
 } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
+import { makeDataForPrefill } from "../../utils";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL
@@ -97,11 +98,9 @@ const NursingNonMedical = () => {
       JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
     ) {
       var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
-      if (xml && xml?.children && xml?.children[0]?.children?.length > 0) {
+      if (xml && xml?.children?.length > 0) {
         let obj = {};
-        xml.children[0]?.children?.forEach((element) => {
-          obj[element.name] = element.value;
-        });
+        makeDataForPrefill({}, xml.children, xml.name, obj)
         localStorage.setItem(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }

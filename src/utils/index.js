@@ -20,3 +20,13 @@ const validateResponse = async (response) => {
     };
     return jsonResponse;
 };
+
+export const makeDataForPrefill = (prev, xmlDoc, key, finalObj) => {
+    if (Array.isArray(xmlDoc) && xmlDoc.length == 0 && prev.value) {
+        finalObj[key] = prev.value
+    } else {
+        for (const el in xmlDoc) {
+            makeDataForPrefill(xmlDoc[el], xmlDoc[el].children, key + "_*_" + xmlDoc[el].name, finalObj);
+        }
+    }
+}
