@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { makeDataForPrefill } from "../../utils";
+import { makeDataForPrefill, updateFormData } from "../../utils";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL
@@ -55,14 +55,17 @@ const Nursing = () => {
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = JSON.parse(localStorage.getItem("userData"));
+        // const userData = JSON.parse(localStorage.getItem("userData"));
+        const updatedFormData = updateFormData(startingForm + "Images", formData)
 
         saveFormSubmission({
           schedule_id: scheduleId.current,
-          form_data: JSON.stringify(data.formData),
+          form_data: updatedFormData,
           form_name: formSpec.start,
         });
         setTimeout(() => navigate("/medical-assessment-options"), 2000);
+        localStorage.setItem(startingForm, "");
+        localStorage.setItem(startingForm + "Images", "");
       }
 
       if (nextForm?.type === "form") {
@@ -97,6 +100,10 @@ const Nursing = () => {
       var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
       if (xml && xml?.children?.length > 0) {
         let obj = {};
+        let images = JSON.parse(e.data).fileURLs;
+        if (images?.[0]?.name) {
+          localStorage.setItem(startingForm + "Images", JSON.stringify(images));
+        }
         makeDataForPrefill({}, xml.children, xml.name, obj)
         localStorage.setItem(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
@@ -130,8 +137,16 @@ const Nursing = () => {
       });
       if (localStorage.getItem(startingForm)) {
         const data = JSON.parse(localStorage.getItem(startingForm));
+        let images = localStorage.getItem(startingForm + "Images") ? JSON.parse(localStorage.getItem(startingForm + "Images")) : null;
         for (const key in data) {
           if (data[key]) {
+            if (images) {
+              let foundImage = images.filter(el => el.name == data[key]);
+              if (foundImage?.length) {
+                formSpec.forms[formId].prefill[key] = "`" + `${foundImage[0].url}` + "`";
+                continue;
+              }
+            }
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
           }
         }
@@ -168,7 +183,7 @@ const Nursing = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/nursing-options">
+    <CommonLayout back="/medical-assessment-options">
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

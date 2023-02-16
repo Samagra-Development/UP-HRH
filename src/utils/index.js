@@ -21,12 +21,22 @@ const validateResponse = async (response) => {
     return jsonResponse;
 };
 
-export const makeDataForPrefill = (prev, xmlDoc, key, finalObj) => {
+export const makeDataForPrefill = (prev, xmlDoc, key, finalObj, formName) => {
     if (Array.isArray(xmlDoc) && xmlDoc.length == 0 && prev.value) {
-        finalObj[key] = prev.value
+        finalObj[key] = prev.value;
     } else {
         for (const el in xmlDoc) {
-            makeDataForPrefill(xmlDoc[el], xmlDoc[el].children, key + "_*_" + xmlDoc[el].name, finalObj);
+            makeDataForPrefill(xmlDoc[el], xmlDoc[el].children, key + "_*_" + xmlDoc[el].name, finalObj, formName);
         }
     }
+}
+
+export const updateFormData = (name, data) => {
+    let newData = JSON.stringify(data);
+    let images = localStorage.getItem(name) ? JSON.parse(localStorage.getItem(name)) : null;
+    if (images) {
+        images.forEach(el => newData = newData.replace(el.name, el.url));
+        return newData;
+    }
+    return null;
 }

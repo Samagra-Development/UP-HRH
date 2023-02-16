@@ -170,7 +170,7 @@ const Paramedical = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/paramedical-options">
+    <CommonLayout back="/medical-assessment-options">
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

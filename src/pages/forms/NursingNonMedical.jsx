@@ -172,7 +172,7 @@ const NursingNonMedical = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/nursing-options">
+    <CommonLayout back="/medical-assessment-options">
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

@@ -177,6 +177,7 @@ const OsceOptions = () => {
                     <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
                         Select Assessment Form
                     </p>
+                    {assType == 'student' && <p className="text-secondary text-[12px] font-bold mt-5 text-center animate__animated animate__fadeInDown">Randomly select students from the senior most batch of students in the course</p>}
                     {osceForms && osceForms.map(el => <Button
                         text={getFormText(el)}
                         styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[el.slice(0, el.indexOf(".xml"))] ? 'disabled-btn' : ''}`}
