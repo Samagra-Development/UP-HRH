@@ -93,3 +93,43 @@ npm start
 The React application will start on port 3000.
 Go to: http://localhost:3000
 
+## Environment
+
+```.env
+REACT_APP_USER_SERVICE_URL=
+REACT_APP_APPLICATION_ID=
+REACT_APP_HASURA_URL=
+REACT_APP_ENKETO_URL=
+REACT_APP_ENKETO_URL=
+HASURA_REST_API_URL=
+HASURA_ADMIN_SECRET=
+```
+
+## Data uploading
+
+Scripts reside inside the `scripts` folder. To run scripts, create copies of data inside the `scripts/input/samples` folder inside `scripts/inputs` and insert data as per the format mentioned in the samples. 
+
+Note: Ensure `.env` is updated. 
+
+### To upload institutes:
+
+Command: `python3 institute_upload.py`
+
+Input file: `scripts/input/institutes/InstituteData.csv`
+Sample input file: `scripts/input/samples/institutes/InstituteData.csv`
+
+### To upload assessors:
+
+Command: `python3 assessors_upload.py`
+
+Input file: `scripts/input/assessors/CodePhonenumberMapping.csv`, `scripts/input/assessors/PhonenumberUserIdMapping.csv`
+Sample input file: `scripts/input/samples/assessors/CodePhonenumberMapping.csv`, `scripts/input/samples/assessors/PhonenumberUserIdMapping.csv`
+
+Note: New users will be needed to be created on fusionauth using https://github.com/choxx/hasura-fa-user-creation-script
+
+### To upload schedules:
+
+Command: `python3 schedule_upload.py`
+
+Input file: `scripts/input/scheduling/AssessmentSchedule.csv`
+Sample input file: `scripts/input/samples/scheduling/AssessmentSchedule.csv`

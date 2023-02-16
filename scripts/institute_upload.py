@@ -2,6 +2,7 @@ import requests
 import csv
 from collections import defaultdict
 from decouple import config
+import json
 
 institutes = {}
 institute_courses = defaultdict(set)
@@ -9,7 +10,7 @@ institute_poc = {}
 institute_specialization = defaultdict(set)
 institute_type = defaultdict(set)
 
-with open("input/InstituteData.csv", 'r') as file:
+with open("input/institutes/InstituteData.csv", 'r') as file:
     csvreader = csv.reader(file)
     for row in csvreader:
         institudeId = row[0]
@@ -70,5 +71,6 @@ for key, value in institutes.items():
         }
     }
 
+    print("Inserting: "+key)
     x = requests.post(url, headers=headers, json=requestBody)
     print(x)
