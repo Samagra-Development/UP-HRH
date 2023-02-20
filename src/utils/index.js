@@ -38,5 +38,5 @@ export const updateFormData = (name, data) => {
         images.forEach(el => newData = newData.replace(el.name, el.url));
         return newData;
     }
-    return null;
+    return JSON.stringify(data);
 }
