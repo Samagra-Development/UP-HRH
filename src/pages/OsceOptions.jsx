@@ -152,11 +152,14 @@ const OsceOptions = () => {
                     <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
                         Select Course Type
                     </p>
-                    {!loading && state?.todayAssessment?.courses?.map(el => <Button
-                        text={el}
-                        styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
-                        onClick={() => { if (el == 'BSC') { setCourse('b.sc') } else setCourse(el.toLowerCase()) }}
-                    />)}
+                    {!loading && state?.todayAssessment?.courses?.map(el => {
+                        if (el != 'PBBSC' && el != 'MSC')
+                            return <Button
+                                text={el}
+                                styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
+                                onClick={() => { if (el == 'BSC') { setCourse('b.sc') } else setCourse(el.toLowerCase()) }}
+                            />
+                    })}
                 </div>}
                 {!assType && course && <div className="flex flex-col px-5 py-8 items-center">
                     <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
