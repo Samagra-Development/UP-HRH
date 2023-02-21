@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CommonLayout from "../../components/CommonLayout";
+import ROUTE_MAP from "../../routing/routeMap";
 
 const Osce1 = () => {
   const forms = [
@@ -18,9 +19,9 @@ const Osce1 = () => {
   useEffect(() => {
     setFormId(Math.floor(Math.random() * forms.length));
   }, []);
-  console.log(forms[formId])
+  console.log(forms[formId]);
   return (
-    <CommonLayout back="/osce-options">
+    <CommonLayout back={ROUTE_MAP.osce_options}>
       {formId && (
         <div className="flex flex-col items-center">
           <iframe

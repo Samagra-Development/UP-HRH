@@ -6,6 +6,7 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import { makeDataForPrefill } from "../../utils";
+import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
@@ -63,7 +64,7 @@ const Paramedical = () => {
           form_data: JSON.stringify(data.formData),
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
       }
 
       if (nextForm?.type === "form") {
@@ -168,7 +169,7 @@ const Paramedical = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/paramedical-options">
+    <CommonLayout back={ROUTE_MAP.paramedical_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>
