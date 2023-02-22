@@ -58,3 +58,9 @@ export const setCookie = (cname, cvalue, minutes) => {
   var expires = "expires=" + d.toUTCString();
   document.cookie = cname + "=" + cvalue + "; " + expires;
 };
+
+export const isUserExists = async () => {
+  const user = await JSON.parse(document.cookie.split(";")[1].split("=")[1]);
+  if (user) return true;
+  return false;
+};

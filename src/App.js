@@ -1,8 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import "./App.css";
-import { createContext, useState, useContext } from "react";
-import LoginMedical from "./pages/LoginMedical";
+import { createContext, useState } from "react";
 import MedicalAssessor from "./pages/MedicalAssessor";
 import MedicalAssessments from "./pages/MedicalAssessments";
 import UpcomingMedicalAssessments from "./pages/UpcomingMedicalAssessments";
@@ -29,23 +28,11 @@ import NursingNonMedical from "./pages/forms/NursingNonMedical";
 import ParamedicalNonMedical from "./pages/forms/ParamedicalNonMedical";
 import Admin from "./pages/Admin";
 import ROUTE_MAP from "./routing/routeMap";
+import Login from "./pages/Login/Login";
+import { extractUserFromCookies } from "./utils";
+import PrivateRoute from "./routing/PrivateRoute/PrivateRoute";
 
 export const StateContext = createContext();
-
-const PrivateRoute = ({ children, odk }) => {
-  const { state } = useContext(StateContext);
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const isAuthenticated = userData ? true : false;
-  // console.log(state);
-
-  // if (odk && isAuthenticated) {
-  //   if (state && state.userData && state.userData.filledForms && !state.userData.filledForms[odk])
-  //     return children;
-  //   else
-  //     return <Navigate to="/" />
-  // }
-  return isAuthenticated ? children : <Navigate to="/" />;
-};
 
 function App() {
   const [state, setState] = useState();
@@ -54,17 +41,16 @@ function App() {
       <StateContext.Provider value={{ state, setState }}>
         <BrowserRouter>
           <Routes>
-            <Route path={ROUTE_MAP.root} element={<Home />} />
-            <Route path={ROUTE_MAP.login} element={<LoginMedical />} />
-            <Route path={ROUTE_MAP.register} element={<Register />} />
             <Route
-              path={ROUTE_MAP.welcome_medical_assessor}
+              path={ROUTE_MAP.root}
               element={
                 <PrivateRoute>
                   <MedicalAssessor />
                 </PrivateRoute>
               }
             />
+            <Route path={ROUTE_MAP.login} element={<Login />} />
+            <Route path={ROUTE_MAP.register} element={<Register />} />
             <Route
               path={ROUTE_MAP.medical_assessments}
               element={
