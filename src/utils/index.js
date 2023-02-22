@@ -1,5 +1,5 @@
 export const makeHasuraCalls = async (query) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = extractUserFromCookie();
   return fetch(process.env.REACT_APP_HASURA_URL, {
     method: "POST",
     headers: {
@@ -59,8 +59,11 @@ export const setCookie = (cname, cvalue, minutes) => {
   document.cookie = cname + "=" + cvalue + "; " + expires;
 };
 
-export const isUserExists = async () => {
-  const user = await JSON.parse(document.cookie.split(";")[1].split("=")[1]);
-  if (user) return true;
-  return false;
+export const extractUserFromCookie = () => {
+  try {
+    const { user } = JSON.parse(document.cookie.split(";")[0].split("=")[1]);
+    if (user) return user;
+  } catch (error) {
+    return false;
+  }
 };

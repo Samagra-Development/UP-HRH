@@ -42,11 +42,7 @@ const LoginMedical = ({ handleStepChangeForLogin }) => {
     }
     if (loginRes.responseCode == "OK" && loginRes.result) {
       let loggedInUser = loginRes.result.data.user;
-      // elemintating localstorage
-      // localStorage.setItem("userData", JSON.stringify(loggedInUser));
-
-      setCookie("userData", JSON.stringify(loggedInUser), 2);
-
+      setCookie("userData", JSON.stringify({ user: loggedInUser }), 12);
       if (userIsAdminForPortal(loggedInUser.user.registrations)) {
         navigate(ROUTE_MAP.admin);
       } else {

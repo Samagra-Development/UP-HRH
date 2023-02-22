@@ -29,12 +29,17 @@ import ParamedicalNonMedical from "./pages/forms/ParamedicalNonMedical";
 import Admin from "./pages/Admin";
 import ROUTE_MAP from "./routing/routeMap";
 import Login from "./pages/Login/Login";
-import { extractUserFromCookies } from "./utils";
+import { extractUserFromCookie } from "./utils";
 import PrivateRoute from "./routing/PrivateRoute/PrivateRoute";
+import { useEffect } from "react";
 
 export const StateContext = createContext();
 
 function App() {
+  useEffect(() => {
+    const user = extractUserFromCookie();
+    console.log(user, "user");
+  }, []);
   const [state, setState] = useState();
   return (
     <div className="App">
