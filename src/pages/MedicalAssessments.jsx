@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import { getMedicalAssessments } from "../api";
 import { StateContext } from "../App";
+import ROUTE_MAP from "../routing/routeMap";
 
 const MedicalAssessments = () => {
   const { state, setState } = useContext(StateContext);
@@ -21,14 +22,14 @@ const MedicalAssessments = () => {
 
   const startAssess = () => {
     setState({ ...state, todayAssessment: { ...data } });
-    navigate("/capture-location");
+    navigate(ROUTE_MAP.capture_location);
   };
 
   const getTodayAssessments = async () => {
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
-      let ass = res?.data?.assessment_schedule?.[0];      
+      let ass = res?.data?.assessment_schedule?.[0];
       setData({
         id: ass.institute.id,
         district: ass.institute.district,
@@ -48,7 +49,7 @@ const MedicalAssessments = () => {
   }, []);
 
   return (
-    <CommonLayout back="/welcome-medical-assessor">
+    <CommonLayout back={ROUTE_MAP.welcome_medical_assessor}>
       <div className="flex flex-col px-5 py-8 items-center">
         <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px] animate__animated animate__fadeInDown">
           Today's Assessments

@@ -6,9 +6,10 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import { makeDataForPrefill, updateFormData } from "../../utils";
+import ROUTE_MAP from "../../routing/routeMap";
 
-const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL
-const ENKETO_URL = process.env.REACT_APP_ENKETO_URL
+const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
+const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 const Nursing = () => {
   const { state } = useContext(StateContext);
@@ -56,14 +57,17 @@ const Nursing = () => {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
         // const userData = JSON.parse(localStorage.getItem("userData"));
-        const updatedFormData = updateFormData(startingForm + "Images", formData)
+        const updatedFormData = updateFormData(
+          startingForm + "Images",
+          formData
+        );
 
         saveFormSubmission({
           schedule_id: scheduleId.current,
           form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
         localStorage.setItem(startingForm, "");
         localStorage.setItem(startingForm + "Images", "");
       }
@@ -104,7 +108,7 @@ const Nursing = () => {
         if (images?.[0]?.name) {
           localStorage.setItem(startingForm + "Images", JSON.stringify(images));
         }
-        makeDataForPrefill({}, xml.children, xml.name, obj)
+        makeDataForPrefill({}, xml.children, xml.name, obj);
         localStorage.setItem(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
@@ -129,7 +133,8 @@ const Nursing = () => {
         id: ass.institute.id,
         district: ass.institute.district,
         instituteName: ass.institute.name,
-        specialization: ass.institute?.institute_specializations?.[0]?.specializations,
+        specialization:
+          ass.institute?.institute_specializations?.[0]?.specializations,
         courses: ass.institute?.institute_types?.[0]?.types,
         type: ass.institute.sector,
         latitude: ass.institute.latitude,
@@ -137,13 +142,16 @@ const Nursing = () => {
       });
       if (localStorage.getItem(startingForm)) {
         const data = JSON.parse(localStorage.getItem(startingForm));
-        let images = localStorage.getItem(startingForm + "Images") ? JSON.parse(localStorage.getItem(startingForm + "Images")) : null;
+        let images = localStorage.getItem(startingForm + "Images")
+          ? JSON.parse(localStorage.getItem(startingForm + "Images"))
+          : null;
         for (const key in data) {
           if (data[key]) {
             if (images) {
-              let foundImage = images.filter(el => el.name == data[key]);
+              let foundImage = images.filter((el) => el.name == data[key]);
               if (foundImage?.length) {
-                formSpec.forms[formId].prefill[key] = "`" + `${foundImage[0].url}` + "`";
+                formSpec.forms[formId].prefill[key] =
+                  "`" + `${foundImage[0].url}` + "`";
                 continue;
               }
             }
@@ -183,7 +191,7 @@ const Nursing = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/medical-assessment-options">
+    <CommonLayout back={ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

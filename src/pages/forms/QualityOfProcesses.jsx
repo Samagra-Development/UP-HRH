@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
+import ROUTE_MAP from "../../routing/routeMap";
 
 const QualityOfProcesses = () => {
   const { state } = useContext(StateContext);
@@ -45,7 +46,7 @@ const QualityOfProcesses = () => {
     longitude: null,
   });
 
-  console.log(assData)
+  console.log(assData);
 
   function afterFormSubmit(e) {
     console.log("ABC", e.data);
@@ -60,7 +61,7 @@ const QualityOfProcesses = () => {
           form_data: JSON.stringify(data.formData),
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
       }
 
       if (nextForm?.type === "form") {
@@ -119,7 +120,8 @@ const QualityOfProcesses = () => {
         id: ass.institute.id,
         district: ass.institute.district,
         instituteName: ass.institute.name,
-        specialization: ass.institute?.institute_specializations?.[0]?.specializations,
+        specialization:
+          ass.institute?.institute_specializations?.[0]?.specializations,
         courses: ass.institute?.institute_types?.[0]?.types,
         type: ass.institute.sector,
         latitude: ass.institute.latitude,
@@ -165,7 +167,7 @@ const QualityOfProcesses = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/nursing-options">
+    <CommonLayout back={ROUTE_MAP.nursing_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

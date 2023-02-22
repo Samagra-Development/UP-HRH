@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { StateContext } from "../App";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
+import ROUTE_MAP from "../routing/routeMap";
 
 const CaptureLocation = () => {
   const [lat, setLat] = useState(0);
@@ -62,9 +63,9 @@ const CaptureLocation = () => {
       var a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.sin(dLon / 2) *
-        Math.sin(dLon / 2) *
-        Math.cos(lat1) *
-        Math.cos(lat2);
+          Math.sin(dLon / 2) *
+          Math.cos(lat1) *
+          Math.cos(lat2);
       var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       d = R * c;
     } catch (err) {
@@ -107,7 +108,7 @@ const CaptureLocation = () => {
       }, 5000);
       return;
     }
-    navigate("/medical-assessment-options");
+    navigate(ROUTE_MAP.medical_assessment_options);
   };
 
   useEffect(() => {
@@ -116,7 +117,7 @@ const CaptureLocation = () => {
   }, [lat, long]);
 
   return (
-    <CommonLayout back="/medical-assessments">
+    <CommonLayout back={ROUTE_MAP.medical_assessments}>
       <div className="flex flex-col px-5 py-8 items-center">
         <img
           src="/assets/locationGirl.png"

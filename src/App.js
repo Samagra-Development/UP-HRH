@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
-import './App.css';
+import "./App.css";
 import { createContext, useState, useContext } from "react";
 import LoginMedical from "./pages/LoginMedical";
 import MedicalAssessor from "./pages/MedicalAssessor";
@@ -28,6 +28,7 @@ import GenericOsceForm from "./pages/forms/GenericOsceForm";
 import NursingNonMedical from "./pages/forms/NursingNonMedical";
 import ParamedicalNonMedical from "./pages/forms/ParamedicalNonMedical";
 import Admin from "./pages/Admin";
+import ROUTE_MAP from "./routing/routeMap";
 
 export const StateContext = createContext();
 
@@ -53,40 +54,218 @@ function App() {
       <StateContext.Provider value={{ state, setState }}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<LoginMedical />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/welcome-medical-assessor" element={<PrivateRoute><MedicalAssessor /></PrivateRoute>} />
-            <Route path="/medical-assessments" element={<PrivateRoute><MedicalAssessments /></PrivateRoute>} />
-            <Route path="/upcoming-medical-assessments" element={<PrivateRoute><UpcomingMedicalAssessments /></PrivateRoute>} />
-            <Route path="/form" element={<PrivateRoute><Form /></PrivateRoute>} />
-            <Route path="/capture-location" element={<PrivateRoute><CaptureLocation /></PrivateRoute>} />
-            <Route path="/medical-assessment-options" element={<PrivateRoute><MedicalAssessmentsOptions /></PrivateRoute>} />
-            <Route path="/nursing-options" element={<PrivateRoute><NursingOptions /></PrivateRoute>} />
-            <Route path="/paramedical-options" element={<PrivateRoute><ParamedicalOptions /></PrivateRoute>} />
-            <Route path="/osce-options" element={<PrivateRoute><OsceOptions /></PrivateRoute>} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/nursing" element={<PrivateRoute><Nursing /></PrivateRoute>} />
-            <Route path="/nursing-non-medical" element={<PrivateRoute><NursingNonMedical /></PrivateRoute>} />
-            <Route path="/paramedical" element={<PrivateRoute><Paramedical /></PrivateRoute>} />
-            <Route path="/paramedical-non-medical" element={<PrivateRoute><ParamedicalNonMedical /></PrivateRoute>} />
-            <Route path="/osce-1" element={<PrivateRoute><Osce1 /></PrivateRoute>} />
-            <Route path="/osce-2" element={<PrivateRoute><Osce2 /></PrivateRoute>} />
-            <Route path="/basic-infrastructure" element={<PrivateRoute odk="non_medical_infrastructure"><BasicInfrastructure /></PrivateRoute>} />
-            <Route path="/student-info" element={<PrivateRoute odk="non_medical_student_info"><StudentInfo /></PrivateRoute>} />
-            <Route path="/facilities" element={<PrivateRoute odk="non_medical_facilities"><Facilities /></PrivateRoute>} />
-            <Route path="/faculty-&-facilities" element={<PrivateRoute odk="non_medical_faculty_and_facilities"><FacultyFacilities /></PrivateRoute>} />
-            <Route path="/quality-of-processes" element={<PrivateRoute odk="medical_quality_of_processes"><QualityOfProcesses /></PrivateRoute>} />
-            <Route path="/labs" element={<PrivateRoute odk="medical_labs"><Labs /></PrivateRoute>} />
-            {/* <Route path="/osce-unoccupied-beds" element={<PrivateRoute odk="osce_unoccupied_beds"><UnoccupiedBeds /></PrivateRoute>} />
-            <Route path="/vital-signs" element={<PrivateRoute odk="vital-signs"><VitalSigns /></PrivateRoute>} /> */}
-            <Route path="/osceForm/:osceName" element={<PrivateRoute ><GenericOsceForm /></PrivateRoute>} />
-            <Route path="/admin" element={<PrivateRoute><Admin /></PrivateRoute>} />
-            <Route path="/*" element={<Home />} />
+            <Route path={ROUTE_MAP.root} element={<Home />} />
+            <Route path={ROUTE_MAP.login} element={<LoginMedical />} />
+            <Route path={ROUTE_MAP.register} element={<Register />} />
+            <Route
+              path={ROUTE_MAP.welcome_medical_assessor}
+              element={
+                <PrivateRoute>
+                  <MedicalAssessor />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.medical_assessments}
+              element={
+                <PrivateRoute>
+                  <MedicalAssessments />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.upcoming_medical_assessments}
+              element={
+                <PrivateRoute>
+                  <UpcomingMedicalAssessments />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.form}
+              element={
+                <PrivateRoute>
+                  <Form />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.capture_location}
+              element={
+                <PrivateRoute>
+                  <CaptureLocation />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.medical_assessment_options}
+              element={
+                <PrivateRoute>
+                  <MedicalAssessmentsOptions />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.nursing_options}
+              element={
+                <PrivateRoute>
+                  <NursingOptions />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.paramedical_options}
+              element={
+                <PrivateRoute>
+                  <ParamedicalOptions />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.osce_options}
+              element={
+                <PrivateRoute>
+                  <OsceOptions />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.forgot_password}
+              element={<ForgotPassword />}
+            />
+            <Route
+              path={ROUTE_MAP.nursing}
+              element={
+                <PrivateRoute>
+                  <Nursing />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.nursing_non_medical}
+              element={
+                <PrivateRoute>
+                  <NursingNonMedical />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.paramedical}
+              element={
+                <PrivateRoute>
+                  <Paramedical />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.paramedical_non_medical}
+              element={
+                <PrivateRoute>
+                  <ParamedicalNonMedical />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.osce_1}
+              element={
+                <PrivateRoute>
+                  <Osce1 />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.osce_2}
+              element={
+                <PrivateRoute>
+                  <Osce2 />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.basic_infrastructure}
+              element={
+                <PrivateRoute odk="non_medical_infrastructure">
+                  <BasicInfrastructure />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.student_info}
+              element={
+                <PrivateRoute odk="non_medical_student_info">
+                  <StudentInfo />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.facilities}
+              element={
+                <PrivateRoute odk="non_medical_facilities">
+                  <Facilities />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.faculty_and_facilities}
+              element={
+                <PrivateRoute odk="non_medical_faculty_and_facilities">
+                  <FacultyFacilities />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.quality_of_processes}
+              element={
+                <PrivateRoute odk="medical_quality_of_processes">
+                  <QualityOfProcesses />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.labs}
+              element={
+                <PrivateRoute odk="medical_labs">
+                  <Labs />
+                </PrivateRoute>
+              }
+            />
+            {/* <Route
+              path={ROUTE_MAP.osce_unoccupied_beds}
+              element={
+                <PrivateRoute odk="osce_unoccupied_beds">
+                  <UnoccupiedBeds />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.vital_signs}
+              element={
+                <PrivateRoute odk="vital-signs">
+                  <VitalSigns />
+                </PrivateRoute>
+              }
+            /> */}
+            <Route
+              path={`${ROUTE_MAP.osceForm_param_osceName}:osceName`}
+              element={
+                <PrivateRoute>
+                  <GenericOsceForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.admin}
+              element={
+                <PrivateRoute>
+                  <Admin />
+                </PrivateRoute>
+              }
+            />
+            <Route path={ROUTE_MAP.root_star} element={<Home />} />
           </Routes>
         </BrowserRouter>
-      </StateContext.Provider >
-    </div >
+      </StateContext.Provider>
+    </div>
   );
 }
 

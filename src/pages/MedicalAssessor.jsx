@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
+import ROUTE_MAP from "../routing/routeMap";
 
 const MedicalAssessor = () => {
   const navigate = useNavigate();
@@ -25,12 +26,12 @@ const MedicalAssessor = () => {
         <Button
           text="Today's Assessments"
           styles="w-80 lg:w-[60%] animate__animated animate__fadeInDown"
-          onClick={() => handleClick("/medical-assessments")}
+          onClick={() => handleClick(ROUTE_MAP.medical_assessments)}
         />
         <Button
           text="Upcoming"
           styles="w-80 lg:w-[60%] animate__animated animate__fadeInDown"
-          onClick={() => handleClick("/upcoming-medical-assessments")}
+          onClick={() => handleClick(ROUTE_MAP.upcoming_medical_assessments)}
         />
       </div>
     </CommonLayout>
