@@ -5,7 +5,6 @@ import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { loginMedical } from "../api";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import ROUTE_MAP from "../routing/routeMap";
 
 const LoginMedical = () => {
@@ -43,8 +42,10 @@ const LoginMedical = () => {
     }
     if (loginRes.responseCode == "OK" && loginRes.result) {
       let loggedInUser = loginRes.result.data.user;
-      localStorage.setItem("userData", JSON.stringify(loggedInUser));
-      console.log(loggedInUser);
+      // localStorage.setItem("userData", JSON.stringify(loggedInUser));
+
+      setCookie("userData", JSON.stringify(loggedInUser), 2);
+
       if (userIsAdminForPortal(loggedInUser.user.registrations)) {
         navigate(ROUTE_MAP.admin);
       } else {
