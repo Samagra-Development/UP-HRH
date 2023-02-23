@@ -10,6 +10,7 @@ const MedicalAssessments = () => {
   const { state, setState } = useContext(StateContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const isMobile = window.innerWidth < 500;
   const [data, setData] = useState({
     district: "",
     instituteName: "",
@@ -38,6 +39,7 @@ const MedicalAssessments = () => {
           ass.institute?.institute_specializations?.[0]?.specializations,
         courses: ass.institute?.institute_types?.[0]?.types,
         type: ass.institute.sector,
+        pocs: ass.institute.institute_pocs,
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
@@ -58,7 +60,7 @@ const MedicalAssessments = () => {
           {data?.district}
         </p>
         {!loading && data && (
-          <div className="h-full w-full bg-tertiary flex flex-col wrap items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow">
+          <div className="h-full w-full bg-tertiary flex flex-col wrap items-center pt-4 pb-8 px-5 mt-4 animate__animated animate__fadeIn animate__slow overflow-scroll">
             <div className="flex flex-col py-3 w-full ">
               <span className="text-secondary pb-2 font-medium">
                 Institute Name
@@ -80,6 +82,42 @@ const MedicalAssessments = () => {
                 className="border-2 border-primary p-3.5"
                 value={data?.type}
               />
+            </div>
+            <div className="flex flex-col py-3 w-full">
+              <span className="text-secondary pb-2 font-medium">
+                POC Names
+              </span>
+              {data?.pocs?.map(el => <input
+                type="text"
+                disabled
+                className="border-2 border-primary p-3.5"
+                value={el?.name}
+                style={{ marginBottom: 20 }}
+              />)}
+            </div>
+            <div className="flex flex-col py-3 w-full" style={{ marginTop: -20, marginBottom: -20 }}>
+              <span className="text-secondary pb-2 font-medium">
+                POC Numbers
+              </span>
+              {data?.pocs?.map(el => <input
+                type="text"
+                disabled
+                className="border-2 border-primary p-3.5"
+                value={el?.number}
+                style={{ marginBottom: 20 }}
+              />)}
+            </div>
+            <div className="flex flex-col py-3 w-full" style={{ marginTop: -20, marginBottom: -20 }}>
+              <span className="text-secondary pb-2 font-medium">
+                POC Numbers
+              </span>
+              {data?.pocs?.map(el => <input
+                type="text"
+                disabled
+                className="border-2 border-primary p-3.5"
+                value={el?.number}
+                style={{ marginBottom: 20 }}
+              />)}
             </div>
             <div className="flex flex-col py-3 w-full">
               <span className="text-secondary pb-2 font-medium">
@@ -107,6 +145,19 @@ const MedicalAssessments = () => {
                 </div>
               </div>
             )}
+            <div className="flex flex-col py-3 w-full" >
+              <span className="text-secondary pb-2 font-medium">
+                Institute Location
+              </span>
+              {data.latitude && data.longitude && <iframe
+                src={`https://maps.google.com/maps?q=${data?.latitude},${data?.longitude}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                width={isMobile ? "100%" : "60%"}
+                height={200}
+                loading="lazy"
+                title="map"
+                className="mt-5 animate__animated animate__fadeIn"
+              />}
+            </div>
             {/* <div className="flex flex-col py-3 w-full">
               <span className="text-secondary pb-2 font-medium">
                 Is Nursing
