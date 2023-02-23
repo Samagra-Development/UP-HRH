@@ -51,7 +51,6 @@ export const updateFormData = (name, data) => {
   }
   return JSON.stringify(data);
 };
-
 export const setCookie = (cname, cvalue, minutes) => {
   var d = new Date();
   d.setTime(d.getTime() + minutes * 60 * 1000);
