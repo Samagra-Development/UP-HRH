@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { StateContext } from "../App";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";

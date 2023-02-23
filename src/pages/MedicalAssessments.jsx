@@ -86,8 +86,11 @@ const MedicalAssessments = () => {
                 Institute Specialization
               </span>
               <div className="flex flex-row gap-2 flex-wrap">
-                {data?.specialization?.map((el) => (
-                  <span className="px-5 py-1 bg-primary rounded text-white">
+                {data?.specialization?.map((el, idx) => (
+                  <span
+                    key={`${el}${idx}`}
+                    className="px-5 py-1 bg-primary rounded text-white"
+                  >
                     {el}
                   </span>
                 ))}
@@ -99,8 +102,11 @@ const MedicalAssessments = () => {
                   Courses offered
                 </span>
                 <div className="flex flex-row gap-2 flex-wrap">
-                  {data?.courses?.map((el) => (
-                    <span className="px-5 py-1 bg-primary rounded text-white">
+                  {data?.courses?.map((el, idx) => (
+                    <span
+                      key={`${el}${idx}`}
+                      className="px-5 py-1 bg-primary rounded text-white"
+                    >
                       {el}
                     </span>
                   ))}

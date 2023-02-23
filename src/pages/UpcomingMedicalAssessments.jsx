@@ -40,8 +40,8 @@ const UpcomingMedicalAssessments = () => {
             </thead>
             <tbody>
               {tableData &&
-                tableData.map((el) => (
-                  <tr className="bg-white border-b">
+                tableData.map((el, idx) => (
+                  <tr key={`${el}${idx}`} className="bg-white border-b">
                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                       {el.date}
                     </td>
