@@ -4,10 +4,11 @@ import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import ROUTE_MAP from "../routing/routeMap";
 
-const Home = () => {
+const Home = ({ handleStepChangeForLogin }) => {
   const navigate = useNavigate();
   const handleClick = (route) => {
     navigate(route);
+    handleStepChangeForLogin();
   };
   return (
     <CommonLayout backDisabled={true} logoutDisabled>

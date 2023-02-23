@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { isUserExists } from "../../utils";
+import { extractUserFromCookie } from "../../utils";
 import { StateContext } from "../../App";
 import ROUTE_MAP from "../routeMap";
 import { Navigate } from "react-router";
 
 const PrivateRoute = ({ children, odk }) => {
   const { state } = useContext(StateContext);
-  const isAuthenticated = isUserExists();
+  const isAuthenticated = extractUserFromCookie();
   // console.log(state);
 
   // if (odk && isAuthenticated) {
