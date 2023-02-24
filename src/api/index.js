@@ -4,7 +4,7 @@ import { makeHasuraCalls } from "../utils";
 const BASE_URL = process.env.REACT_APP_USER_SERVICE_URL;
 const applicationId = process.env.REACT_APP_APPLICATION_ID;
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
-const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
+// const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 export const loginMedical = async (username, pass) => {
   try {
@@ -129,7 +129,7 @@ export const getRandomOsceFormsTeacher = async (type) => {
     const years = ["1st_year"];
     const year = years[Math.floor(Math.random() * years.length)];
     const res = await axios.get(
-      `${ENKETO_MANAGER_URL}osceFormTeachers/${type}/${year}`
+      `${ENKETO_MANAGER_URL}/osceFormTeachers/${type}/${year}`
     );
     return res.data;
   } catch (err) {
@@ -181,7 +181,6 @@ export const createUser = async (data) => {
       return errorStrings.join(". \n");
     }
   } catch (error) {
-    console.log("Create Catch", error);
     const errorStrings = [];
     const errors = error?.response?.data?.exception?.fieldErrors;
     Object.keys(errors).forEach((key) => {
