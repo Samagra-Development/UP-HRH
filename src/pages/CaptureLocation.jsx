@@ -63,9 +63,9 @@ const CaptureLocation = () => {
       var a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.sin(dLon / 2) *
-          Math.sin(dLon / 2) *
-          Math.cos(lat1) *
-          Math.cos(lat2);
+        Math.sin(dLon / 2) *
+        Math.cos(lat1) *
+        Math.cos(lat2);
       var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
       d = R * c;
     } catch (err) {
@@ -82,32 +82,32 @@ const CaptureLocation = () => {
   }
 
   const handleSubmit = () => {
-    // if (
-    //   !state?.todayAssessment?.latitude ||
-    //   !state?.todayAssessment?.longitude
-    // ) {
-    //   setError(
-    //     `Institute co-ordinates are missing. Please try again from start`
-    //   );
-    //   setTimeout(() => {
-    //     setError(false);
-    //   }, 5000);
-    //   return;
-    // }
-    // if (!lat || !long) {
-    //   setError(`Please capture location before continuing`);
-    //   setTimeout(() => {
-    //     setError(false);
-    //   }, 5000);
-    //   return;
-    // }
-    // if (distance > 500) {
-    //   setError(`Please ensure you are within the institute premises`);
-    //   setTimeout(() => {
-    //     setError(false);
-    //   }, 5000);
-    //   return;
-    // }
+    if (
+      !state?.todayAssessment?.latitude ||
+      !state?.todayAssessment?.longitude
+    ) {
+      setError(
+        `Institute co-ordinates are missing. Please try again from start`
+      );
+      setTimeout(() => {
+        setError(false);
+      }, 5000);
+      return;
+    }
+    if (!lat || !long) {
+      setError(`Please capture location before continuing`);
+      setTimeout(() => {
+        setError(false);
+      }, 5000);
+      return;
+    }
+    if (distance > 500) {
+      setError(`Please ensure you are within the institute premises`);
+      setTimeout(() => {
+        setError(false);
+      }, 5000);
+      return;
+    }
     navigate(ROUTE_MAP.medical_assessment_options);
   };
 
