@@ -1,5 +1,5 @@
 export const makeHasuraCalls = async (query) => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = extractUserFromCookie();
   return fetch(process.env.REACT_APP_HASURA_URL, {
     method: "POST",
     headers: {
@@ -51,12 +51,36 @@ export const updateFormData = (name, data) => {
   }
   return JSON.stringify(data);
 };
-
-// generates cookie and its expiration time  with provided informantiona
-
-export const setCookie = (cname, cvalue, hours) => {
+export const setCookie = (cname, cvalue, minutes) => {
   var d = new Date();
-  d.setTime(d.getTime() + hours * 60 * 60 * 1000);
+  d.setTime(d.getTime() + minutes * 60 * 1000);
   var expires = "expires=" + d.toUTCString();
   document.cookie = cname + "=" + cvalue + "; " + expires;
+};
+
+export const extractUserFromCookie = () => {
+  try {
+    const { user } = JSON.parse(document.cookie.split(";")[0].split("=")[1]);
+    if (user) return user;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const deleteAllCookies = () => {
+  const cookies = document.cookie.split(";");
+
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i];
+    const eqPos = cookie.indexOf("=");
+    const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
+    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  }
+};
+
+export const logout = () => {
+  localStorage.clear();
+  sessionStorage.clear();
+  deleteAllCookies();
+  window.location = "/";
 };

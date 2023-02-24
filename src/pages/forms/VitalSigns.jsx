@@ -6,6 +6,7 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import ROUTE_MAP from "../../routing/routeMap";
+import { extractUserFromCookie } from "../../utils";
 
 const VitalSigns = () => {
   const { state } = useContext(StateContext);
@@ -63,7 +64,7 @@ const VitalSigns = () => {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
 
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = JSON.parse(localStorage.getItem("userData"));
+        const userData = extractUserFromCookie();
 
         saveFormSubmission({
           assessor_id: userData?.user?.id,

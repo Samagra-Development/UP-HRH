@@ -2,7 +2,6 @@ const ROUTE_MAP = {
   root: "/",
   login: "/login",
   register: "/register",
-  welcome_medical_assessor: "/welcome-medical-assessor",
   medical_assessments: "/medical-assessments",
   upcoming_medical_assessments: "/upcoming-medical-assessments",
   form: "/form",
@@ -26,7 +25,7 @@ const ROUTE_MAP = {
   labs: "/labs",
   osce_unoccupied_beds: "/osce-unoccupied-beds",
   vital_signs: "/vital-signs",
-  osceForm_param_osceName: "/osceForm",
+  osceForm_param_osceName: "/osceForm/",
   admin: "/admin",
   root_star: "/*",
 };
