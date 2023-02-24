@@ -5,7 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { getCookie, makeDataForPrefill, updateFormData } from "../../utils";
+import {
+  getCookie,
+  makeDataForPrefill,
+  setCookie,
+  updateFormData,
+} from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
@@ -68,8 +73,8 @@ const ParamedicalNonMedical = () => {
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
-        localStorage.setItem(startingForm, "");
-        localStorage.setItem(startingForm + "Images", "");
+        setCookie(startingForm, "");
+        setCookie(startingForm + "Images", "");
       }
 
       if (nextForm?.type === "form") {
@@ -103,10 +108,10 @@ const ParamedicalNonMedical = () => {
         let obj = {};
         let images = JSON.parse(e.data).fileURLs;
         if (images?.[0]?.name) {
-          localStorage.setItem(startingForm + "Images", JSON.stringify(images));
+          setCookie(startingForm + "Images", JSON.stringify(images));
         }
         makeDataForPrefill({}, xml.children, xml.name, obj);
-        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setCookie(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -138,10 +143,10 @@ const ParamedicalNonMedical = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (localStorage.getItem(startingForm)) {
-        const data = JSON.parse(localStorage.getItem(startingForm));
-        let images = localStorage.getItem(startingForm + "Images")
-          ? JSON.parse(localStorage.getItem(startingForm + "Images"))
+      if (getCookie(startingForm)) {
+        const data = JSON.parse(getCookie(startingForm));
+        let images = getCookie(startingForm + "Images")
+          ? JSON.parse(getCookie(startingForm + "Images"))
           : null;
         for (const key in data) {
           if (data[key]) {

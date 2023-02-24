@@ -6,7 +6,7 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import ROUTE_MAP from "../../routing/routeMap";
-import { getCookie } from "../../utils";
+import { extractUserFromCookie } from "../../utils";
 
 const VitalSigns = () => {
   const { state } = useContext(StateContext);
@@ -64,7 +64,7 @@ const VitalSigns = () => {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
 
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = getCookie("userData");
+        const userData = extractUserFromCookie();
 
         saveFormSubmission({
           assessor_id: userData?.user?.id,
@@ -109,7 +109,7 @@ const VitalSigns = () => {
         xml.children[0]?.children?.forEach((element) => {
           obj[element.name] = element.value;
         });
-        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setCookie(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -139,8 +139,8 @@ const VitalSigns = () => {
         latitude: assess.institute.latitude,
         longitude: assess.institute.longitude,
       });
-      if (localStorage.getItem(startingForm)) {
-        const data = JSON.parse(localStorage.getItem(startingForm));
+      if (getCookie(startingForm)) {
+        const data = JSON.parse(getCookie(startingForm));
         for (const key in data) {
           if (data[key]) {
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
