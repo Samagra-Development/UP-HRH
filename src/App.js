@@ -30,15 +30,16 @@ import Admin from "./pages/Admin";
 import ROUTE_MAP from "./routing/routeMap";
 import Login from "./pages/Login/Login";
 import PrivateRoute from "./routing/PrivateRoute/PrivateRoute";
-import { getCookie } from "./utils";
+import dayjs from "dayjs";
+import { todaysDate } from "./utils";
 
 export const StateContext = createContext();
 
 function App() {
   const [state, setState] = useState();
   useEffect(() => {
-    const user = getCookie("userData");
-    if (user) console.log(user, "this is user");
+    const date = todaysDate();
+    console.log(date);
   }, []);
   return (
     <div className="App">

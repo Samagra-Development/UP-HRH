@@ -3,21 +3,21 @@ import CommonLayout from "../../components/CommonLayout";
 import formSpecJSON from "../../configs/nursing.json";
 import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
-import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import {
   getCookie,
   makeDataForPrefill,
   setCookie,
+  todaysDate,
   updateFormData,
 } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
+import dayjs from "dayjs";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 const Nursing = () => {
-  const { state } = useContext(StateContext);
   const formSpec = formSpecJSON;
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
@@ -72,8 +72,8 @@ const Nursing = () => {
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
-        setCookie(startingForm, "");
-        setCookie(startingForm + "Images", "");
+        setCookie(startingForm + todaysDate(), "");
+        setCookie(startingForm + todaysDate() + "Images", "");
       }
 
       if (nextForm?.type === "form") {
@@ -110,10 +110,13 @@ const Nursing = () => {
         let obj = {};
         let images = JSON.parse(e.data).fileURLs;
         if (images?.[0]?.name) {
-          setCookie(startingForm + "Images", JSON.stringify(images));
+          setCookie(
+            startingForm + todaysDate() + "Images",
+            JSON.stringify(images)
+          );
         }
         makeDataForPrefill({}, xml.children, xml.name, obj);
-        setCookie(startingForm, JSON.stringify(obj));
+        setCookie(startingForm + todaysDate(), JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -144,10 +147,10 @@ const Nursing = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (getCookie(startingForm)) {
-        const data = JSON.parse(getCookie(startingForm));
-        let images = getCookie(startingForm + "Images")
-          ? JSON.parse(getCookie(startingForm + "Images"))
+      if (getCookie(startingForm + todaysDate())) {
+        const data = JSON.parse(getCookie(startingForm + todaysDate()));
+        let images = getCookie(startingForm + todaysDate() + "Images")
+          ? JSON.parse(getCookie(startingForm + todaysDate() + "Images"))
           : null;
         for (const key in data) {
           if (data[key]) {

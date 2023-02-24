@@ -1,4 +1,9 @@
+import dayjs from "dayjs";
 import Cookies from "js-cookie";
+
+export const todaysDate = () => {
+  return dayjs().format("DD/MM/YYYY");
+};
 
 export const makeHasuraCalls = async (query) => {
   const userData = getCookie("userData");
@@ -64,7 +69,6 @@ export const setCookie = (cname, cvalue) => {
 export const getCookie = (cname) => {
   try {
     let cookie = Cookies.get(cname);
-    console.log(JSON.parse(cookie));
     if (cookie) return JSON.parse(cookie);
   } catch (error) {
     return false;
