@@ -6,6 +6,7 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import ROUTE_MAP from "../../routing/routeMap";
+import { getCookie } from "../../utils";
 
 const Facilities = () => {
   const { state } = useContext(StateContext);
@@ -63,7 +64,7 @@ const Facilities = () => {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
 
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = JSON.parse(localStorage.getItem("userData"));
+        const userData = getCookie("userData");
 
         saveFormSubmission({
           assessor_id: userData?.user?.id,

@@ -6,7 +6,6 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import ROUTE_MAP from "../../routing/routeMap";
-import { extractUserFromCookie } from "../../utils";
 
 const FacultyFacilities = () => {
   const { state } = useContext(StateContext);
@@ -64,7 +63,7 @@ const FacultyFacilities = () => {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
 
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const { user } = extractUserFromCookie();
+        const { user } = true;
 
         saveFormSubmission({
           assessor_id: user?.id,

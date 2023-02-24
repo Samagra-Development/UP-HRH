@@ -6,7 +6,7 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import ROUTE_MAP from "../../routing/routeMap";
-import { extractUserFromCookie } from "../../utils";
+import { getCookie } from "../../utils";
 
 const QualityOfProcesses = () => {
   const { state } = useContext(StateContext);
@@ -55,7 +55,7 @@ const QualityOfProcesses = () => {
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = extractUserFromCookie();
+        const userData = getCookie("userData");
 
         saveFormSubmission({
           schedule_id: assData.schedule_id,

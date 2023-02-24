@@ -5,7 +5,7 @@ import CommonLayout from "../components/CommonLayout";
 import { StateContext } from "../App";
 import { getAssessmentStatus, getMedicalAssessments } from "../api";
 import ROUTE_MAP from "../routing/routeMap";
-import { extractUserFromCookie } from "../utils";
+import { getCookie } from "../utils";
 
 const MedicalAssessmentsOptions = () => {
   const { state, setState } = useContext(StateContext);
@@ -59,10 +59,9 @@ const MedicalAssessmentsOptions = () => {
   };
 
   useEffect(() => {
-    // getFilledArole === "Medical" ssessmentStatus();
     const {
       user: { registrations },
-    } = extractUserFromCookie();
+    } = getCookie("userData");
     const roles = registrations[0]?.roles[0];
     setRole(() => roles);
   }, []);

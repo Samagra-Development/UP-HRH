@@ -15,7 +15,6 @@ const LoginMedical = ({ handleStepChangeForLogin }) => {
   const [password, setPassword] = useState("");
 
   function userIsAdminForPortal(registrations) {
-    //console.log(registrations)
     const currentRegistration = registrations[0];
     return (
       currentRegistration !== null &&
@@ -42,7 +41,7 @@ const LoginMedical = ({ handleStepChangeForLogin }) => {
     }
     if (loginRes.responseCode == "OK" && loginRes.result) {
       let loggedInUser = loginRes.result.data.user;
-      setCookie("userData", JSON.stringify({ user: loggedInUser }), 12);
+      setCookie("userData", loggedInUser);
       if (userIsAdminForPortal(loggedInUser.user.registrations)) {
         navigate(ROUTE_MAP.admin);
       } else {

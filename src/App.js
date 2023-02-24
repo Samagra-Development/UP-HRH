@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import "./App.css";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import MedicalAssessor from "./pages/MedicalAssessor";
 import MedicalAssessments from "./pages/MedicalAssessments";
 import UpcomingMedicalAssessments from "./pages/UpcomingMedicalAssessments";
@@ -30,11 +30,16 @@ import Admin from "./pages/Admin";
 import ROUTE_MAP from "./routing/routeMap";
 import Login from "./pages/Login/Login";
 import PrivateRoute from "./routing/PrivateRoute/PrivateRoute";
+import { getCookie } from "./utils";
 
 export const StateContext = createContext();
 
 function App() {
   const [state, setState] = useState();
+  useEffect(() => {
+    const user = getCookie("userData");
+    if (user) console.log(user, "this is user");
+  }, []);
   return (
     <div className="App">
       <StateContext.Provider value={{ state, setState }}>

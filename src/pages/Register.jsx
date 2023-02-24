@@ -38,7 +38,6 @@ const Register = () => {
     }
 
     const userRes = await createUser({ mobile, role, password });
-    console.log(userRes);
     if (userRes?.responseCode != "OK") {
       setError(userRes);
       setTimeout(() => setError(""), 3000);
