@@ -62,12 +62,27 @@ export const setCookie = (cname, cvalue) => {
 };
 
 export const getCookie = (cname) => {
-  let cookie = Cookies.get(cname);
-  if (cookie) return JSON.parse(cookie);
+  try {
+    let cookie = Cookies.get(cname);
+    console.log(JSON.parse(cookie));
+    if (cookie) return JSON.parse(cookie);
+  } catch (error) {
+    return false;
+  }
 };
 
 export const logout = () => {
   localStorage.clear();
   sessionStorage.clear();
   window.location = "/";
+  removeCookie("userData");
+};
+
+export const removeCookie = (cname) => {
+  try {
+    Cookies.remove(cname);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };

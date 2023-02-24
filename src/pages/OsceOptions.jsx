@@ -148,7 +148,7 @@ const OsceOptions = () => {
     getFilledAssessmentStatus();
     const {
       user: { registrations },
-    } = setCookie("userData");
+    } = getCookie("userData");
     const roles = registrations[0]?.roles[0];
     setRole(() => roles);
     getTodayAssessments();
