@@ -97,7 +97,7 @@ const GenericOsceForm = () => {
           form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.osce_options), 2000);
         localStorage.setItem(startingForm, "");
         localStorage.setItem(startingForm + "Images", "");
       }
@@ -114,7 +114,7 @@ const GenericOsceForm = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate("medical-assessment-options");
+        navigate(ROUTE_MAP.osce_options);
       } else {
         window.location.href = nextForm.url;
       }

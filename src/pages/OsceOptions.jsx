@@ -22,7 +22,9 @@ const OsceOptions = () => {
   const [course, setCourse] = useState("");
   const [assType, setAssType] = useState("");
   const [osceForms, setOsceForms] = useState("");
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const [disableStudentForms, setDisableStudentForms] = useState(false);
+  const [disableTeacherForms, setDisableTeacherForms] = useState(false);
+  // const userData = JSON.parse(localStorage.getItem("userData"));
   const scheduleId = useRef();
 
   const navigate = useNavigate();
@@ -35,16 +37,18 @@ const OsceOptions = () => {
     } else {
       // console.log(course)
       if (assType == "teacher") {
-        const res = await getRandomOsceFormsTeacher(course);
-        if (res.length) {
-          setOsceForms(res);
-          assignOsceForm({
-            osce_names: "{" + res.toString() + "}",
-            assessment_type: assType,
-            course_type: course,
-            schedule_id: scheduleId.current,
-          });
-        }
+        const year1 = await getRandomOsceForm('b.sc', "1st_year");
+        const year2 = await getRandomOsceForm('b.sc', "2nd_year");
+        const year3 = await getRandomOsceForm('b.sc', "3rd_year");
+        const year4 = await getRandomOsceForm('b.sc', "4th_year");
+        const forms = [year1, year2, year3, year4];
+        assignOsceForm({
+          osce_names: "{" + forms.toString() + "}",
+          assessment_type: assType,
+          course_type: course,
+          schedule_id: scheduleId.current,
+        });
+        setOsceForms(forms);
       } else {
         if (course == "gnm" || course == "b.sc") {
           const year1 = await getRandomOsceForm(course, "1st_year");
@@ -162,6 +166,13 @@ const OsceOptions = () => {
 
   const getFormText = (el) => {
     if (el) {
+      if (assType == 'teacher') {
+        if (el.includes("1st")) return "Foundations of Nursing"
+        if (el.includes("2nd")) return "Medical Surgical Nursing"
+        if (el.includes("3rd")) return "Paediatric"
+        if (el.includes("4th")) return "Obstetrics/Midwifery"
+
+      }
       let formName = "";
       formName = el
         .slice(el.indexOf("_") + 1, el.lastIndexOf("."))
@@ -184,12 +195,21 @@ const OsceOptions = () => {
     }
   };
 
-  console.log(state);
+  useEffect(() => {
+    setDisableStudentForms(false);
+    setDisableTeacherForms(false);
+    if (osceForms && state?.userData?.filledForms) {
+      let filledForms = osceForms.filter(el => state.userData.filledForms[el.slice(0, el.indexOf(".xml"))]);
+      // console.log(assType, filledForms.length, disableStudentForms, disableTeacherForms)
+      if (assType == 'student' && filledForms.length >= 1) setDisableStudentForms(true);
+      if (assType == 'teacher' && filledForms.length >= 2) setDisableTeacherForms(true);
+    }
+  }, [osceForms, course, assType])
 
   return (
     role && (
       <CommonLayout
-        back={ROUTE_MAP.medical_assessment_options}
+        back={ROUTE_MAP.nursing_options}
         backFunction={course ? backFunction : null}
       >
         {!assType && !course && (
@@ -233,13 +253,12 @@ const OsceOptions = () => {
         )}
         {assType && (
           <div className="flex flex-col px-5 py-8 items-center">
-            <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
+            <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeIn">
               Select Assessment Form
             </p>
             {assType == "student" && (
-              <p className="text-secondary text-[12px] font-bold mt-5 text-center animate__animated animate__fadeInDown">
-                Randomly select students from the senior most batch of students
-                in the course
+              <p className="text-secondary text-[12px] font-bold mt-5 text-center animate__animated animate__fadeIn">
+                Please select only one student from the senior most batch
               </p>
             )}
             {osceForms &&
@@ -247,18 +266,17 @@ const OsceOptions = () => {
                 <Button
                   key={`${el}${idx}`}
                   text={getFormText(el)}
-                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                    state?.userData?.filledForms?.[
-                      el.slice(0, el.indexOf(".xml"))
-                    ]
-                      ? "disabled-btn"
-                      : ""
-                  }`}
+                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${(state?.userData?.filledForms?.[
+                    el.slice(0, el.indexOf(".xml"))
+                  ] || disableStudentForms || disableTeacherForms)
+                    ? "disabled-btn"
+                    : ""
+                    }`}
                   onClick={() => {
                     if (
-                      !state?.userData?.filledForms?.[
+                      !(state?.userData?.filledForms?.[
                         el.slice(0, el.indexOf(".xml"))
-                      ]
+                      ] || disableStudentForms || disableTeacherForms)
                     )
                       navigate(
                         `${ROUTE_MAP.osceForm_param_osceName}${el.slice(

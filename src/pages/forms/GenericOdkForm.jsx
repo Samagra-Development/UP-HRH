@@ -1,19 +1,45 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import formSpecJSON from "../../configs/paramedical.json";
-import { useNavigate } from "react-router-dom";
+import { Routes, useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { extractUserFromCookie, makeDataForPrefill } from "../../utils";
+import { makeDataForPrefill, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
-const Paramedical = () => {
+const GenericOdkForm = () => {
+  let { formName } = useParams();
+  const scheduleId = useRef();
+  const formSpec = {
+    forms: {
+      [formName]: {
+        skipOnSuccessMessage: true,
+        prefill: {},
+        submissionURL: "",
+        name: formName,
+        successCheck: "async (formData) => { return true; }",
+        onSuccess: {
+          notificationMessage: "Form submitted successfully",
+          sideEffect: "async (formData) => { console.log(formData); }",
+        },
+        onFailure: {
+          message: "Form submission failed",
+          sideEffect: "async (formData) => { console.log(formData); }",
+          next: {
+            type: "url",
+            id: "google",
+          },
+        },
+      },
+    },
+    start: formName,
+    metaData: {},
+  };
+
   const { state } = useContext(StateContext);
-  const formSpec = formSpecJSON;
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
       `${ENKETO_MANAGER_URL}/prefill?form=${form}&onFormSuccessData=${encodeFunction(
@@ -40,7 +66,6 @@ const Paramedical = () => {
   const [prefilledFormData, setPrefilledFormData] = useState();
 
   const [loading, setLoading] = useState(false);
-  const scheduleId = useRef();
   const [assData, setData] = useState({
     district: "",
     instituteName: "",
@@ -52,19 +77,24 @@ const Paramedical = () => {
   });
 
   function afterFormSubmit(e) {
-    console.log("ABC", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = extractUserFromCookie();
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        const updatedFormData = updateFormData(
+          startingForm + "Images",
+          formData
+        );
 
         saveFormSubmission({
           schedule_id: scheduleId.current,
-          form_data: JSON.stringify(data.formData),
+          form_data: updatedFormData,
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        localStorage.setItem(startingForm, "");
+        localStorage.setItem(startingForm + "Images", "");
       }
 
       if (nextForm?.type === "form") {
@@ -79,7 +109,7 @@ const Paramedical = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate("medical-assessment-options");
+        navigate(ROUTE_MAP.medical_assessment_options);
       } else {
         window.location.href = nextForm.url;
       }
@@ -96,6 +126,10 @@ const Paramedical = () => {
       var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
       if (xml && xml?.children?.length > 0) {
         let obj = {};
+        let images = JSON.parse(e.data).fileURLs;
+        if (images?.[0]?.name) {
+          localStorage.setItem(startingForm + "Images", JSON.stringify(images));
+        }
         makeDataForPrefill({}, xml.children, xml.name, obj);
         localStorage.setItem(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
@@ -131,8 +165,19 @@ const Paramedical = () => {
       });
       if (localStorage.getItem(startingForm)) {
         const data = JSON.parse(localStorage.getItem(startingForm));
+        let images = localStorage.getItem(startingForm + "Images")
+          ? JSON.parse(localStorage.getItem(startingForm + "Images"))
+          : null;
         for (const key in data) {
           if (data[key]) {
+            if (images) {
+              let foundImage = images.filter((el) => el.name == data[key]);
+              if (foundImage?.length) {
+                formSpec.forms[formId].prefill[key] =
+                  "`" + `${foundImage[0].url}` + "`";
+                continue;
+              }
+            }
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
           }
         }
@@ -169,13 +214,13 @@ const Paramedical = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.paramedical_options}>
+    <CommonLayout back={ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
-              title="Location Form"
+              title="form"
               src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
@@ -186,4 +231,4 @@ const Paramedical = () => {
   );
 };
 
-export default Paramedical;
+export default GenericOdkForm;
