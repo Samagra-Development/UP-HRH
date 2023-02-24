@@ -5,7 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { getCookie, makeDataForPrefill, setCookie } from "../../utils";
+import {
+  getCookie,
+  makeDataForPrefill,
+  setCookie,
+  todaysDate,
+} from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
@@ -97,7 +102,7 @@ const Paramedical = () => {
       if (xml && xml?.children?.length > 0) {
         let obj = {};
         makeDataForPrefill({}, xml.children, xml.name, obj);
-        setCookie(startingForm, JSON.stringify(obj));
+        setCookie(startingForm + todaysDate(), JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -129,8 +134,8 @@ const Paramedical = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (getCookie(startingForm)) {
-        const data = JSON.parse(getCookie(startingForm));
+      if (getCookie(startingForm + todaysDate())) {
+        const data = JSON.parse(getCookie(startingForm + todaysDate()));
         for (const key in data) {
           if (data[key]) {
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";

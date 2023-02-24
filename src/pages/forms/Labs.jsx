@@ -6,7 +6,7 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import ROUTE_MAP from "../../routing/routeMap";
-import { getCookie, setCookie } from "../../utils";
+import { getCookie, setCookie, todaysDate } from "../../utils";
 
 const Labs = () => {
   const { state } = useContext(StateContext);
@@ -109,7 +109,7 @@ const Labs = () => {
         xml.children[0]?.children?.forEach((element) => {
           obj[element.name] = element.value;
         });
-        setCookie(startingForm, JSON.stringify(obj));
+        setCookie(startingForm + todaysDate(), JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -139,8 +139,8 @@ const Labs = () => {
         latitude: assess.institute.latitude,
         longitude: assess.institute.longitude,
       });
-      if (getCookie(startingForm)) {
-        const data = JSON.parse(getCookie(startingForm));
+      if (getCookie(startingForm + todaysDate())) {
+        const data = JSON.parse(getCookie(startingForm + todaysDate()));
         for (const key in data) {
           if (data[key]) {
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";

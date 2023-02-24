@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
 import formSpecJSON from "../../configs/nursing.json";
 import { useNavigate } from "react-router-dom";
@@ -7,12 +7,12 @@ import XMLParser from "react-xml-parser";
 import {
   getCookie,
   makeDataForPrefill,
+  removeCookie,
   setCookie,
   todaysDate,
   updateFormData,
 } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
-import dayjs from "dayjs";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
@@ -72,8 +72,8 @@ const Nursing = () => {
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
-        setCookie(startingForm + todaysDate(), "");
-        setCookie(startingForm + todaysDate() + "Images", "");
+        removeCookie(startingForm + todaysDate());
+        removeCookie(startingForm + todaysDate() + "Images");
       }
 
       if (nextForm?.type === "form") {

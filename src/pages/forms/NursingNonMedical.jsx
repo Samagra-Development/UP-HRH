@@ -13,6 +13,7 @@ import {
   getCookie,
   makeDataForPrefill,
   setCookie,
+  todaysDate,
   updateFormData,
 } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
@@ -77,8 +78,8 @@ const NursingNonMedical = () => {
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
-        setCookie(startingForm, "");
-        setCookie(startingForm + "Images", "");
+        setCookie(startingForm + todaysDate(), "");
+        setCookie(startingForm + todaysDate() + "Images", "");
       }
 
       if (nextForm?.type === "form") {
@@ -112,10 +113,13 @@ const NursingNonMedical = () => {
         let obj = {};
         let images = JSON.parse(e.data).fileURLs;
         if (images?.[0]?.name) {
-          setCookie(startingForm + "Images", JSON.stringify(images));
+          setCookie(
+            startingForm + todaysDate() + "Images",
+            JSON.stringify(images)
+          );
         }
         makeDataForPrefill({}, xml.children, xml.name, obj);
-        setCookie(startingForm, JSON.stringify(obj));
+        setCookie(startingForm + todaysDate(), JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -147,10 +151,10 @@ const NursingNonMedical = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (getCookie(startingForm)) {
-        const data = JSON.parse(getCookie(startingForm));
-        let images = getCookie(startingForm + "Images")
-          ? JSON.parse(getCookie(startingForm + "Images"))
+      if (getCookie(startingForm + todaysDate())) {
+        const data = JSON.parse(getCookie(startingForm + todaysDate()));
+        let images = getCookie(startingForm + todaysDate() + "Images")
+          ? JSON.parse(getCookie(startingForm + todaysDate() + "Images"))
           : null;
         for (const key in data) {
           if (data[key]) {
