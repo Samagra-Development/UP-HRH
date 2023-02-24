@@ -5,11 +5,10 @@ import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { loginMedical } from "../api";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import ROUTE_MAP from "../routing/routeMap";
 import { setCookie } from "../utils";
 
-const LoginMedical = () => {
+const LoginMedical = ({ handleStepChangeForLogin }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
@@ -25,7 +24,6 @@ const LoginMedical = () => {
   }
 
   const handleLogin = async () => {
-    console.log("Hello World");
     if (!username || !password) {
       setError("Either username or password is missing");
       setTimeout(() => {
@@ -44,14 +42,11 @@ const LoginMedical = () => {
     }
     if (loginRes.responseCode == "OK" && loginRes.result) {
       let loggedInUser = loginRes.result.data.user;
-      localStorage.setItem("userData", JSON.stringify(loggedInUser));
-
-      setCookie("userData", JSON.stringify(loggedInUser), 2);
-
+      setCookie("userData", JSON.stringify({ user: loggedInUser }), 12);
       if (userIsAdminForPortal(loggedInUser.user.registrations)) {
         navigate(ROUTE_MAP.admin);
       } else {
-        navigate(ROUTE_MAP.welcome_medical_assessor);
+        navigate(ROUTE_MAP.root);
       }
       return;
     }
@@ -63,7 +58,7 @@ const LoginMedical = () => {
   };
 
   return (
-    <CommonLayout back="/" logoutDisabled>
+    <CommonLayout backFunction={handleStepChangeForLogin} logoutDisabled>
       <div className="flex flex-col px-5 py-8 items-center">
         <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] animate__animated animate__fadeInDown">
           Welcome Back

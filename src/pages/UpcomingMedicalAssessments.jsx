@@ -21,7 +21,7 @@ const UpcomingMedicalAssessments = () => {
   }, []);
 
   return (
-    <CommonLayout back={ROUTE_MAP.welcome_medical_assessor}>
+    <CommonLayout back={ROUTE_MAP.root}>
       <div className="flex flex-col px-5 py-8 items-center">
         <p className="text-secondary text-[25px] font-bold mt-4 lg:text-[45px]">
           Upcoming Assessments
@@ -40,8 +40,8 @@ const UpcomingMedicalAssessments = () => {
             </thead>
             <tbody>
               {tableData &&
-                tableData.map((el) => (
-                  <tr className="bg-white border-b">
+                tableData.map((el, idx) => (
+                  <tr key={`${el}${idx}`} className="bg-white border-b">
                     <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                       {el.date}
                     </td>

@@ -2,7 +2,6 @@ const ROUTE_MAP = {
   root: "/",
   login: "/login",
   register: "/register",
-  welcome_medical_assessor: "/welcome-medical-assessor",
   medical_assessments: "/medical-assessments",
   upcoming_medical_assessments: "/upcoming-medical-assessments",
   capture_location: "/capture-location",

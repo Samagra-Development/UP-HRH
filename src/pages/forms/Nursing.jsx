@@ -56,7 +56,6 @@ const Nursing = () => {
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        // const userData = JSON.parse(localStorage.getItem("userData"));
         const updatedFormData = updateFormData(
           startingForm + "Images",
           formData

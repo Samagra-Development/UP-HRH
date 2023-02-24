@@ -4,7 +4,7 @@ import { makeHasuraCalls } from "../utils";
 const BASE_URL = process.env.REACT_APP_USER_SERVICE_URL;
 const applicationId = process.env.REACT_APP_APPLICATION_ID;
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
-const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
+// const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 export const loginMedical = async (username, pass) => {
   try {
@@ -186,7 +186,6 @@ export const createUser = async (data) => {
       return errorStrings.join(". \n");
     }
   } catch (error) {
-    console.log("Create Catch", error);
     const errorStrings = [];
     const errors = error?.response?.data?.exception?.fieldErrors;
     Object.keys(errors).forEach((key) => {

@@ -9,7 +9,11 @@ import {
 } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { makeDataForPrefill, updateFormData } from "../../utils";
+import {
+  extractUserFromCookie,
+  makeDataForPrefill,
+  updateFormData,
+} from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
@@ -60,7 +64,7 @@ const NursingNonMedical = () => {
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = JSON.parse(localStorage.getItem("userData"));
+        const userData = extractUserFromCookie();
         const updatedFormData = updateFormData(
           startingForm + "Images",
           formData

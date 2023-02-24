@@ -51,7 +51,7 @@ const MedicalAssessments = () => {
   }, []);
 
   return (
-    <CommonLayout back={ROUTE_MAP.welcome_medical_assessor}>
+    <CommonLayout back={ROUTE_MAP.root}>
       <div className="flex flex-col px-5 py-8 items-center">
         <p className="text-secondary text-[28px] font-bold mt-4 lg:text-[45px] animate__animated animate__fadeInDown">
           Today's Assessments
@@ -124,8 +124,11 @@ const MedicalAssessments = () => {
                 Institute Specialization
               </span>
               <div className="flex flex-row gap-2 flex-wrap">
-                {data?.specialization?.map((el) => (
-                  <span className="px-5 py-1 bg-primary rounded text-white">
+                {data?.specialization?.map((el, idx) => (
+                  <span
+                    key={`${el}${idx}`}
+                    className="px-5 py-1 bg-primary rounded text-white"
+                  >
                     {el}
                   </span>
                 ))}
@@ -137,8 +140,11 @@ const MedicalAssessments = () => {
                   Courses offered
                 </span>
                 <div className="flex flex-row gap-2 flex-wrap">
-                  {data?.courses?.map((el) => (
-                    <span className="px-5 py-1 bg-primary rounded text-white">
+                  {data?.courses?.map((el, idx) => (
+                    <span
+                      key={`${el}${idx}`}
+                      className="px-5 py-1 bg-primary rounded text-white"
+                    >
                       {el}
                     </span>
                   ))}
