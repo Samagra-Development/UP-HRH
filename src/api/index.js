@@ -129,7 +129,7 @@ export const getRandomOsceFormsTeacher = async (type) => {
     const years = ["1st_year"];
     const year = years[Math.floor(Math.random() * years.length)];
     const res = await axios.get(
-      `${ENKETO_MANAGER_URL}/osceFormTeachers/${type}/${year}`
+      `${ENKETO_MANAGER_URL}osceFormTeachers/${type}/${year}`
     );
     return res.data;
   } catch (err) {
