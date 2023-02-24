@@ -80,105 +80,20 @@ const MedicalAssessmentsOptions = () => {
           <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select form type
           </p>
-          {state?.todayAssessment?.specialization?.includes("Nursing") && (
-            <>
-              {role == "Non-Medical" && (
-                <Button
-                  text="Nursing Form"
-                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                    state?.userData?.filledForms?.["nursing_non_medical"]
-                      ? "disabled-btn"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (!state?.userData?.filledForms?.["nursing_non_medical"])
-                      handleNavigation(ROUTE_MAP.nursing_non_medical);
-                    else {
-                      setError(
-                        "You've already filled Non Medical Nursing asessment for today"
-                      );
-                      setTimeout(() => setError(""), 3000);
-                    }
-                  }}
-                />
-              )}
-              {role == "Medical" && (
-                <Button
-                  text="Nursing Form"
-                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                    state?.userData?.filledForms?.["nursing"]
-                      ? "disabled-btn"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (!state?.userData?.filledForms?.["nursing"])
-                      handleNavigation(ROUTE_MAP.nursing);
-                    else {
-                      setError(
-                        "You've already filled Nursing assessment for this date."
-                      );
-                      setTimeout(() => setError(""), 3000);
-                    }
-                  }}
-                />
-              )}
-            </>
-          )}
-          {state?.todayAssessment?.specialization?.includes("Paramedical") && (
-            <>
-              {!loading && role == "Non-Medical" && (
-                <Button
-                  text="Paramedical Form"
-                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                    state?.userData?.filledForms?.["paramedical_non_medical"]
-                      ? "disabled-btn"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (
-                      !state?.userData?.filledForms?.["paramedical_non_medical"]
-                    )
-                      handleNavigation(ROUTE_MAP.paramedical_non_medical);
-                    else {
-                      setError(
-                        "You've already filled Non Medical Paramedical asessment for today"
-                      );
-                      setTimeout(() => setError(""), 3000);
-                    }
-                  }}
-                />
-              )}
-              {!loading && role == "Medical" && (
-                <Button
-                  text="Paramedical Form"
-                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                    state?.userData?.filledForms?.["paramedical"]
-                      ? "disabled-btn"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    if (!state?.userData?.filledForms?.["paramedical"])
-                      handleNavigation(ROUTE_MAP.paramedical);
-                    else {
-                      setError(
-                        "You've already filled Paramedical assessment for this date."
-                      );
-                      setTimeout(() => setError(""), 3000);
-                    }
-                  }}
-                />
-              )}
-            </>
-          )}
-          {role === "Medical" && (
+          {state?.todayAssessment?.specialization?.includes("Nursing") &&
             <Button
-              text="OSCE Forms"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
-              onClick={() => {
-                handleNavigation(ROUTE_MAP.osce_options);
-              }}
+              text="Nursing"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
+              onClick={() => handleNavigation(ROUTE_MAP.nursing_options)}
             />
-          )}
+          }
+          {state?.todayAssessment?.specialization?.includes("Paramedical") &&
+            <Button
+              text="Paramedical"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
+              onClick={() => handleNavigation(ROUTE_MAP.paramedical_options)}
+            />
+          }
           {error && (
             <span className="text-white animate__animated animate__headShake bg-rose-600 font-medium px-4 py-2 mt-5 text-center ">
               {error}

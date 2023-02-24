@@ -186,7 +186,7 @@ const OsceOptions = () => {
   return (
     role && (
       <CommonLayout
-        back={ROUTE_MAP.medical_assessment_options}
+        back={ROUTE_MAP.nursing_options}
         backFunction={course ? backFunction : null}
       >
         {!assType && !course && (
@@ -243,17 +243,16 @@ const OsceOptions = () => {
               osceForms.map((el) => (
                 <Button
                   text={getFormText(el)}
-                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                    state?.userData?.filledForms?.[
-                      el.slice(0, el.indexOf(".xml"))
-                    ]
-                      ? "disabled-btn"
-                      : ""
-                  }`}
+                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[
+                    el.slice(0, el.indexOf(".xml"))
+                  ]
+                    ? "disabled-btn"
+                    : ""
+                    }`}
                   onClick={() => {
                     if (
                       !state?.userData?.filledForms?.[
-                        el.slice(0, el.indexOf(".xml"))
+                      el.slice(0, el.indexOf(".xml"))
                       ]
                     )
                       navigate(

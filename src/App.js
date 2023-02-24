@@ -25,6 +25,8 @@ import OsceOptions from "./pages/OsceOptions";
 import QualityOfProcesses from "./pages/forms/QualityOfProcesses";
 import Labs from "./pages/forms/Labs";
 import GenericOsceForm from "./pages/forms/GenericOsceForm";
+import GenericNursingForm from "./pages/forms/GenericNursingForm";
+import GenericParamedicalForm from "./pages/forms/GenericParamedicalForm";
 import NursingNonMedical from "./pages/forms/NursingNonMedical";
 import ParamedicalNonMedical from "./pages/forms/ParamedicalNonMedical";
 import Admin from "./pages/Admin";
@@ -250,6 +252,22 @@ function App() {
               element={
                 <PrivateRoute>
                   <GenericOsceForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={`${ROUTE_MAP.nursing_param_formName}:formName`}
+              element={
+                <PrivateRoute>
+                  <GenericNursingForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={`${ROUTE_MAP.paramedical_param_formName}:formName`}
+              element={
+                <PrivateRoute>
+                  <GenericParamedicalForm />
                 </PrivateRoute>
               }
             />
