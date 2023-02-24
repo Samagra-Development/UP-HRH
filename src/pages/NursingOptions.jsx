@@ -106,7 +106,7 @@ const NursingOptions = () => {
             }}
           />
           }
-          {role === "Medical" && (
+          {!loading && role === "Medical" && (
             <Button
               text="OSCE Forms"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}

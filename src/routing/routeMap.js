@@ -5,7 +5,6 @@ const ROUTE_MAP = {
   welcome_medical_assessor: "/welcome-medical-assessor",
   medical_assessments: "/medical-assessments",
   upcoming_medical_assessments: "/upcoming-medical-assessments",
-  form: "/form",
   capture_location: "/capture-location",
   medical_assessment_options: "/medical-assessment-options",
   nursing_options: "/nursing-options",
@@ -29,6 +28,7 @@ const ROUTE_MAP = {
   osceForm_param_osceName: "/osceForm/",
   nursing_param_formName: "/nursingForms/",
   paramedical_param_formName: "/paramedicalForm/",
+  otherforms_param_formName: "/forms/",
   admin: "/admin",
   root_star: "/*",
 };

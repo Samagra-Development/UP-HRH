@@ -93,7 +93,7 @@ const GenericNursingForm = () => {
           form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.nursing_options), 2000);
         localStorage.setItem(startingForm, "");
         localStorage.setItem(startingForm + "Images", "");
       }

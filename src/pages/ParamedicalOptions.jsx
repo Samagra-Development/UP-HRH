@@ -52,13 +52,13 @@ const ParamedicalOptions = () => {
           </p>
           {!loading && <Button
             text="DEMO FORM"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_infrastructure"]
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[""]
               ? "disabled-btn"
               : ""
               }`}
             onClick={() => {
-              if (!state?.userData?.filledForms?.["nursing_infrastructure"])
-                handleNavigation(ROUTE_MAP.nursing_param_formName + "nursing_infrastructure");
+              if (!state?.userData?.filledForms?.[""])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "");
               else {
                 setError(
                   "You've already filled this asessment for today"
@@ -70,13 +70,13 @@ const ParamedicalOptions = () => {
           }
           {!loading && <Button
             text="DEMO FORM"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_academic"]
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[""]
               ? "disabled-btn"
               : ""
               }`}
             onClick={() => {
-              if (!state?.userData?.filledForms?.["nursing_academic"])
-                handleNavigation(ROUTE_MAP.nursing_param_formName + "nursing_academic");
+              if (!state?.userData?.filledForms?.[""])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "");
               else {
                 setError(
                   "You've already filled this asessment for today"
@@ -87,14 +87,14 @@ const ParamedicalOptions = () => {
           />
           }
           {!loading && <Button
-            text="Clinical Learning"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_clinical_learning"]
+            text="DEMO FORM"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[""]
               ? "disabled-btn"
               : ""
               }`}
             onClick={() => {
-              if (!state?.userData?.filledForms?.["nursing_clinical_learning"])
-                handleNavigation(ROUTE_MAP.nursing_param_formName + "nursing_clinical_learning");
+              if (!state?.userData?.filledForms?.[""])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "");
               else {
                 setError(
                   "You've already filled this asessment for today"

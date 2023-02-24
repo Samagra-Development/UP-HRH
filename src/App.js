@@ -27,6 +27,7 @@ import Labs from "./pages/forms/Labs";
 import GenericOsceForm from "./pages/forms/GenericOsceForm";
 import GenericNursingForm from "./pages/forms/GenericNursingForm";
 import GenericParamedicalForm from "./pages/forms/GenericParamedicalForm";
+import GenericOdkForm from "./pages/forms/GenericOdkForm";
 import NursingNonMedical from "./pages/forms/NursingNonMedical";
 import ParamedicalNonMedical from "./pages/forms/ParamedicalNonMedical";
 import Admin from "./pages/Admin";
@@ -80,14 +81,6 @@ function App() {
               element={
                 <PrivateRoute>
                   <UpcomingMedicalAssessments />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path={ROUTE_MAP.form}
-              element={
-                <PrivateRoute>
-                  <Form />
                 </PrivateRoute>
               }
             />
@@ -247,6 +240,14 @@ function App() {
                 </PrivateRoute>
               }
             /> */}
+            <Route
+              path={`${ROUTE_MAP.otherforms_param_formName}:formName`}
+              element={
+                <PrivateRoute>
+                  <GenericOdkForm />
+                </PrivateRoute>
+              }
+            />
             <Route
               path={`${ROUTE_MAP.osceForm_param_osceName}:osceName`}
               element={

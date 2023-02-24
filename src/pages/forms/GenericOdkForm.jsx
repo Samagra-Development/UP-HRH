@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import { useNavigate, useParams } from "react-router-dom";
+import { Routes, useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
@@ -10,16 +10,16 @@ import ROUTE_MAP from "../../routing/routeMap";
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
-const GenericOsceForm = () => {
-  let { osceName } = useParams();
+const GenericOdkForm = () => {
+  let { formName } = useParams();
   const scheduleId = useRef();
   const formSpec = {
     forms: {
-      [osceName]: {
+      [formName]: {
         skipOnSuccessMessage: true,
         prefill: {},
         submissionURL: "",
-        name: osceName,
+        name: formName,
         successCheck: "async (formData) => { return true; }",
         onSuccess: {
           notificationMessage: "Form submitted successfully",
@@ -35,7 +35,7 @@ const GenericOsceForm = () => {
         },
       },
     },
-    start: osceName,
+    start: formName,
     metaData: {},
   };
 
@@ -77,7 +77,6 @@ const GenericOsceForm = () => {
   });
 
   function afterFormSubmit(e) {
-    console.log("ABC", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
@@ -93,7 +92,7 @@ const GenericOsceForm = () => {
           form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.osce_options), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
         localStorage.setItem(startingForm, "");
         localStorage.setItem(startingForm + "Images", "");
       }
@@ -110,7 +109,7 @@ const GenericOsceForm = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate(ROUTE_MAP.osce_options);
+        navigate(ROUTE_MAP.medical_assessment_options);
       } else {
         window.location.href = nextForm.url;
       }
@@ -215,7 +214,7 @@ const GenericOsceForm = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.osce_options}>
+    <CommonLayout back={ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>
@@ -232,4 +231,4 @@ const GenericOsceForm = () => {
   );
 };
 
-export default GenericOsceForm;
+export default GenericOdkForm;

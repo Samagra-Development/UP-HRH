@@ -93,7 +93,7 @@ const GenericParamedicalForm = () => {
           form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.paramedical_options), 2000);
         localStorage.setItem(startingForm, "");
         localStorage.setItem(startingForm + "Images", "");
       }
@@ -215,7 +215,7 @@ const GenericParamedicalForm = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.osce_options}>
+    <CommonLayout back={ROUTE_MAP.paramedical_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>
