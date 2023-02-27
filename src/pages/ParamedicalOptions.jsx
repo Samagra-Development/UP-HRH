@@ -5,7 +5,7 @@ import CommonLayout from "../components/CommonLayout";
 import { StateContext } from "../App";
 import { getAssessmentStatus } from "../api";
 import ROUTE_MAP from "../routing/routeMap";
-import { setCookie } from "../utils";
+import { getCookie, setCookie } from "../utils";
 
 const ParamedicalOptions = () => {
   const { state, setState } = useContext(StateContext);
@@ -41,7 +41,7 @@ const ParamedicalOptions = () => {
     getFilledAssessmentStatus();
     const {
       user: { registrations },
-    } = setCookie("userData");
+    } = getCookie("userData");
     const roles = registrations[0]?.roles[0];
     setRole(() => roles);
   }, []);
