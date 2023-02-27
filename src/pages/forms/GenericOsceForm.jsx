@@ -95,6 +95,7 @@ const GenericOsceForm = () => {
         saveFormSubmission({
           schedule_id: scheduleId.current,
           form_data: updatedFormData,
+          assessment_type: 'institute',
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.osce_options), 2000);

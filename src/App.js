@@ -34,6 +34,8 @@ import ROUTE_MAP from "./routing/routeMap";
 import Login from "./pages/Login/Login";
 import PrivateRoute from "./routing/PrivateRoute/PrivateRoute";
 import { getCookie } from "./utils";
+import AssessmentType from "./pages/AssessmentType";
+import HospitalOptions from "./pages/HospitalOptions";
 
 export const StateContext = createContext();
 
@@ -117,6 +119,22 @@ function App() {
             <Route
               path={ROUTE_MAP.forgot_password}
               element={<ForgotPassword />}
+            />
+            <Route
+              path={ROUTE_MAP.assessment_type}
+              element={
+                <PrivateRoute>
+                  <AssessmentType />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path={ROUTE_MAP.hospital_forms}
+              element={
+                <PrivateRoute>
+                  <HospitalOptions />
+                </PrivateRoute>
+              }
             />
             <Route
               path={ROUTE_MAP.nursing}

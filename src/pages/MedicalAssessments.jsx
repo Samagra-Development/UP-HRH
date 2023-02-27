@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import { getMedicalAssessments } from "../api";
+import { faUser, faLock, faMobile } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StateContext } from "../App";
 import ROUTE_MAP from "../routing/routeMap";
 
@@ -23,7 +25,7 @@ const MedicalAssessments = () => {
 
   const startAssess = () => {
     setState({ ...state, todayAssessment: { ...data } });
-    navigate(ROUTE_MAP.capture_location);
+    navigate(ROUTE_MAP.assessment_type);
   };
 
   const getTodayAssessments = async () => {
@@ -85,39 +87,11 @@ const MedicalAssessments = () => {
             </div>
             <div className="flex flex-col py-3 w-full">
               <span className="text-secondary pb-2 font-medium">
-                POC Names
+                POC Details
               </span>
-              {data?.pocs?.map(el => <input
-                type="text"
-                disabled
-                className="border-2 border-primary p-3.5"
-                value={el?.name}
-                style={{ marginBottom: 20 }}
-              />)}
-            </div>
-            <div className="flex flex-col py-3 w-full" style={{ marginTop: -20, marginBottom: -20 }}>
-              <span className="text-secondary pb-2 font-medium">
-                POC Numbers
-              </span>
-              {data?.pocs?.map(el => <input
-                type="text"
-                disabled
-                className="border-2 border-primary p-3.5"
-                value={el?.number}
-                style={{ marginBottom: 20 }}
-              />)}
-            </div>
-            <div className="flex flex-col py-3 w-full" style={{ marginTop: -20, marginBottom: -20 }}>
-              <span className="text-secondary pb-2 font-medium">
-                POC Numbers
-              </span>
-              {data?.pocs?.map(el => <input
-                type="text"
-                disabled
-                className="border-2 border-primary p-3.5"
-                value={el?.number}
-                style={{ marginBottom: 20 }}
-              />)}
+              {data?.pocs?.map(el =>
+                <div className="mb-4 text-secondary"><FontAwesomeIcon icon={faUser} /> &nbsp; {el.name}, {el.number}</div>
+              )}
             </div>
             <div className="flex flex-col py-3 w-full">
               <span className="text-secondary pb-2 font-medium">

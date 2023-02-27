@@ -89,9 +89,10 @@ const GenericOdkForm = () => {
         saveFormSubmission({
           schedule_id: scheduleId.current,
           form_data: updatedFormData,
+          assessment_type: formName.startsWith('hospital') ? 'hospital' : 'institute',
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        setTimeout(() => navigate(formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options), 2000);
         setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
         setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
@@ -108,7 +109,7 @@ const GenericOdkForm = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate(ROUTE_MAP.medical_assessment_options);
+        navigate(formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options)
       } else {
         window.location.href = nextForm.url;
       }
@@ -212,7 +213,7 @@ const GenericOdkForm = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.medical_assessment_options}>
+    <CommonLayout back={formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

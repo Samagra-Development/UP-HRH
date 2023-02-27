@@ -117,7 +117,7 @@ const CaptureLocation = () => {
   }, [lat, long]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.medical_assessments}>
+    <CommonLayout back={ROUTE_MAP.assessment_type}>
       <div className="flex flex-col px-5 py-8 items-center">
         <img
           src="/assets/locationGirl.png"
