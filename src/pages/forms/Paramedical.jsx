@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import formSpecJSON from "../../configs/paraMedical.json";
+import formSpecJSON from "../../configs/paramedical.json";
 import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";

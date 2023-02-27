@@ -1,30 +1,25 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import { useNavigate, useParams } from "react-router-dom";
+import { Routes, useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import {
-  getCookie,
-  makeDataForPrefill,
-  setCookie,
-  updateFormData,
-} from "../../utils";
+import { makeDataForPrefill, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
-const GenericOsceForm = () => {
-  let { osceName } = useParams();
+const GenericOdkForm = () => {
+  let { formName } = useParams();
   const scheduleId = useRef();
   const formSpec = {
     forms: {
-      [osceName]: {
+      [formName]: {
         skipOnSuccessMessage: true,
         prefill: {},
         submissionURL: "",
-        name: osceName,
+        name: formName,
         successCheck: "async (formData) => { return true; }",
         onSuccess: {
           notificationMessage: "Form submitted successfully",
@@ -40,7 +35,7 @@ const GenericOsceForm = () => {
         },
       },
     },
-    start: osceName,
+    start: formName,
     metaData: {},
   };
 
@@ -82,12 +77,11 @@ const GenericOsceForm = () => {
   });
 
   function afterFormSubmit(e) {
-    console.log("ABC", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = getCookie("userData");
+        const userData = JSON.parse(localStorage.getItem("userData"));
         const updatedFormData = updateFormData(
           startingForm + "Images",
           formData
@@ -98,9 +92,9 @@ const GenericOsceForm = () => {
           form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.osce_options), 2000);
-        setCookie(startingForm, "");
-        setCookie(startingForm + "Images", "");
+        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        localStorage.setItem(startingForm, "");
+        localStorage.setItem(startingForm + "Images", "");
       }
 
       if (nextForm?.type === "form") {
@@ -115,7 +109,7 @@ const GenericOsceForm = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate(ROUTE_MAP.osce_options);
+        navigate(ROUTE_MAP.medical_assessment_options);
       } else {
         window.location.href = nextForm.url;
       }
@@ -134,10 +128,10 @@ const GenericOsceForm = () => {
         let obj = {};
         let images = JSON.parse(e.data).fileURLs;
         if (images?.[0]?.name) {
-          setCookie(startingForm + "Images", JSON.stringify(images));
+          localStorage.setItem(startingForm + "Images", JSON.stringify(images));
         }
         makeDataForPrefill({}, xml.children, xml.name, obj);
-        setCookie(startingForm, JSON.stringify(obj));
+        localStorage.setItem(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -169,10 +163,10 @@ const GenericOsceForm = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (getCookie(startingForm)) {
-        const data = JSON.parse(getCookie(startingForm));
-        let images = getCookie(startingForm + "Images")
-          ? JSON.parse(getCookie(startingForm + "Images"))
+      if (localStorage.getItem(startingForm)) {
+        const data = JSON.parse(localStorage.getItem(startingForm));
+        let images = localStorage.getItem(startingForm + "Images")
+          ? JSON.parse(localStorage.getItem(startingForm + "Images"))
           : null;
         for (const key in data) {
           if (data[key]) {
@@ -220,7 +214,7 @@ const GenericOsceForm = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.osce_options}>
+    <CommonLayout back={ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>
@@ -237,4 +231,4 @@ const GenericOsceForm = () => {
   );
 };
 
-export default GenericOsceForm;
+export default GenericOdkForm;

@@ -55,41 +55,66 @@ const NursingOptions = () => {
           <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select your assessment type
           </p>
-          {!loading && role == "Non-Medical" && (
-            <Button
-              text="Non Medical Nursing Form"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                state?.userData?.filledForms?.["nursing_non_medical"]
-                  ? "disabled-btn"
-                  : ""
+          {!loading && <Button
+            text="Infrastructure"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_infrastructure"]
+              ? "disabled-btn"
+              : ""
               }`}
-              onClick={() => {
-                if (!state?.userData?.filledForms?.["nursing_non_medical"])
-                  handleNavigation(ROUTE_MAP.nursing_non_medical);
-                else {
-                  setError(
-                    "You've already filled Non Medical Nursing asessment for today"
-                  );
-                  setTimeout(() => setError(""), 3000);
-                }
-              }}
-            />
-          )}
-          {!loading && role == "Medical" && (
-            <Button
-              text="Medical Nursing Form"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${
-                state?.userData?.filledForms?.["nursing"] ? "disabled-btn" : ""
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["nursing_infrastructure"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "nursing_infrastructure");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {!loading && <Button
+            text="Academic"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_academic"]
+              ? "disabled-btn"
+              : ""
               }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["nursing_academic"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "nursing_academic");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {!loading && <Button
+            text="Clinical Learning"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_clinical_learning"]
+              ? "disabled-btn"
+              : ""
+              }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["nursing_clinical_learning"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "nursing_clinical_learning");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {!loading && role === "Medical" && (
+            <Button
+              text="OSCE Forms"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown'}`}
               onClick={() => {
-                if (!state?.userData?.filledForms?.["nursing"])
-                  handleNavigation(ROUTE_MAP.nursing);
-                else {
-                  setError(
-                    "You've already filled Nursing assessment for this date."
-                  );
-                  setTimeout(() => setError(""), 3000);
-                }
+                handleNavigation(ROUTE_MAP.osce_options);
               }}
             />
           )}
