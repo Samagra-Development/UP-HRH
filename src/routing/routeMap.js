@@ -8,6 +8,8 @@ const ROUTE_MAP = {
   medical_assessment_options: "/medical-assessment-options",
   nursing_options: "/nursing-options",
   paramedical_options: "/paramedical-options",
+  assessment_type: "/assessment-type",
+  hospital_forms: "/hospital-forms",
   osce_options: "/osce-options",
   forgot_password: "/forgot-password",
   nursing: "/nursing",

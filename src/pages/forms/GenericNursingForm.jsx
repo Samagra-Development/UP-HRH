@@ -89,6 +89,7 @@ const GenericNursingForm = () => {
 
         saveFormSubmission({
           schedule_id: scheduleId.current,
+          assessment_type: 'institute',
           form_data: updatedFormData,
           form_name: formSpec.start,
         });

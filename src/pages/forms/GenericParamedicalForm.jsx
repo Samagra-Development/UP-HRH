@@ -90,6 +90,7 @@ const GenericParamedicalForm = () => {
         saveFormSubmission({
           schedule_id: scheduleId.current,
           form_data: updatedFormData,
+          assessment_type: 'institute',
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.nursing_options), 2000);
