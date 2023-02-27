@@ -44,8 +44,8 @@ export const makeDataForPrefill = (prev, xmlDoc, key, finalObj, formName) => {
 
 export const updateFormData = (name, data) => {
   let newData = JSON.stringify(data);
-  let images = localStorage.getItem(name)
-    ? JSON.parse(localStorage.getItem(name))
+  let images = getCookie(name)
+    ? JSON.parse(getCookie(name))
     : null;
   if (images) {
     images.forEach((el) => (newData = newData.replace(el.name, el.url)));
@@ -53,6 +53,7 @@ export const updateFormData = (name, data) => {
   }
   return JSON.stringify(data);
 };
+
 export const setCookie = (cname, cvalue) => {
   try {
     Cookies.set(cname, JSON.stringify(cvalue));

@@ -22,6 +22,7 @@ const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 const NursingNonMedical = () => {
   const { state } = useContext(StateContext);
+  const scheduleId = useRef();
   const formSpec = formSpecJSON;
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
@@ -49,7 +50,6 @@ const NursingNonMedical = () => {
   const [prefilledFormData, setPrefilledFormData] = useState();
 
   const [loading, setLoading] = useState(false);
-  const scheduleId = useRef();
   const [assData, setData] = useState({
     district: "",
     instituteName: "",
@@ -61,13 +61,13 @@ const NursingNonMedical = () => {
   });
 
   function afterFormSubmit(e) {
+    console.log("ABC", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = getCookie("userData");
         const updatedFormData = updateFormData(
-          startingForm + "Images",
+          startingForm + `Images${new Date().toISOString().split("T")[0]}`,
           formData
         );
 
@@ -77,8 +77,8 @@ const NursingNonMedical = () => {
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
-        setCookie(startingForm, "");
-        setCookie(startingForm + "Images", "");
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
+        setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
 
       if (nextForm?.type === "form") {
@@ -93,7 +93,7 @@ const NursingNonMedical = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate("medical-assessment-options");
+        navigate(ROUTE_MAP.medical_assessment_options);
       } else {
         window.location.href = nextForm.url;
       }
@@ -112,10 +112,10 @@ const NursingNonMedical = () => {
         let obj = {};
         let images = JSON.parse(e.data).fileURLs;
         if (images?.[0]?.name) {
-          setCookie(startingForm + "Images", JSON.stringify(images));
+          setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, JSON.stringify(images));
         }
         makeDataForPrefill({}, xml.children, xml.name, obj);
-        setCookie(startingForm, JSON.stringify(obj));
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -129,7 +129,6 @@ const NursingNonMedical = () => {
   };
 
   const getTodayAssessments = async () => {
-    console.log("getTodayAssessments");
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
@@ -147,10 +146,10 @@ const NursingNonMedical = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (getCookie(startingForm)) {
-        const data = JSON.parse(getCookie(startingForm));
-        let images = getCookie(startingForm + "Images")
-          ? JSON.parse(getCookie(startingForm + "Images"))
+      if (getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`)) {
+        const data = JSON.parse(getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`));
+        let images = getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`)
+          ? JSON.parse(getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`))
           : null;
         for (const key in data) {
           if (data[key]) {

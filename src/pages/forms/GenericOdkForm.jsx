@@ -4,7 +4,7 @@ import { Routes, useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { makeDataForPrefill, updateFormData } from "../../utils";
+import { getCookie, makeDataForPrefill, setCookie, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
@@ -38,7 +38,6 @@ const GenericOdkForm = () => {
     start: formName,
     metaData: {},
   };
-
   const { state } = useContext(StateContext);
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
@@ -77,13 +76,13 @@ const GenericOdkForm = () => {
   });
 
   function afterFormSubmit(e) {
+    console.log("ABC", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = JSON.parse(localStorage.getItem("userData"));
         const updatedFormData = updateFormData(
-          startingForm + "Images",
+          startingForm + `Images${new Date().toISOString().split("T")[0]}`,
           formData
         );
 
@@ -93,8 +92,8 @@ const GenericOdkForm = () => {
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
-        localStorage.setItem(startingForm, "");
-        localStorage.setItem(startingForm + "Images", "");
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
+        setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
 
       if (nextForm?.type === "form") {
@@ -128,10 +127,10 @@ const GenericOdkForm = () => {
         let obj = {};
         let images = JSON.parse(e.data).fileURLs;
         if (images?.[0]?.name) {
-          localStorage.setItem(startingForm + "Images", JSON.stringify(images));
+          setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, JSON.stringify(images));
         }
         makeDataForPrefill({}, xml.children, xml.name, obj);
-        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -145,7 +144,6 @@ const GenericOdkForm = () => {
   };
 
   const getTodayAssessments = async () => {
-    console.log("getTodayAssessments");
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
@@ -163,10 +161,10 @@ const GenericOdkForm = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (localStorage.getItem(startingForm)) {
-        const data = JSON.parse(localStorage.getItem(startingForm));
-        let images = localStorage.getItem(startingForm + "Images")
-          ? JSON.parse(localStorage.getItem(startingForm + "Images"))
+      if (getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`)) {
+        const data = JSON.parse(getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`));
+        let images = getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`)
+          ? JSON.parse(getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`))
           : null;
         for (const key in data) {
           if (data[key]) {
