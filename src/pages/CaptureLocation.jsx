@@ -4,6 +4,7 @@ import { StateContext } from "../App";
 import Button from "../components/Button";
 import CommonLayout from "../components/CommonLayout";
 import ROUTE_MAP from "../routing/routeMap";
+import { getCookie } from "../utils";
 
 const CaptureLocation = () => {
   const [lat, setLat] = useState(0);
@@ -11,6 +12,7 @@ const CaptureLocation = () => {
   const [showMap, setShowMap] = useState(false);
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [role, setRole] = useState('');
   const { state, setState } = useContext(StateContext);
   const [distance, setDistance] = useState(9999);
   const [error, setError] = useState(false);
@@ -116,8 +118,16 @@ const CaptureLocation = () => {
     else setDisabled(true);
   }, [lat, long]);
 
+  useEffect(() => {
+    const {
+      user: { registrations },
+    } = getCookie("userData");
+    const roles = registrations[0]?.roles[0];
+    setRole(roles);
+  }, [])
+
   return (
-    <CommonLayout back={ROUTE_MAP.assessment_type}>
+    <CommonLayout back={role == 'Medical' ? ROUTE_MAP.assessment_type : ROUTE_MAP.medical_assessments}>
       <div className="flex flex-col px-5 py-8 items-center">
         <img
           src="/assets/locationGirl.png"

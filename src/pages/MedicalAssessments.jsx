@@ -7,12 +7,14 @@ import { faUser, faLock, faMobile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { StateContext } from "../App";
 import ROUTE_MAP from "../routing/routeMap";
+import { getCookie } from "../utils";
 
 const MedicalAssessments = () => {
   const { state, setState } = useContext(StateContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const isMobile = window.innerWidth < 500;
+  const [role, setRole] = useState('');
   const [data, setData] = useState({
     district: "",
     instituteName: "",
@@ -25,7 +27,7 @@ const MedicalAssessments = () => {
 
   const startAssess = () => {
     setState({ ...state, todayAssessment: { ...data } });
-    navigate(ROUTE_MAP.assessment_type);
+    navigate(role == 'Medical' ? ROUTE_MAP.assessment_type : ROUTE_MAP.capture_location);
   };
 
   const getTodayAssessments = async () => {
@@ -50,6 +52,11 @@ const MedicalAssessments = () => {
   };
   useEffect(() => {
     getTodayAssessments();
+    const {
+      user: { registrations },
+    } = getCookie("userData");
+    const roles = registrations[0]?.roles[0];
+    setRole(roles);
   }, []);
 
   return (
