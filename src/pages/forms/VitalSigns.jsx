@@ -109,7 +109,7 @@ const VitalSigns = () => {
         xml.children[0]?.children?.forEach((element) => {
           obj[element.name] = element.value;
         });
-        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setCookie(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -139,8 +139,8 @@ const VitalSigns = () => {
         latitude: assess.institute.latitude,
         longitude: assess.institute.longitude,
       });
-      if (localStorage.getItem(startingForm)) {
-        const data = JSON.parse(localStorage.getItem(startingForm));
+      if (getCookie(startingForm)) {
+        const data = JSON.parse(getCookie(startingForm));
         for (const key in data) {
           if (data[key]) {
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";

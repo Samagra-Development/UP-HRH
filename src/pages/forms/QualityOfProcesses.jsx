@@ -6,7 +6,7 @@ import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import ROUTE_MAP from "../../routing/routeMap";
-import { extractUserFromCookie } from "../../utils";
+import { getCookie, setCookie } from "../../utils";
 
 const QualityOfProcesses = () => {
   const { state } = useContext(StateContext);
@@ -55,7 +55,7 @@ const QualityOfProcesses = () => {
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = extractUserFromCookie();
+        const userData = getCookie("userData");
 
         saveFormSubmission({
           schedule_id: assData.schedule_id,
@@ -97,7 +97,7 @@ const QualityOfProcesses = () => {
         xml.children[0]?.children?.forEach((element) => {
           obj[element.name] = element.value;
         });
-        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setCookie(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -128,8 +128,8 @@ const QualityOfProcesses = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (localStorage.getItem(startingForm)) {
-        const data = JSON.parse(localStorage.getItem(startingForm));
+      if (getCookie(startingForm)) {
+        const data = JSON.parse(getCookie(startingForm));
         for (const key in data) {
           if (data[key]) {
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";

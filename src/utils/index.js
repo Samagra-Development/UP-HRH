@@ -1,5 +1,7 @@
+import Cookies from "js-cookie";
+
 export const makeHasuraCalls = async (query) => {
-  const userData = extractUserFromCookie();
+  const userData = getCookie("userData");
   return fetch(process.env.REACT_APP_HASURA_URL, {
     method: "POST",
     headers: {
@@ -51,36 +53,36 @@ export const updateFormData = (name, data) => {
   }
   return JSON.stringify(data);
 };
-export const setCookie = (cname, cvalue, minutes) => {
-  var d = new Date();
-  d.setTime(d.getTime() + minutes * 60 * 1000);
-  var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + "; " + expires;
-};
-
-export const extractUserFromCookie = () => {
+export const setCookie = (cname, cvalue) => {
   try {
-    const { user } = JSON.parse(document.cookie.split(";")[0].split("=")[1]);
-    if (user) return user;
+    Cookies.set(cname, JSON.stringify(cvalue));
   } catch (error) {
     return false;
   }
 };
 
-export const deleteAllCookies = () => {
-  const cookies = document.cookie.split(";");
-
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i];
-    const eqPos = cookie.indexOf("=");
-    const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
-    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+export const getCookie = (cname) => {
+  try {
+    let cookie = Cookies.get(cname);
+    console.log(JSON.parse(cookie));
+    if (cookie) return JSON.parse(cookie);
+  } catch (error) {
+    return false;
   }
 };
 
 export const logout = () => {
   localStorage.clear();
   sessionStorage.clear();
-  deleteAllCookies();
   window.location = "/";
+  removeCookie("userData");
+};
+
+export const removeCookie = (cname) => {
+  try {
+    Cookies.remove(cname);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };

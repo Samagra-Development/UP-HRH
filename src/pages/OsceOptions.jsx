@@ -12,7 +12,7 @@ import {
   getRandomOsceFormsTeacher,
 } from "../api";
 import ROUTE_MAP from "../routing/routeMap";
-import { extractUserFromCookie } from "../utils";
+import { getCookie, setCookie } from "../utils";
 
 const OsceOptions = () => {
   const { state, setState } = useContext(StateContext);
@@ -22,6 +22,7 @@ const OsceOptions = () => {
   const [course, setCourse] = useState("");
   const [assType, setAssType] = useState("");
   const [osceForms, setOsceForms] = useState("");
+  const userData = getCookie("userData");
   const [disableStudentForms, setDisableStudentForms] = useState(false);
   const [disableTeacherForms, setDisableTeacherForms] = useState(false);
   // const userData = JSON.parse(localStorage.getItem("userData"));
@@ -152,7 +153,7 @@ const OsceOptions = () => {
     getFilledAssessmentStatus();
     const {
       user: { registrations },
-    } = extractUserFromCookie();
+    } = getCookie("userData");
     const roles = registrations[0]?.roles[0];
     setRole(() => roles);
     getTodayAssessments();
