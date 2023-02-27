@@ -44,4 +44,4 @@ for key, value in assessorCodeToPhone.items():
     }
     print("Inserting "+key+", "+value)
     insertUserRequest = requests.post(url, headers=headers, json=requestBody)
-    print(insertUserRequest)
+    print(insertUserRequest.content)

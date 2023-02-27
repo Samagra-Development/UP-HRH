@@ -2,7 +2,6 @@ import requests
 import csv
 from collections import defaultdict
 from decouple import config
-import json
 
 institutes = {}
 institute_courses = defaultdict(set)
@@ -72,5 +71,5 @@ for key, value in institutes.items():
     }
 
     print("Inserting: "+key)
-    x = requests.post(url, headers=headers, json=requestBody)
-    print(x)
+    instituteUploadRequest = requests.post(url, headers=headers, json=requestBody)
+    print(instituteUploadRequest.content)
