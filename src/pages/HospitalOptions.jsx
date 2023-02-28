@@ -75,14 +75,14 @@ const HospitalOptions = () => {
         />
         }
         {!loading && <Button
-          text="Clinical Supervision"
-          styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["hospital_clinical_supervision"]
+          text="Clinical Facilities"
+          styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["hospital_clinical_facilities"]
             ? "disabled-btn"
             : ""
             }`}
           onClick={() => {
-            if (!state?.userData?.filledForms?.["hospital_clinical_supervision"])
-              handleNavigation(ROUTE_MAP.otherforms_param_formName + "hospital_clinical_supervision");
+            if (!state?.userData?.filledForms?.["hospital_clinical_facilities"])
+              handleNavigation(ROUTE_MAP.otherforms_param_formName + "hospital_clinical_facilities");
             else {
               setError(
                 "You've already filled this asessment for today"
