@@ -73,7 +73,7 @@ const MedicalAssessmentsOptions = () => {
   return (
     role && (
       <CommonLayout back={ROUTE_MAP.medical_assessments}>
-        <div className="flex flex-col px-5 py-8 items-center">
+        <div className="flex flex-col px-5 py-8 items-center mb-10">
           <img
             src="/assets/forms.png "
             className="h-60 lg:h-80 my-5 lg:mt-[70px]"
@@ -159,6 +159,25 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
+          {state?.todayAssessment?.courses?.includes("BSC") &&
+            <Button
+              text="BSC Form"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_bsc_general"]
+                ? "disabled-btn"
+                : ""
+                }`}
+              onClick={() => {
+                if (!state?.userData?.filledForms?.["form_bsc_general"])
+                  handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_bsc_general");
+                else {
+                  setError(
+                    "You've already filled this asessment for today"
+                  );
+                  setTimeout(() => setError(""), 3000);
+                }
+              }}
+            />
+          }
           {state?.todayAssessment?.courses?.includes("GNM") &&
             <Button
               text="GNM Form"
@@ -169,6 +188,45 @@ const MedicalAssessmentsOptions = () => {
               onClick={() => {
                 if (!state?.userData?.filledForms?.["form_gnm_general"])
                   handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_gnm_general");
+                else {
+                  setError(
+                    "You've already filled this asessment for today"
+                  );
+                  setTimeout(() => setError(""), 3000);
+                }
+              }}
+            />
+          }
+          {state?.todayAssessment?.courses?.includes("MSC") &&
+            <Button
+              text="MSC Form"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_msc_general"]
+                ? "disabled-btn"
+                : ""
+                }`}
+              onClick={() => {
+                if (!state?.userData?.filledForms?.["form_msc_general"])
+                  handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_msc_general");
+                else {
+                  setError(
+                    "You've already filled this asessment for today"
+                  );
+                  setTimeout(() => setError(""), 3000);
+                }
+              }}
+            />
+          }
+
+          {state?.todayAssessment?.courses?.includes("PBBSC") &&
+            <Button
+              text="PBBSC Form"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_pbbsc_general"]
+                ? "disabled-btn"
+                : ""
+                }`}
+              onClick={() => {
+                if (!state?.userData?.filledForms?.["form_pbbsc_general"])
+                  handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_pbbsc_general");
                 else {
                   setError(
                     "You've already filled this asessment for today"

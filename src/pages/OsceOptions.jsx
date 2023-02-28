@@ -31,7 +31,7 @@ const OsceOptions = () => {
   const navigate = useNavigate();
 
   const pullForms = async () => {
-    const assignedForms = await getAssignedForms(course, assType);
+    const assignedForms = await getAssignedForms(assType == 'teacher' ? 'b.sc' : course, assType);
     if (assignedForms?.data?.osce_assignment?.length) {
       let forms = assignedForms?.data?.osce_assignment?.[0].osce_names;
       setOsceForms(forms);
@@ -46,7 +46,7 @@ const OsceOptions = () => {
         assignOsceForm({
           osce_names: "{" + forms.toString() + "}",
           assessment_type: assType,
-          course_type: course,
+          course_type: 'b.sc',
           schedule_id: scheduleId.current,
         });
         setOsceForms(forms);
@@ -160,10 +160,10 @@ const OsceOptions = () => {
   }, []);
 
   useEffect(() => {
-    if (assType) {
+    if (assType == 'teacher' || (assType == 'student' && course)) {
       pullForms();
     }
-  }, [assType]);
+  }, [assType, course]);
 
   const getFormText = (el) => {
     if (el) {
@@ -185,13 +185,13 @@ const OsceOptions = () => {
   };
 
   const backFunction = () => {
-    if (osceForms && assType) {
+    if (osceForms && course) {
       setOsceForms([]);
-      setAssType(null);
+      setCourse(null);
       return;
     }
-    if (course) {
-      setCourse(null);
+    if (assType) {
+      setAssType(null);
       return;
     }
   };
@@ -211,9 +211,26 @@ const OsceOptions = () => {
     role && (
       <CommonLayout
         back={ROUTE_MAP.nursing_options}
-        backFunction={course ? backFunction : null}
+        backFunction={assType ? backFunction : null}
       >
         {!assType && !course && (
+          <div className="flex flex-col px-5 py-8 items-center">
+            <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
+              Select Assessment Type
+            </p>
+            <Button
+              text="Student"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown `}
+              onClick={() => setAssType("student")}
+            />
+            <Button
+              text="Teacher"
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
+              onClick={() => setAssType("teacher")}
+            />
+          </div>
+        )}
+        {assType == 'student' && !course && (
           <div className="flex flex-col px-5 py-8 items-center">
             <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
               Select Course Type
@@ -235,33 +252,19 @@ const OsceOptions = () => {
               })}
           </div>
         )}
-        {!assType && course && (
-          <div className="flex flex-col px-5 py-8 items-center">
-            <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
-              Select Assessment Type
-            </p>
-            <Button
-              text="Student"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown `}
-              onClick={() => setAssType("student")}
-            />
-            <Button
-              text="Teacher"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
-              onClick={() => setAssType("teacher")}
-            />
-          </div>
-        )}
-        {assType && (
+        {(course || assType == 'teacher') && (
           <div className="flex flex-col px-5 py-8 items-center">
             <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeIn">
               Select Assessment Form
             </p>
-            {assType == "student" && (
+            {assType == "student" ?
               <p className="text-secondary text-[12px] font-bold mt-5 text-center animate__animated animate__fadeIn">
-                Please select only one student from the senior most batch
+                Please select one student from the senior most batch
               </p>
-            )}
+              : <p className="text-secondary text-[12px] font-bold mt-5 text-center animate__animated animate__fadeIn">
+                Please assess only two teachers
+              </p>
+            }
             {osceForms &&
               osceForms.map((el, idx) => (
                 <Button
@@ -287,9 +290,7 @@ const OsceOptions = () => {
                       );
                     else {
                       setError(
-                        `You've already filled ${getFormText(
-                          el
-                        )} Signs assessment today`
+                        `You've already filled assessments today`
                       );
                       setTimeout(() => setError(""), 3000);
                     }
