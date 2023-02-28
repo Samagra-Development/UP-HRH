@@ -5,7 +5,7 @@ from decouple import config
 
 institutes = {}
 institute_courses = defaultdict(set)
-institute_poc = {}
+institute_poc = defaultdict(set)
 institute_specialization = defaultdict(set)
 institute_type = defaultdict(set)
 
@@ -22,10 +22,7 @@ with open("input/institutes/InstituteData.csv", 'r') as file:
             "email": row[13],
         }
         institute_courses[institudeId].add(row[5])
-        institute_poc[institudeId] = {
-            "name": row[9],
-            "number": row[10]
-        }
+        institute_poc[institudeId].add(row[9]+","+row[10])
         institute_specialization[institudeId].add(row[3])
         institute_type[institudeId].add(row[4])
 
@@ -34,6 +31,13 @@ headers = {"x-hasura-admin-secret": config('HASURA_ADMIN_SECRET'),
            "Content-Type": "application/json"}
 
 for key, value in institutes.items():
+    poc_list = []
+    for poc in institute_poc[key]:
+        poc_splits = poc.split(",")
+        poc_list.append({
+            "name": poc_splits[0],
+            "number": poc_splits[1]
+        })
     requestBody = {
         "query": "mutation ($object: [institutes_insert_input!] = {}) {\n      insert_institutes(objects: $object) {\n        returning {\n          id\n           }\n      }\n    }",
         "variables": {
@@ -61,10 +65,7 @@ for key, value in institutes.items():
                     }
                 },
                 "institute_pocs": {
-                    "data": {
-                        "name": institute_poc[key]["name"],
-                        "number":  institute_poc[key]["number"]
-                    }
+                    "data": poc_list
                 }
             }
         }
