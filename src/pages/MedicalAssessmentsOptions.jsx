@@ -84,14 +84,14 @@ const MedicalAssessmentsOptions = () => {
           </p>
 
           {/* For Medical Assessor */}
-          {state?.todayAssessment?.specialization?.includes("Nursing") && role == 'Medical' &&
+          {(state?.todayAssessment?.specialization?.includes("NURSING") || state?.todayAssessment?.specialization?.includes("Nursing")) && role == 'Medical' &&
             <Button
               text="Nursing"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
               onClick={() => handleNavigation(ROUTE_MAP.nursing_options)}
             />
           }
-          {state?.todayAssessment?.specialization?.includes("Paramedical") && role == 'Medical' &&
+          {(state?.todayAssessment?.specialization?.includes("PARAMEDICAL") || state?.todayAssessment?.specialization?.includes("Paramedical")) && role == 'Medical' &&
             <Button
               text="Paramedical"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
@@ -100,7 +100,7 @@ const MedicalAssessmentsOptions = () => {
           }
 
           {/* For Non Medical Assessor */}
-          {state?.todayAssessment?.specialization?.includes("Nursing") && role == 'Non-Medical' &&
+          {(state?.todayAssessment?.specialization?.includes("NURSING") || state?.todayAssessment?.specialization?.includes("Nursing")) && role == 'Non-Medical' &&
             <Button
               text="Nursing"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_non_medical"]
@@ -119,7 +119,7 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
-          {state?.todayAssessment?.specialization?.includes("Paramedical") && role == 'Non-Medical' &&
+          {(state?.todayAssessment?.specialization?.includes("PARAMEDICAL") || state?.todayAssessment?.specialization?.includes("Paramedical")) && role == 'Non-Medical' &&
             <Button
               text="Paramedical"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["paramedical_non_medical"]
