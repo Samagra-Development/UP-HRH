@@ -54,14 +54,14 @@ const ParamedicalOptions = () => {
             Select your assessment type
           </p>
           {!loading && <Button
-            text="DEMO FORM"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[""]
+            text="Clinical Learning"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["paramedical_clinical_learning"]
               ? "disabled-btn"
               : ""
               }`}
             onClick={() => {
-              if (!state?.userData?.filledForms?.[""])
-                handleNavigation(ROUTE_MAP.nursing_param_formName + "");
+              if (!state?.userData?.filledForms?.["paramedical_clinical_learning"])
+                handleNavigation(ROUTE_MAP.paramedical_param_formName + "paramedical_clinical_learning");
               else {
                 setError(
                   "You've already filled this asessment for today"
@@ -72,32 +72,14 @@ const ParamedicalOptions = () => {
           />
           }
           {!loading && <Button
-            text="DEMO FORM"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[""]
+            text="Academic Section"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["paramedical_academic_section"]
               ? "disabled-btn"
               : ""
               }`}
             onClick={() => {
-              if (!state?.userData?.filledForms?.[""])
-                handleNavigation(ROUTE_MAP.nursing_param_formName + "");
-              else {
-                setError(
-                  "You've already filled this asessment for today"
-                );
-                setTimeout(() => setError(""), 3000);
-              }
-            }}
-          />
-          }
-          {!loading && <Button
-            text="DEMO FORM"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[""]
-              ? "disabled-btn"
-              : ""
-              }`}
-            onClick={() => {
-              if (!state?.userData?.filledForms?.[""])
-                handleNavigation(ROUTE_MAP.nursing_param_formName + "");
+              if (!state?.userData?.filledForms?.["paramedical_academic_section"])
+                handleNavigation(ROUTE_MAP.paramedical_param_formName + "paramedical_academic_section");
               else {
                 setError(
                   "You've already filled this asessment for today"

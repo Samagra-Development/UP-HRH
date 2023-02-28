@@ -93,7 +93,7 @@ const GenericParamedicalForm = () => {
           assessment_type: 'institute',
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.nursing_options), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.paramedical_options), 2000);
         setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
         setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
@@ -110,7 +110,7 @@ const GenericParamedicalForm = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate("medical-assessment-options");
+        navigate(ROUTE_MAP.paramedical_options);
       } else {
         window.location.href = nextForm.url;
       }
