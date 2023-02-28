@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
+import ROUTE_MAP from "../../routing/routeMap";
+import { getCookie, setCookie } from "../../utils";
 
 const QualityOfProcesses = () => {
   const { state } = useContext(StateContext);
@@ -45,7 +47,7 @@ const QualityOfProcesses = () => {
     longitude: null,
   });
 
-  console.log(assData)
+  console.log(assData);
 
   function afterFormSubmit(e) {
     console.log("ABC", e.data);
@@ -53,14 +55,14 @@ const QualityOfProcesses = () => {
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = JSON.parse(localStorage.getItem("userData"));
+        const userData = getCookie("userData");
 
         saveFormSubmission({
           schedule_id: assData.schedule_id,
           form_data: JSON.stringify(data.formData),
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
       }
 
       if (nextForm?.type === "form") {
@@ -95,7 +97,7 @@ const QualityOfProcesses = () => {
         xml.children[0]?.children?.forEach((element) => {
           obj[element.name] = element.value;
         });
-        localStorage.setItem(startingForm, JSON.stringify(obj));
+        setCookie(startingForm, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -119,14 +121,15 @@ const QualityOfProcesses = () => {
         id: ass.institute.id,
         district: ass.institute.district,
         instituteName: ass.institute.name,
-        specialization: ass.institute?.institute_specializations?.[0]?.specializations,
+        specialization:
+          ass.institute?.institute_specializations?.[0]?.specializations,
         courses: ass.institute?.institute_types?.[0]?.types,
         type: ass.institute.sector,
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (localStorage.getItem(startingForm)) {
-        const data = JSON.parse(localStorage.getItem(startingForm));
+      if (getCookie(startingForm)) {
+        const data = JSON.parse(getCookie(startingForm));
         for (const key in data) {
           if (data[key]) {
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
@@ -165,7 +168,7 @@ const QualityOfProcesses = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back="/nursing-options">
+    <CommonLayout back={ROUTE_MAP.nursing_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

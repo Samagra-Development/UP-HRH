@@ -2,19 +2,23 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
 import formSpecJSON from "../../configs/paramedicalNonMedical.json";
 import { useNavigate } from "react-router-dom";
-import {
-  getMedicalAssessments,
-  saveFormSubmission,
-} from "../../api";
+import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { makeDataForPrefill } from "../../utils";
+import {
+  getCookie,
+  makeDataForPrefill,
+  setCookie,
+  updateFormData,
+} from "../../utils";
+import ROUTE_MAP from "../../routing/routeMap";
 
-const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL
-const ENKETO_URL = process.env.REACT_APP_ENKETO_URL
+const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
+const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 const ParamedicalNonMedical = () => {
   const { state } = useContext(StateContext);
+  const scheduleId = useRef();
   const formSpec = formSpecJSON;
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
@@ -42,7 +46,6 @@ const ParamedicalNonMedical = () => {
   const [prefilledFormData, setPrefilledFormData] = useState();
 
   const [loading, setLoading] = useState(false);
-  const scheduleId = useRef();
   const [assData, setData] = useState({
     district: "",
     instituteName: "",
@@ -59,14 +62,20 @@ const ParamedicalNonMedical = () => {
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = JSON.parse(localStorage.getItem("userData"));
+        const updatedFormData = updateFormData(
+          startingForm + `Images${new Date().toISOString().split("T")[0]}`,
+          formData
+        );
 
         saveFormSubmission({
           schedule_id: scheduleId.current,
-          form_data: JSON.stringify(data.formData),
+          assessment_type: 'institute',
+          form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate("/medical-assessment-options"), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
+        setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
 
       if (nextForm?.type === "form") {
@@ -81,7 +90,7 @@ const ParamedicalNonMedical = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate("medical-assessment-options");
+        navigate(ROUTE_MAP.medical_assessment_options);
       } else {
         window.location.href = nextForm.url;
       }
@@ -98,8 +107,12 @@ const ParamedicalNonMedical = () => {
       var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
       if (xml && xml?.children?.length > 0) {
         let obj = {};
-        makeDataForPrefill({}, xml.children, xml.name, obj)
-        localStorage.setItem(startingForm, JSON.stringify(obj));
+        let images = JSON.parse(e.data).fileURLs;
+        if (images?.[0]?.name) {
+          setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, JSON.stringify(images));
+        }
+        makeDataForPrefill({}, xml.children, xml.name, obj);
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -113,7 +126,6 @@ const ParamedicalNonMedical = () => {
   };
 
   const getTodayAssessments = async () => {
-    console.log("getTodayAssessments");
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
@@ -124,16 +136,28 @@ const ParamedicalNonMedical = () => {
         id: ass.institute.id,
         district: ass.institute.district,
         instituteName: ass.institute.name,
-        specialization: ass.institute?.institute_specializations?.[0]?.specializations,
+        specialization:
+          ass.institute?.institute_specializations?.[0]?.specializations,
         courses: ass.institute?.institute_types?.[0]?.types,
         type: ass.institute.sector,
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (localStorage.getItem(startingForm)) {
-        const data = JSON.parse(localStorage.getItem(startingForm));
+      if (getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`)) {
+        const data = JSON.parse(getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`));
+        let images = getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`)
+          ? JSON.parse(getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`))
+          : null;
         for (const key in data) {
           if (data[key]) {
+            if (images) {
+              let foundImage = images.filter((el) => el.name == data[key]);
+              if (foundImage?.length) {
+                formSpec.forms[formId].prefill[key] =
+                  "`" + `${foundImage[0].url}` + "`";
+                continue;
+              }
+            }
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
           }
         }
@@ -169,8 +193,9 @@ const ParamedicalNonMedical = () => {
     };
   }, [prefilledFormData]);
 
+
   return (
-    <CommonLayout back="/paramedical-options">
+    <CommonLayout back={ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>

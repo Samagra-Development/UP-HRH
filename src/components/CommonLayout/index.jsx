@@ -7,15 +7,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import CommonModal from "../Modal";
 
+import { logout } from "../../utils/index.js";
+
 const CommonLayout = (props) => {
   const navigate = useNavigate();
   const [logoutModal, showLogoutModal] = useState(false);
-
-  const logout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    window.location.href = "/";
-  };
 
   return (
     <>
@@ -32,13 +28,17 @@ const CommonLayout = (props) => {
             alt="illustration"
           />
         </div>
-        <div className="bg-white h-full w-full rounded-t-[60px]">
+        <div className="bg-white h-full w-full rounded-t-[60px] overflow-scroll">
           <div className="flex flex-row w-full px-8 py-7 justify-between cursor-pointer">
             {!props.backDisabled && (
               <FontAwesomeIcon
                 icon={faChevronLeft}
                 className="text-2xl text-gray-300 lg:text-4xl"
-                onClick={() => { props.backFunction ? props.backFunction() : navigate(props.back) }}
+                onClick={() => {
+                  props.backFunction
+                    ? props.backFunction()
+                    : navigate(props.back);
+                }}
               />
             )}
             {!props.logoutDisabled && (

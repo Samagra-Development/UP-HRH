@@ -1,30 +1,25 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import { useNavigate, useParams } from "react-router-dom";
+import { Routes, useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import {
-  getCookie,
-  makeDataForPrefill,
-  setCookie,
-  updateFormData,
-} from "../../utils";
+import { getCookie, makeDataForPrefill, setCookie, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
-const GenericOsceForm = () => {
-  let { osceName } = useParams();
+const GenericOdkForm = () => {
+  let { formName } = useParams();
   const scheduleId = useRef();
   const formSpec = {
     forms: {
-      [osceName]: {
+      [formName]: {
         skipOnSuccessMessage: true,
         prefill: {},
         submissionURL: "",
-        name: osceName,
+        name: formName,
         successCheck: "async (formData) => { return true; }",
         onSuccess: {
           notificationMessage: "Form submitted successfully",
@@ -40,10 +35,9 @@ const GenericOsceForm = () => {
         },
       },
     },
-    start: osceName,
+    start: formName,
     metaData: {},
   };
-
   const { state } = useContext(StateContext);
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
@@ -95,10 +89,10 @@ const GenericOsceForm = () => {
         saveFormSubmission({
           schedule_id: scheduleId.current,
           form_data: updatedFormData,
-          assessment_type: 'institute',
+          assessment_type: formName.startsWith('hospital') ? 'hospital' : 'institute',
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.osce_options), 2000);
+        setTimeout(() => navigate(formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options), 2000);
         setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
         setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
@@ -115,7 +109,7 @@ const GenericOsceForm = () => {
             formSpec.forms[nextForm.id].prefill
           )
         );
-        navigate(ROUTE_MAP.osce_options);
+        navigate(formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options)
       } else {
         window.location.href = nextForm.url;
       }
@@ -219,7 +213,7 @@ const GenericOsceForm = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.osce_options}>
+    <CommonLayout back={formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
         {!loading && assData && (
           <>
@@ -236,4 +230,4 @@ const GenericOsceForm = () => {
   );
 };
 
-export default GenericOsceForm;
+export default GenericOdkForm;

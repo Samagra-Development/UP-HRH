@@ -1,9 +1,10 @@
 import React from "react";
 import CommonLayout from "../../components/CommonLayout";
+import ROUTE_MAP from "../../routing/routeMap";
 
 const Osce2 = () => {
   return (
-    <CommonLayout back="/osce-options">
+    <CommonLayout back={ROUTE_MAP.osce_options}>
       <div className="flex flex-col items-center">
         <iframe
           title="Location Form"

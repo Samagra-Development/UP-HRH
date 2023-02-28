@@ -2,66 +2,44 @@ import requests
 import csv
 from collections import defaultdict
 from decouple import config
+import json
 
-assessorCodeToPhone = {}
-assessorPhoneToId = {}
-
-# Assessor code <> Phone number
-# columns needed: code, phonenumber
-with open("input/scheduling/CodePhonenumberMapping.csv", 'r') as file:
-    csvreader = csv.reader(file)
-    for row in csvreader:
-        assessorCodeToPhone[row[0]] = row[1]
-
-
-# Assessor Phone <> User ID
-# columns needed: phone, userid
-with open("input/scheduling/PhonenumberUserIdMapping.csv", 'r') as file:
-    csvreader = csv.reader(file)
-    for row in csvreader:
-        assessorPhoneToId[row[0]] = row[1]
 
 url = config('HASURA_REST_API_URL')
 headers = {"x-hasura-admin-secret": config('HASURA_ADMIN_SECRET'),
            "Content-Type": "application/json"}
 
-for key, value in assessorCodeToPhone.items():
-    accessorId = assessorPhoneToId.get(value)
 
-    if not accessorId:
-        raise Exception("No userId found for assessor code: " +
-                        key + " and phonenumber: "+value)
-
+def upload_data(insertions):
     requestBody = {
-        "query": "mutation ($object: [assessors_insert_input!] = {}) {\n      insert_assessors(objects: $object) {\n        returning {\n          code\n           }\n      }\n    }",
+        "query": "mutation ($object: [assessment_schedule_insert_input!] = {}) {\n insert_assessment_schedule(objects: $object, on_conflict: { \n constraint: assessment_schedule_assessor_code_date_key, \n update_columns: [institute_id, date, updated_at] \n}\n) {\n        returning {\n          id\n           }\n      }\n    }",
         "variables": {
-            "object": {
-                "code": key,
-                "phonenumber": value,
-                "user_id": accessorId
-            }
+            "object": insertions
         }
     }
-    print("Inserting "+key+", "+value)
-    insertUserRequest = requests.post(url, headers=headers, json=requestBody)
-    print(insertUserRequest)
+    insertAssessmentScheduleRequest = requests.post(
+        url, headers=headers, json=requestBody)
+    print("Response: " + insertAssessmentScheduleRequest.text)
 
+
+insertionObjects = []
 
 with open("input/scheduling/AssessmentSchedule.csv", 'r') as file:
     csvreader = csv.reader(file)
     for row in csvreader:
-        requestBody = {
-            "query": "mutation ($object: [assessment_schedule_insert_input!] = {}) {\n      insert_assessment_schedule(objects: $object) {\n        returning {\n          id\n           }\n      }\n    }",
-            "variables": {
-                "object": {
-                    "institute_id": row[1],
-                    "date": row[2],
-                    "assessor_code": row[0]
-                }
+        print("Adding schedule for " +
+          row[1] + " on "+row[2]+" by "+row[0])
+        insertionObjects.append(
+            {
+                "institute_id": row[1],
+                "date": row[2],
+                "assessor_code": row[0]
             }
-        }
-        print("Uploading schedule for " +
-              row[1] + " on "+row[2]+" by "+row[0])
-        insertAssessmentScheduleRequest = requests.post(
-            url, headers=headers, json=requestBody)
-        print(insertAssessmentScheduleRequest)
+        )
+        if len(insertionObjects) == 10:
+            print("Uploading schedule")
+            upload_data(insertionObjects)
+            insertionObjects.clear()
+
+if len(insertionObjects) > 0:
+    upload_data(insertionObjects)

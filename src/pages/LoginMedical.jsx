@@ -5,22 +5,24 @@ import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { loginMedical } from "../api";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import ROUTE_MAP from "../routing/routeMap";
+import { setCookie } from "../utils";
 
-const LoginMedical = () => {
+const LoginMedical = ({ handleStepChangeForLogin }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   function userIsAdminForPortal(registrations) {
-    //console.log(registrations)
     const currentRegistration = registrations[0];
-    return currentRegistration !== null && currentRegistration.roles.includes("Admin");
+    return (
+      currentRegistration !== null &&
+      currentRegistration.roles.includes("Admin")
+    );
   }
 
   const handleLogin = async () => {
-    console.log("Hello World")
     if (!username || !password) {
       setError("Either username or password is missing");
       setTimeout(() => {
@@ -38,14 +40,12 @@ const LoginMedical = () => {
       return;
     }
     if (loginRes.responseCode == "OK" && loginRes.result) {
-      let loggedInUser = loginRes.result.data.user
-      localStorage.setItem("userData", JSON.stringify(loggedInUser))
-      console.log(loggedInUser)
+      let loggedInUser = loginRes.result.data.user;
+      setCookie("userData", loggedInUser);
       if (userIsAdminForPortal(loggedInUser.user.registrations)) {
-        navigate("/admin");
-      }
-      else {
-        navigate("/welcome-medical-assessor");
+        navigate(ROUTE_MAP.admin);
+      } else {
+        navigate(ROUTE_MAP.root);
       }
       return;
     }
@@ -57,7 +57,7 @@ const LoginMedical = () => {
   };
 
   return (
-    <CommonLayout back="/" logoutDisabled>
+    <CommonLayout backFunction={handleStepChangeForLogin} logoutDisabled>
       <div className="flex flex-col px-5 py-8 items-center">
         <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] animate__animated animate__fadeInDown">
           Welcome Back
@@ -65,7 +65,7 @@ const LoginMedical = () => {
         <p className="text-primary text-md lg:text-[20px] font-medium animate__animated animate__fadeInDown">
           Please enter your details
         </p>
-        <div className="flex flex-col w-80 py-5 mt-5 lg:w-[70%] animate__animated animate__fadeInDown" >
+        <div className="flex flex-col w-80 py-5 mt-5 lg:w-[70%] animate__animated animate__fadeInDown">
           <span className="text-secondary pl-0.5 pb-2">
             <FontAwesomeIcon icon={faUser} /> &nbsp;Username
           </span>
@@ -89,9 +89,8 @@ const LoginMedical = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
-              console.log(e.key)
-              if (e.key == "Enter")
-                handleLogin();
+              console.log(e.key);
+              if (e.key == "Enter") handleLogin();
             }}
           />
         </div>
@@ -105,7 +104,12 @@ const LoginMedical = () => {
           styles="w-80 lg:w-[70%] animate__animated animate__fadeInDown"
           onClick={handleLogin}
         />
-        <p className="text-secondary py-5 animate__animated animate__fadeInDown" onClick={() => navigate('/forgot-password')}>Forgot Password?</p>
+        <p
+          className="text-secondary py-5 animate__animated animate__fadeInDown"
+          onClick={() => navigate(ROUTE_MAP.forgot_password)}
+        >
+          Forgot Password?
+        </p>
       </div>
     </CommonLayout>
   );

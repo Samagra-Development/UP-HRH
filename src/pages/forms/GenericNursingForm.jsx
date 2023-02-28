@@ -1,26 +1,52 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
-import formSpecJSON from "../../configs/vitalSigns.json";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
+import { getCookie, makeDataForPrefill, setCookie, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
-import { extractUserFromCookie } from "../../utils";
 
-const VitalSigns = () => {
+const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
+const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
+
+const GenericNursingForm = () => {
+  let { formName } = useParams();
+  const scheduleId = useRef();
+  const formSpec = {
+    forms: {
+      [formName]: {
+        skipOnSuccessMessage: true,
+        prefill: {},
+        submissionURL: "",
+        name: formName,
+        successCheck: "async (formData) => { return true; }",
+        onSuccess: {
+          notificationMessage: "Form submitted successfully",
+          sideEffect: "async (formData) => { console.log(formData); }",
+        },
+        onFailure: {
+          message: "Form submission failed",
+          sideEffect: "async (formData) => { console.log(formData); }",
+          next: {
+            type: "url",
+            id: "google",
+          },
+        },
+      },
+    },
+    start: formName,
+    metaData: {},
+  };
+
   const { state } = useContext(StateContext);
-  console.log(state);
   const getFormURI = (form, ofsd, prefillSpec) => {
-    // console.log(form, ofsd, prefillSpec);
     return encodeURIComponent(
-      `https://enketo-manager-ratings-tech.samagra.io/prefill?form=${form}&onFormSuccessData=${encodeFunction(
+      `${ENKETO_MANAGER_URL}/prefill?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
       )}&prefillSpec=${encodeFunction(prefillSpec)}`
     );
   };
-  const formSpec = formSpecJSON;
-  console.log(formSpec);
   const navigate = useNavigate();
   const encodeFunction = (func) => encodeURIComponent(JSON.stringify(func));
   const startingForm = formSpec.start;
@@ -40,7 +66,7 @@ const VitalSigns = () => {
   const [prefilledFormData, setPrefilledFormData] = useState();
 
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({
+  const [assData, setData] = useState({
     district: "",
     instituteName: "",
     nursing: "",
@@ -51,33 +77,28 @@ const VitalSigns = () => {
   });
 
   function afterFormSubmit(e) {
-    // console.log(e)
+    console.log("ABC", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
-    console.log("data", data);
     try {
-      /* message = {
-              nextForm: "formID",
-              formData: {},
-            }
-            */
-
       const { nextForm, formData, onSuccessData, onFailureData } = data;
-
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const userData = extractUserFromCookie();
+        const updatedFormData = updateFormData(
+          startingForm + `Images${new Date().toISOString().split("T")[0]}`,
+          formData
+        );
 
         saveFormSubmission({
-          assessor_id: userData?.user?.id,
-          username: userData?.user?.username,
-          submission_date: new Date(),
-          institute_id: state?.todayAssessment?.id,
-          form_data: JSON.stringify(data.formData),
+          schedule_id: scheduleId.current,
+          assessment_type: 'institute',
+          form_data: updatedFormData,
           form_name: formSpec.start,
         });
-        setTimeout(() => navigate(ROUTE_MAP.medical_assessment_options), 2000);
+        setTimeout(() => navigate(ROUTE_MAP.nursing_options), 2000);
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
+        setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
 
-      if (nextForm.type === "form") {
+      if (nextForm?.type === "form") {
         setFormId(nextForm.id);
         setOnFormSuccessData(onSuccessData);
         setOnFormFailureData(onFailureData);
@@ -100,16 +121,18 @@ const VitalSigns = () => {
 
   const eventTriggered = (e) => {
     if (
-      e.origin == "https://enketo-ratings-tech.samagra.io" &&
+      e.origin == ENKETO_URL &&
       JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
     ) {
       var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
-      if (xml && xml?.children && xml?.children[0]?.children?.length > 0) {
+      if (xml && xml?.children?.length > 0) {
         let obj = {};
-        xml.children[0]?.children?.forEach((element) => {
-          obj[element.name] = element.value;
-        });
-        setCookie(startingForm, JSON.stringify(obj));
+        let images = JSON.parse(e.data).fileURLs;
+        if (images?.[0]?.name) {
+          setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, JSON.stringify(images));
+        }
+        makeDataForPrefill({}, xml.children, xml.name, obj);
+        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, JSON.stringify(obj));
         setPrefilledFormData(JSON.stringify(obj));
       }
     }
@@ -126,23 +149,35 @@ const VitalSigns = () => {
     setLoading(true);
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
-      let assess = res?.data?.assessment_schedule?.[0];
+      let ass = res?.data?.assessment_schedule?.[0];
+      scheduleId.current = ass.id;
       setData({
-        district: assess.institute.district,
-        instituteName: assess.institute.name,
-        nursing: assess.institute.nursing,
-        paramedical: assess.institute.paramedical,
-        gnm: assess.institute.gnm,
-        anm: assess.institute.anm,
-        bsc: assess.institute.bsc,
-        type: assess.institute.sector,
-        latitude: assess.institute.latitude,
-        longitude: assess.institute.longitude,
+        schedule_id: ass.id,
+        id: ass.institute.id,
+        district: ass.institute.district,
+        instituteName: ass.institute.name,
+        specialization:
+          ass.institute?.institute_specializations?.[0]?.specializations,
+        courses: ass.institute?.institute_types?.[0]?.types,
+        type: ass.institute.sector,
+        latitude: ass.institute.latitude,
+        longitude: ass.institute.longitude,
       });
-      if (getCookie(startingForm)) {
-        const data = JSON.parse(getCookie(startingForm));
+      if (getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`)) {
+        const data = JSON.parse(getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`));
+        let images = getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`)
+          ? JSON.parse(getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`))
+          : null;
         for (const key in data) {
           if (data[key]) {
+            if (images) {
+              let foundImage = images.filter((el) => el.name == data[key]);
+              if (foundImage?.length) {
+                formSpec.forms[formId].prefill[key] =
+                  "`" + `${foundImage[0].url}` + "`";
+                continue;
+              }
+            }
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
           }
         }
@@ -155,8 +190,8 @@ const VitalSigns = () => {
           )
         );
       } else {
-        formSpec.forms[formId].prefill.dist = "`" + `${assess?.district}` + "`";
-        formSpec.forms[formId].prefill.name = "`" + `${assess?.name}` + "`";
+        formSpec.forms[formId].prefill.dist = "`" + `${ass?.district}` + "`";
+        formSpec.forms[formId].prefill.name = "`" + `${ass?.name}` + "`";
         setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
       }
     } else setData(null);
@@ -179,14 +214,14 @@ const VitalSigns = () => {
   }, [prefilledFormData]);
 
   return (
-    <CommonLayout back={ROUTE_MAP.osce_options}>
+    <CommonLayout back={ROUTE_MAP.nursing_options}>
       <div className="flex flex-col items-center">
-        {!loading && data && (
+        {!loading && assData && (
           <>
             {console.log(formSpec.forms[formId].prefill)}
             <iframe
               title="form"
-              src={`${process.env.REACT_APP_ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>
@@ -196,4 +231,4 @@ const VitalSigns = () => {
   );
 };
 
-export default VitalSigns;
+export default GenericNursingForm;
