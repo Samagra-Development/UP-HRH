@@ -27,12 +27,14 @@ const MedicalAssessmentsOptions = () => {
         (el) => (filledForms[el.form_name] = true)
       );
     }
-    setState({
-      ...state,
-      userData: {
-        ...state?.userData,
-        filledForms: { ...state?.filledForms, ...filledForms },
-      },
+    setState((prevState) => {
+      return {
+        ...prevState,
+        userData: {
+          ...state?.userData,
+          filledForms: { ...state?.filledForms, ...filledForms },
+        },
+      }
     });
     setLoading(false);
   };
@@ -41,19 +43,21 @@ const MedicalAssessmentsOptions = () => {
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
       let ass = res?.data?.assessment_schedule?.[0];
-      setState({
-        ...state,
-        todayAssessment: {
-          id: ass.institute.id,
-          district: ass.institute.district,
-          instituteName: ass.institute.name,
-          specialization:
-            ass.institute?.institute_specializations?.[0]?.specializations,
-          courses: ass.institute?.institute_types?.[0]?.types,
-          type: ass.institute.sector,
-          latitude: ass.institute.latitude,
-          longitude: ass.institute.longitude,
-        },
+      setState((prevState) => {
+        return {
+          ...prevState,
+          todayAssessment: {
+            id: ass.institute.id,
+            district: ass.institute.district,
+            instituteName: ass.institute.name,
+            specialization:
+              ass.institute?.institute_specializations?.[0]?.specializations,
+            courses: ass.institute?.institute_types?.[0]?.types,
+            type: ass.institute.sector,
+            latitude: ass.institute.latitude,
+            longitude: ass.institute.longitude,
+          },
+        }
       });
     }
   };
@@ -66,10 +70,17 @@ const MedicalAssessmentsOptions = () => {
     setRole(() => roles);
   }, []);
 
+  const getData = async () => {
+    await getFilledAssessmentStatus();
+    await getTodayAssessments();
+  }
+
   useEffect(() => {
-    getFilledAssessmentStatus();
-    getTodayAssessments();
+    getData();
   }, []);
+
+  console.log(state);
+
   return (
     role && (
       <CommonLayout back={ROUTE_MAP.medical_assessments}>
@@ -140,7 +151,7 @@ const MedicalAssessmentsOptions = () => {
           } */}
 
           {/* Common for both assessors */}
-          {state?.todayAssessment?.courses?.includes("ANM") &&
+          {!loading && state?.todayAssessment?.courses?.includes("ANM") &&
             <Button
               text="ANM Form"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_anm_general"]
@@ -159,7 +170,7 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
-          {state?.todayAssessment?.courses?.includes("BSC") &&
+          {!loading && state?.todayAssessment?.courses?.includes("BSC") &&
             <Button
               text="BSC Form"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_bsc_general"]
@@ -178,7 +189,7 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
-          {state?.todayAssessment?.courses?.includes("GNM") &&
+          {!loading && state?.todayAssessment?.courses?.includes("GNM") &&
             <Button
               text="GNM Form"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_gnm_general"]
@@ -197,7 +208,7 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
-          {state?.todayAssessment?.courses?.includes("MSC") &&
+          {!loading && state?.todayAssessment?.courses?.includes("MSC") &&
             <Button
               text="MSC Form"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_msc_general"]
@@ -217,7 +228,7 @@ const MedicalAssessmentsOptions = () => {
             />
           }
 
-          {state?.todayAssessment?.courses?.includes("PBBSC") &&
+          {!loading && state?.todayAssessment?.courses?.includes("PBBSC") &&
             <Button
               text="PBBSC Form"
               styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_pbbsc_general"]
