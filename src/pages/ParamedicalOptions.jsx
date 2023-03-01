@@ -35,12 +35,14 @@ const ParamedicalOptions = () => {
         (el) => (filledForms[el.form_name] = true)
       );
     }
-    setState({
-      ...state,
-      userData: {
-        ...state?.userData,
-        filledForms: { ...state?.filledForms, ...filledForms },
-      },
+    setState((prevState) => {
+      return {
+        ...prevState,
+        userData: {
+          ...prevState?.userData,
+          filledForms: { ...prevState?.filledForms, ...prevState },
+        },
+      }
     });
     setLoading(false);
   };
