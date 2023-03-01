@@ -12,6 +12,14 @@ const ParamedicalOptions = () => {
   const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [nonMedicalForms, setNonMedicalForms] = useState([
+    { name: 'Administrative Control', formName: 'non_medical_paramedical_administrative_control' },
+    { name: 'Basic Information', formName: 'non_medical_paramedical_basic_information' },
+    { name: 'Clinical Facilities', formName: 'non_medical_paramedical_clinical_facilities' },
+    { name: 'Number of Seats', formName: 'non_medical_paramedical_number_of_seats' },
+    { name: 'Teaching Faculty', formName: 'non_medical_paramedical_teaching_faculty' },
+    { name: 'Training Infrastructure', formName: 'non_medical_paramedical_training_infrastructure' }
+  ])
 
   const navigate = useNavigate();
   const handleNavigation = (route) => {
@@ -53,7 +61,7 @@ const ParamedicalOptions = () => {
           <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select your assessment type
           </p>
-          {!loading && <Button
+          {!loading && role == 'Medical' && <Button
             text="Clinical Learning"
             styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["paramedical_clinical_learning"]
               ? "disabled-btn"
@@ -71,7 +79,7 @@ const ParamedicalOptions = () => {
             }}
           />
           }
-          {!loading && <Button
+          {!loading && role == 'Medical' && <Button
             text="Academic Section"
             styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["paramedical_academic_section"]
               ? "disabled-btn"
@@ -89,6 +97,27 @@ const ParamedicalOptions = () => {
             }}
           />
           }
+
+          {/* Non Medical Assessor Forms */}
+          {!loading && role == 'Non-Medical' && nonMedicalForms?.map(el => < Button
+            text={el.name}
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[el.formName]
+              ? "disabled-btn"
+              : ""
+              }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.[el.formName])
+                handleNavigation(ROUTE_MAP.paramedical_param_formName + el.formName);
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />)
+          }
+          {/* Non Medical Assessor Forms */}
           {error && (
             <span className="text-white animate__animated animate__headShake bg-rose-600 font-medium px-4 py-2 mt-5 text-center ">
               {error}
