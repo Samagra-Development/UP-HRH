@@ -12,7 +12,6 @@ const NursingOptions = () => {
   const [role, setRole] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
   const handleNavigation = (route) => {
     navigate(route);
@@ -55,7 +54,7 @@ const NursingOptions = () => {
           <p className="text-secondary text-[34px] font-bold mt-5 lg:text-[45px] text-center animate__animated animate__fadeInDown">
             Select your assessment type
           </p>
-          {!loading && <Button
+          {!loading && role == 'Medical' && <Button
             text="Infrastructure"
             styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_infrastructure"]
               ? "disabled-btn"
@@ -73,7 +72,7 @@ const NursingOptions = () => {
             }}
           />
           }
-          {!loading && <Button
+          {!loading && role == 'Medical' && <Button
             text="Academic"
             styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_academic"]
               ? "disabled-btn"
@@ -91,7 +90,7 @@ const NursingOptions = () => {
             }}
           />
           }
-          {!loading && <Button
+          {!loading && role == 'Medical' && <Button
             text="Clinical Learning"
             styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["nursing_clinical_learning"]
               ? "disabled-btn"
@@ -118,6 +117,99 @@ const NursingOptions = () => {
               }}
             />
           )}
+
+          {/* Forms for Non-Medical Assessor  */}
+          {!loading && role == 'Non-Medical' && <Button
+            text="Basic Information"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["non_medical_nursing_basic_information"]
+              ? "disabled-btn"
+              : ""
+              }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["non_medical_nursing_basic_information"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "non_medical_nursing_basic_information");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {!loading && role == 'Non-Medical' && <Button
+            text="Hostel Facilities"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["non_medical_nursing_hostel_facilities"]
+              ? "disabled-btn"
+              : ""
+              }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["non_medical_nursing_hostel_facilities"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "non_medical_nursing_hostel_facilities");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {!loading && role == 'Non-Medical' && <Button
+            text="Infrastructure"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["non_medical_nursing_infrastructure"]
+              ? "disabled-btn"
+              : ""
+              }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["non_medical_nursing_infrastructure"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "non_medical_nursing_infrastructure");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {!loading && role == 'Non-Medical' && <Button
+            text="Seats Sanctioned"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["non_medical_nursing_seats_sanctioned"]
+              ? "disabled-btn"
+              : ""
+              }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["non_medical_nursing_seats_sanctioned"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "non_medical_nursing_seats_sanctioned");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {!loading && role == 'Non-Medical' && <Button
+            text="Teaching Faculty"
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["non_medical_nursing_teaching_faculty"]
+              ? "disabled-btn"
+              : ""
+              }`}
+            onClick={() => {
+              if (!state?.userData?.filledForms?.["non_medical_nursing_teaching_faculty"])
+                handleNavigation(ROUTE_MAP.nursing_param_formName + "non_medical_nursing_teaching_faculty");
+              else {
+                setError(
+                  "You've already filled this asessment for today"
+                );
+                setTimeout(() => setError(""), 3000);
+              }
+            }}
+          />
+          }
+          {/* Forms for Non-Medical Assessor  */}
           {error && (
             <span className="text-white animate__animated animate__headShake bg-rose-600 font-medium px-4 py-2 mt-5 text-center ">
               {error}
