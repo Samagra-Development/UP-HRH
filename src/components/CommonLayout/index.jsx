@@ -28,7 +28,7 @@ const CommonLayout = (props) => {
             alt="illustration"
           />
         </div>
-        <div className="bg-white h-full w-full rounded-t-[60px] overflow-scroll">
+        <div className="bg-white h-full w-full rounded-t-[60px] overflow-scroll pb-5">
           <div className="flex flex-row w-full px-8 py-7 justify-between cursor-pointer">
             {!props.backDisabled && (
               <FontAwesomeIcon

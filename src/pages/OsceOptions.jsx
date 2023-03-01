@@ -270,12 +270,10 @@ const OsceOptions = () => {
                 <Button
                   key={`${el}${idx}`}
                   text={getFormText(el)}
-                  styles={`lg:w-[70%] animate__animated animate__fadeInDown ${(state?.userData?.filledForms?.[
+                  css={(state?.userData?.filledForms?.[
                     el.slice(0, el.indexOf(".xml"))
-                  ] || disableStudentForms || disableTeacherForms)
-                    ? "disabled-btn"
-                    : ""
-                    }`}
+                  ] || disableStudentForms || disableTeacherForms) ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+                  styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
                   onClick={() => {
                     if (
                       !(state?.userData?.filledForms?.[
