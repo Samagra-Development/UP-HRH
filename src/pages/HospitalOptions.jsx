@@ -58,10 +58,8 @@ const HospitalOptions = () => {
         </p>
         {!loading && <Button
           text="Basic Information"
-          styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["hospital_basic_information"]
-            ? "disabled-btn"
-            : ""
-            }`}
+          css={state?.userData?.filledForms?.["hospital_basic_information"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+          styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
           onClick={() => {
             if (!state?.userData?.filledForms?.["hospital_basic_information"])
               handleNavigation(ROUTE_MAP.otherforms_param_formName + "hospital_basic_information");
@@ -76,10 +74,8 @@ const HospitalOptions = () => {
         }
         {!loading && <Button
           text="Clinical Facilities"
-          styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["hospital_clinical_facilities"]
-            ? "disabled-btn"
-            : ""
-            }`}
+          css={state?.userData?.filledForms?.["hospital_clinical_facilities"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+          styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
           onClick={() => {
             if (!state?.userData?.filledForms?.["hospital_clinical_facilities"])
               handleNavigation(ROUTE_MAP.otherforms_param_formName + "hospital_clinical_facilities");
@@ -94,10 +90,8 @@ const HospitalOptions = () => {
         }
         {!loading && <Button
           text="Community Postings"
-          styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["hospital_community_postings"]
-            ? "disabled-btn"
-            : ""
-            }`}
+          css={state?.userData?.filledForms?.["hospital_community_postings"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+          styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
           onClick={() => {
             if (!state?.userData?.filledForms?.["hospital_community_postings"])
               handleNavigation(ROUTE_MAP.otherforms_param_formName + "hospital_community_postings");

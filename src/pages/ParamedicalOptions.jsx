@@ -40,7 +40,7 @@ const ParamedicalOptions = () => {
         ...prevState,
         userData: {
           ...prevState?.userData,
-          filledForms: { ...prevState?.filledForms, ...prevState },
+          filledForms: { ...prevState?.filledForms, ...filledForms },
         },
       }
     });
@@ -65,10 +65,8 @@ const ParamedicalOptions = () => {
           </p>
           {!loading && role == 'Medical' && <Button
             text="Clinical Learning"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["paramedical_clinical_learning"]
-              ? "disabled-btn"
-              : ""
-              }`}
+            css={state?.userData?.filledForms?.["paramedical_clinical_learning"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
             onClick={() => {
               if (!state?.userData?.filledForms?.["paramedical_clinical_learning"])
                 handleNavigation(ROUTE_MAP.paramedical_param_formName + "paramedical_clinical_learning");
@@ -83,10 +81,8 @@ const ParamedicalOptions = () => {
           }
           {!loading && role == 'Medical' && <Button
             text="Academic Section"
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["paramedical_academic_section"]
-              ? "disabled-btn"
-              : ""
-              }`}
+            css={state?.userData?.filledForms?.["paramedical_academic_section"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
             onClick={() => {
               if (!state?.userData?.filledForms?.["paramedical_academic_section"])
                 handleNavigation(ROUTE_MAP.paramedical_param_formName + "paramedical_academic_section");
@@ -103,10 +99,8 @@ const ParamedicalOptions = () => {
           {/* Non Medical Assessor Forms */}
           {!loading && role == 'Non-Medical' && nonMedicalForms?.map(el => < Button
             text={el.name}
-            styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.[el.formName]
-              ? "disabled-btn"
-              : ""
-              }`}
+            css={state?.userData?.filledForms?.[el.formName] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+            styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
             onClick={() => {
               if (!state?.userData?.filledForms?.[el.formName])
                 handleNavigation(ROUTE_MAP.paramedical_param_formName + el.formName);
