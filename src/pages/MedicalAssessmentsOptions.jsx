@@ -84,7 +84,15 @@ const MedicalAssessmentsOptions = () => {
   return (
     role && (
       <CommonLayout back={ROUTE_MAP.medical_assessments}>
-        <div className="flex flex-col px-5 py-8 items-center mb-10">
+        <div className="flex flex-col px-5 py-8 items-center mb-20">
+          <style>
+            {`
+            .disabled-btn {
+              opacity: 0.5 !important;
+              cursor: not-allowed;
+            }
+          `}
+          </style>
           <img
             src="/assets/forms.png "
             className="h-60 lg:h-80 my-5 lg:mt-[70px]"
@@ -151,13 +159,11 @@ const MedicalAssessmentsOptions = () => {
           } */}
 
           {/* Common for both assessors */}
-          {!loading && state?.todayAssessment?.courses?.includes("ANM") &&
+          {!loading && role == 'Medical' && state?.todayAssessment?.courses?.includes("ANM") &&
             <Button
               text="ANM Form"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_anm_general"]
-                ? "disabled-btn"
-                : ""
-                }`}
+              css={state?.userData?.filledForms?.["form_anm_general"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
               onClick={() => {
                 if (!state?.userData?.filledForms?.["form_anm_general"])
                   handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_anm_general");
@@ -170,13 +176,11 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
-          {!loading && state?.todayAssessment?.courses?.includes("BSC") &&
+          {!loading && role == 'Medical' && state?.todayAssessment?.courses?.includes("BSC") &&
             <Button
               text="BSC Form"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_bsc_general"]
-                ? "disabled-btn"
-                : ""
-                }`}
+              css={state?.userData?.filledForms?.["form_bsc_general"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
               onClick={() => {
                 if (!state?.userData?.filledForms?.["form_bsc_general"])
                   handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_bsc_general");
@@ -189,13 +193,11 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
-          {!loading && state?.todayAssessment?.courses?.includes("GNM") &&
+          {!loading && role == 'Medical' && state?.todayAssessment?.courses?.includes("GNM") &&
             <Button
               text="GNM Form"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_gnm_general"]
-                ? "disabled-btn"
-                : ""
-                }`}
+              css={state?.userData?.filledForms?.["form_gnm_general"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
               onClick={() => {
                 if (!state?.userData?.filledForms?.["form_gnm_general"])
                   handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_gnm_general");
@@ -208,13 +210,11 @@ const MedicalAssessmentsOptions = () => {
               }}
             />
           }
-          {!loading && state?.todayAssessment?.courses?.includes("MSC") &&
+          {!loading && role == 'Medical' && state?.todayAssessment?.courses?.includes("MSC") &&
             <Button
               text="MSC Form"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_msc_general"]
-                ? "disabled-btn"
-                : ""
-                }`}
+              css={state?.userData?.filledForms?.["form_msc_general"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
               onClick={() => {
                 if (!state?.userData?.filledForms?.["form_msc_general"])
                   handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_msc_general");
@@ -228,13 +228,11 @@ const MedicalAssessmentsOptions = () => {
             />
           }
 
-          {!loading && state?.todayAssessment?.courses?.includes("PBBSC") &&
+          {!loading && role == 'Medical' && state?.todayAssessment?.courses?.includes("PBBSC") &&
             <Button
               text="PBBSC Form"
-              styles={`lg:w-[70%] animate__animated animate__fadeInDown ${state?.userData?.filledForms?.["form_pbbsc_general"]
-                ? "disabled-btn"
-                : ""
-                }`}
+              css={state?.userData?.filledForms?.["form_pbbsc_general"] ? { background: '#fdc8a2', border: '1px solid #fdc8a2' } : {}}
+              styles={`lg:w-[70%] animate__animated animate__fadeInDown`}
               onClick={() => {
                 if (!state?.userData?.filledForms?.["form_pbbsc_general"])
                   handleNavigation(ROUTE_MAP.otherforms_param_formName + "form_pbbsc_general");
@@ -253,14 +251,6 @@ const MedicalAssessmentsOptions = () => {
             </span>
           )}
         </div>
-        <style>
-          {`
-            .disabled-btn {
-              opacity: 0.5 !important;
-              cursor: not-allowed;
-            }
-          `}
-        </style>
       </CommonLayout>
     )
   );
