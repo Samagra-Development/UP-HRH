@@ -6,6 +6,7 @@ import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
 import {
   getCookie,
+  isImage,
   makeDataForPrefill,
   setCookie,
   updateFormData,
@@ -116,7 +117,7 @@ const GenericOsceForm = () => {
           )
         );
         navigate(ROUTE_MAP.osce_options);
-      } else {
+      } else if (nextForm?.type === 'url') {
         window.location.href = nextForm.url;
       }
     } catch (e) {
@@ -183,6 +184,7 @@ const GenericOsceForm = () => {
                 continue;
               }
             }
+            if (!images?.length && isImage(key, data[key])) continue;
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
           }
         }
