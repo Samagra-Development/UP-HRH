@@ -87,3 +87,11 @@ export const removeCookie = (cname) => {
     return false;
   }
 };
+
+export const isImage = (key, filename) => {
+  if (filename.includes(".png") || filename.includes(".tif") || filename.includes(".tiff") || filename.includes(".jpg") || filename.includes(".jpeg") || filename.includes(".bmp") || filename.includes(".gif") || filename.includes(".eps"))
+    return true;
+  if (key.includes("img") || key.includes("image"))
+    return true;
+  return false;
+}

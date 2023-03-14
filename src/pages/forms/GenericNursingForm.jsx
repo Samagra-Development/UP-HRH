@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { getCookie, makeDataForPrefill, setCookie, updateFormData } from "../../utils";
+import { getCookie, isImage, makeDataForPrefill, setCookie, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
@@ -111,7 +111,7 @@ const GenericNursingForm = () => {
           )
         );
         navigate("medical-assessment-options");
-      } else {
+      } else if (nextForm?.type === 'url') {
         window.location.href = nextForm.url;
       }
     } catch (e) {
@@ -168,6 +168,7 @@ const GenericNursingForm = () => {
         let images = getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`)
           ? JSON.parse(getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`))
           : null;
+        // console.log("DATA ***********", data, images)
         for (const key in data) {
           if (data[key]) {
             if (images) {
@@ -178,6 +179,7 @@ const GenericNursingForm = () => {
                 continue;
               }
             }
+            if (!images?.length && isImage(key, data[key])) continue;
             formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
           }
         }
