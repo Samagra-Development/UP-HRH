@@ -110,7 +110,7 @@ export const getMedicalAssessmentsUpcoming = () => {
   return makeHasuraCalls(query);
 };
 
-export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
+export const getPrefillXML = async (form, onFormSuccessData, prefillXML, imageUrls) => {
   try {
     const res = await axios.post(
       `${ENKETO_MANAGER_URL}/prefillXML?form=${form}&onFormSuccessData=${encodeURI(
@@ -118,13 +118,14 @@ export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
       )}`,
       {
         prefillXML,
+        imageUrls
       },
       { headers: {} }
     );
     return res.data;
   } catch (err) {
     console.log(err);
-    return err;
+    return null;
   }
 };
 

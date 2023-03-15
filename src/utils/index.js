@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import localforage from "localforage";
 
 export const makeHasuraCalls = async (query) => {
   const userData = getCookie("userData");
@@ -94,4 +95,18 @@ export const isImage = (key, filename) => {
   if (key.includes("img") || key.includes("image"))
     return true;
   return false;
+}
+
+
+export const getFromLocalForage = async (key) => {
+  try {
+    return await localforage.getItem(key);
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}
+
+export const setToLocalForage = async (key, value) => {
+  await localforage.setItem(key, value);
 }

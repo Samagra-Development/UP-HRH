@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import CommonLayout from "../../components/CommonLayout";
 import { Routes, useNavigate, useParams } from "react-router-dom";
-import { getMedicalAssessments, saveFormSubmission } from "../../api";
+import { getMedicalAssessments, getPrefillXML, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { getCookie, isImage, makeDataForPrefill, setCookie, updateFormData } from "../../utils";
+import { getCookie, getFromLocalForage, isImage, makeDataForPrefill, setCookie, setToLocalForage, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
@@ -38,14 +38,17 @@ const GenericOdkForm = () => {
     start: formName,
     metaData: {},
   };
+
   const { state } = useContext(StateContext);
+
   const getFormURI = (form, ofsd, prefillSpec) => {
     return encodeURIComponent(
-      `${ENKETO_MANAGER_URL}/prefill?form=${form}&onFormSuccessData=${encodeFunction(
+      `${ENKETO_MANAGER_URL}/prefillXML?form=${form}&onFormSuccessData=${encodeFunction(
         ofsd
       )}&prefillSpec=${encodeFunction(prefillSpec)}`
     );
   };
+
   const navigate = useNavigate();
   const encodeFunction = (func) => encodeURIComponent(JSON.stringify(func));
   const startingForm = formSpec.start;
@@ -55,16 +58,17 @@ const GenericOdkForm = () => {
   );
   const [onFormSuccessData, setOnFormSuccessData] = useState(undefined);
   const [onFormFailureData, setOnFormFailureData] = useState(undefined);
-  const [encodedFormURI, setEncodedFormURI] = useState(
-    getFormURI(
-      formId,
-      formSpec.forms[formId].onSuccess,
-      formSpec.forms[formId].prefill
-    )
-  );
+  const [encodedFormURI, setEncodedFormURI] = useState("");
+  // const [encodedFormURI, setEncodedFormURI] = useState(
+  //   getFormURI(
+  //     formId,
+  //     formSpec.forms[formId].onSuccess,
+  //     formSpec.forms[formId].prefill
+  //   )
+  // );
   const [prefilledFormData, setPrefilledFormData] = useState();
 
-  const [loading, setLoading] = useState(false);
+  const loading = useRef(false);
   const [assData, setData] = useState({
     district: "",
     instituteName: "",
@@ -76,7 +80,7 @@ const GenericOdkForm = () => {
   });
 
   function afterFormSubmit(e) {
-    console.log("ABC", e.data);
+    console.log("Trigger Event----->", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
@@ -118,22 +122,30 @@ const GenericOdkForm = () => {
     }
   }
 
-  const eventTriggered = (e) => {
+  const eventTriggered = async (e) => {
     if (
       e.origin == ENKETO_URL &&
       JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
     ) {
-      var xml = new XMLParser().parseFromString(JSON.parse(e.data).formXML);
-      if (xml && xml?.children?.length > 0) {
-        let obj = {};
+      var formData = new XMLParser().parseFromString(JSON.parse(e.data).formData);
+      if (formData) {
         let images = JSON.parse(e.data).fileURLs;
-        if (images?.[0]?.name) {
-          setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, JSON.stringify(images));
-        }
-        makeDataForPrefill({}, xml.children, xml.name, obj);
-        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, JSON.stringify(obj));
-        setPrefilledFormData(JSON.stringify(obj));
+        await setToLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`, {
+          formData: JSON.parse(e.data).formData,
+          imageUrls: images?.[0]?.name ? images : []
+        })
       }
+      console.log(await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`))
+      // if (xml && xml?.children?.length > 0) {
+      //   let obj = {};
+      //   let images = JSON.parse(e.data).fileURLs;
+      //   if (images?.[0]?.name) {
+      //     setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, JSON.stringify(images));
+      //   }
+      //   makeDataForPrefill({}, xml.children, xml.name, obj);
+      //   setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, JSON.stringify(obj));
+      //   setPrefilledFormData(JSON.stringify(obj));
+      // }
     }
     afterFormSubmit(e);
   };
@@ -144,10 +156,10 @@ const GenericOdkForm = () => {
     window.removeEventListener("message", eventTriggered);
   };
 
-  const getTodayAssessments = async () => {
-    setLoading(true);
+  const getFormData = async () => {
     const res = await getMedicalAssessments();
     if (res?.data?.assessment_schedule?.[0]) {
+      loading.current = true;
       let ass = res?.data?.assessment_schedule?.[0];
       scheduleId.current = ass.id;
       setData({
@@ -162,44 +174,31 @@ const GenericOdkForm = () => {
         latitude: ass.institute.latitude,
         longitude: ass.institute.longitude,
       });
-      if (getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`)) {
-        const data = JSON.parse(getCookie(startingForm + `${new Date().toISOString().split("T")[0]}`));
-        let images = getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`)
-          ? JSON.parse(getCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`))
-          : null;
-        for (const key in data) {
-          if (data[key]) {
-            if (images) {
-              let foundImage = images.filter((el) => el.name == data[key]);
-              if (foundImage?.length) {
-                formSpec.forms[formId].prefill[key] =
-                  "`" + `${foundImage[0].url}` + "`";
-                continue;
-              }
-            }
-            if (!images?.length && isImage(key, data[key])) continue;
-            formSpec.forms[formId].prefill[key] = "`" + `${data[key]}` + "`";
-          }
-        }
+      let formData = await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`);
+      console.log(formData)
+      if (formData) {
         setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
-        setEncodedFormURI(
-          getFormURI(
-            formId,
-            formSpec.forms[formId].onSuccess,
-            formSpec.forms[formId].prefill
-          )
-        );
+        let prefilledForm = await getPrefillXML(startingForm, formSpec.forms[formId].onSuccess, formData.formData, formData.imageUrls);
+        console.log("Prefilled Form:", prefilledForm)
+        setEncodedFormURI(prefilledForm)
+        // setEncodedFormURI(
+        //   getFormURI(
+        //     formId,
+        //     formSpec.forms[formId].onSuccess,
+        //     formData
+        //   )
+        // );
       } else {
-        formSpec.forms[formId].prefill.dist = "`" + `${ass?.district}` + "`";
-        formSpec.forms[formId].prefill.name = "`" + `${ass?.name}` + "`";
-        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+        let prefilledForm = await getPrefillXML(startingForm, formSpec.forms[formId].onSuccess);
+        console.log("Prefilled Form Empty:", prefilledForm)
+        setEncodedFormURI(prefilledForm)
       }
     } else setData(null);
-    setLoading(false);
+    loading.current = false;
   };
 
   useEffect(() => {
-    getTodayAssessments();
+    getFormData();
     return () => {
       setData(null);
       setPrefilledFormData(null);
@@ -216,9 +215,9 @@ const GenericOdkForm = () => {
   return (
     <CommonLayout back={formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options}>
       <div className="flex flex-col items-center">
-        {!loading && assData && (
+        {encodedFormURI && assData && (
           <>
-            {console.log(formSpec.forms[formId].prefill)}
+            {console.log("ENCODED FROM", encodedFormURI)}
             <iframe
               title="form"
               src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
