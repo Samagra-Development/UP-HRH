@@ -13,7 +13,7 @@ import { useEffect } from "react";
 const CommonLayout = (props) => {
   const navigate = useNavigate();
   const [logoutModal, showLogoutModal] = useState(false);
-  const [online, setOnline] = useState(false);
+  const [online, setOnline] = useState(true);
   const onlineInterval = useRef();
 
   useEffect(() => {
