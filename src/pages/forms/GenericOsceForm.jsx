@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getMedicalAssessments, getPrefillXML, saveFormSubmission } from "../../api";
 import { StateContext } from "../../App";
 import XMLParser from "react-xml-parser";
-import { getCookie, getFromLocalForage, isImage, makeDataForPrefill, setCookie, setToLocalForage, updateFormData } from "../../utils";
+import { getCookie, getFormData, getFromLocalForage, handleFormEvents, isImage, makeDataForPrefill, setCookie, setToLocalForage, updateFormData } from "../../utils";
 import ROUTE_MAP from "../../routing/routeMap";
 
 const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
@@ -121,95 +121,26 @@ const GenericOsceForm = () => {
     }
   }
 
-  const eventTriggered = async (e) => {
-    if (
-      e.origin == ENKETO_URL &&
-      JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
-    ) {
-      var formData = new XMLParser().parseFromString(JSON.parse(e.data).formData);
-      if (formData) {
-        let images = JSON.parse(e.data).fileURLs;
-        await setToLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`, {
-          formData: JSON.parse(e.data).formData,
-          imageUrls: images?.[0]?.name ? images : []
-        })
-      }
-      console.log(await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`))
-      // if (xml && xml?.children?.length > 0) {
-      //   let obj = {};
-      //   let images = JSON.parse(e.data).fileURLs;
-      //   if (images?.[0]?.name) {
-      //     setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, JSON.stringify(images));
-      //   }
-      //   makeDataForPrefill({}, xml.children, xml.name, obj);
-      //   setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, JSON.stringify(obj));
-      //   setPrefilledFormData(JSON.stringify(obj));
-      // }
-    }
-    afterFormSubmit(e);
-  };
+  const handleEventTrigger = async (e) => {
+    handleFormEvents(startingForm, afterFormSubmit, e)
+  }
+
   const bindEventListener = () => {
-    window.addEventListener("message", eventTriggered);
+    window.addEventListener("message", handleEventTrigger);
   };
   const detachEventBinding = () => {
-    window.removeEventListener("message", eventTriggered);
-  };
-
-  const getFormData = async () => {
-    const res = await getMedicalAssessments();
-    if (res?.data?.assessment_schedule?.[0]) {
-      loading.current = true;
-      let ass = res?.data?.assessment_schedule?.[0];
-      scheduleId.current = ass.id;
-      setData({
-        schedule_id: ass.id,
-        id: ass.institute.id,
-        district: ass.institute.district,
-        instituteName: ass.institute.name,
-        specialization:
-          ass.institute?.institute_specializations?.[0]?.specializations,
-        courses: ass.institute?.institute_types?.[0]?.types,
-        type: ass.institute.sector,
-        latitude: ass.institute.latitude,
-        longitude: ass.institute.longitude,
-      });
-      let formData = await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`);
-      console.log(formData)
-      if (formData) {
-        setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
-        let prefilledForm = await getPrefillXML(startingForm, formSpec.forms[formId].onSuccess, formData.formData, formData.imageUrls);
-        console.log("Prefilled Form:", prefilledForm)
-        setEncodedFormURI(prefilledForm)
-        // setEncodedFormURI(
-        //   getFormURI(
-        //     formId,
-        //     formSpec.forms[formId].onSuccess,
-        //     formData
-        //   )
-        // );
-      } else {
-        let prefilledForm = await getPrefillXML(startingForm, formSpec.forms[formId].onSuccess);
-        console.log("Prefilled Form Empty:", prefilledForm)
-        setEncodedFormURI(prefilledForm)
-      }
-    } else setData(null);
-    loading.current = false;
+    window.removeEventListener("message", handleEventTrigger);
   };
 
   useEffect(() => {
-    getFormData();
+    bindEventListener();
+    getFormData({ loading, scheduleId, formSpec, startingForm, formId, setData, setEncodedFormSpec, setEncodedFormURI });
     return () => {
+      detachEventBinding();
       setData(null);
       setPrefilledFormData(null);
     };
   }, []);
-
-  useEffect(() => {
-    bindEventListener();
-    return () => {
-      detachEventBinding();
-    };
-  }, [prefilledFormData]);
 
   return (
     <CommonLayout back={ROUTE_MAP.osce_options}>

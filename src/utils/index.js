@@ -1,5 +1,9 @@
 import Cookies from "js-cookie";
+import XMLParser from "react-xml-parser";
 import localforage from "localforage";
+import { getMedicalAssessments, getPrefillXML } from "../api";
+
+const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 export const makeHasuraCalls = async (query) => {
   const userData = getCookie("userData");
@@ -110,3 +114,63 @@ export const getFromLocalForage = async (key) => {
 export const setToLocalForage = async (key, value) => {
   await localforage.setItem(key, value);
 }
+
+export const handleFormEvents = async (startingForm, afterFormSubmit, e) => {
+  if (
+    e.origin == ENKETO_URL &&
+    JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
+  ) {
+    console.log("Form Change Event------->", e)
+    var formData = new XMLParser().parseFromString(JSON.parse(e.data).formData);
+    if (formData) {
+      let images = JSON.parse(e.data).fileURLs;
+      let prevData = await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`);
+      await setToLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`, {
+        formData: JSON.parse(e.data).formData,
+        imageUrls: { ...prevData?.imageUrls, ...images }
+      })
+    }
+  }
+  afterFormSubmit(e);
+};
+
+export const getFormData = async ({ loading, scheduleId, formSpec, startingForm, formId, setData, setEncodedFormSpec, setEncodedFormURI }) => {
+  const res = await getMedicalAssessments();
+  if (res?.data?.assessment_schedule?.[0]) {
+    loading.current = true;
+    let ass = res?.data?.assessment_schedule?.[0];
+    scheduleId.current = ass.id;
+    setData({
+      schedule_id: ass.id,
+      id: ass.institute.id,
+      district: ass.institute.district,
+      instituteName: ass.institute.name,
+      specialization:
+        ass.institute?.institute_specializations?.[0]?.specializations,
+      courses: ass.institute?.institute_types?.[0]?.types,
+      type: ass.institute.sector,
+      latitude: ass.institute.latitude,
+      longitude: ass.institute.longitude,
+    });
+    let formData = await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`);
+    console.log("Form Data Local Forage --->", formData)
+    if (formData) {
+      setEncodedFormSpec(encodeURI(JSON.stringify(formSpec.forms[formId])));
+      let prefilledForm = await getPrefillXML(startingForm, formSpec.forms[formId].onSuccess, formData.formData, formData.imageUrls);
+      console.log("Prefilled Form:", prefilledForm)
+      setEncodedFormURI(prefilledForm)
+      // setEncodedFormURI(
+      //   getFormURI(
+      //     formId,
+      //     formSpec.forms[formId].onSuccess,
+      //     formData
+      //   )
+      // );
+    } else {
+      let prefilledForm = await getPrefillXML(startingForm, formSpec.forms[formId].onSuccess);
+      console.log("Prefilled Form Empty:", prefilledForm)
+      setEncodedFormURI(prefilledForm)
+    }
+  } else setData(null);
+  loading.current = false;
+};
