@@ -11,6 +11,7 @@ const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 const GenericNursingForm = () => {
+  const user = getCookie("userData");
   let { formName } = useParams();
   const scheduleId = useRef();
   const formSpec = {
@@ -142,7 +143,6 @@ const GenericNursingForm = () => {
       setPrefilledFormData(null);
     };
   }, []);
-
   // localforage.clear();
   return (
     <CommonLayout back={ROUTE_MAP.nursing_options}>
@@ -152,7 +152,7 @@ const GenericNursingForm = () => {
             {console.log("ENCODED FROM", encodedFormURI)}
             <iframe
               title="form"
-              src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}&userId=${user.user.id}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>

@@ -11,6 +11,7 @@ const ENKETO_MANAGER_URL = process.env.REACT_APP_ENKETO_MANAGER_URL;
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
 const GenericOsceForm = () => {
+  const user = getCookie("userData");
   let { osceName } = useParams();
   const scheduleId = useRef();
   const formSpec = {
@@ -150,7 +151,7 @@ const GenericOsceForm = () => {
             {console.log("ENCODED FROM", encodedFormURI)}
             <iframe
               title="form"
-              src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}`}
+              src={`${ENKETO_URL}/preview?formSpec=${encodedFormSpec}&xform=${encodedFormURI}&userId=${user.user.id}`}
               style={{ height: "80vh", width: "100%", marginTop: "20px" }}
             />
           </>

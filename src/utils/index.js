@@ -103,8 +103,9 @@ export const isImage = (key, filename) => {
 
 
 export const getFromLocalForage = async (key) => {
+  const user = getCookie("userData");
   try {
-    return await localforage.getItem(key);
+    return await localforage.getItem(user.user.id + "_" + key);
   } catch (err) {
     console.log(err);
     return null;
@@ -116,6 +117,7 @@ export const setToLocalForage = async (key, value) => {
 }
 
 export const handleFormEvents = async (startingForm, afterFormSubmit, e) => {
+  const user = getCookie("userData");
   if (
     e.origin == ENKETO_URL &&
     JSON.parse(e?.data)?.state !== "ON_FORM_SUCCESS_COMPLETED"
@@ -125,7 +127,8 @@ export const handleFormEvents = async (startingForm, afterFormSubmit, e) => {
     if (formData) {
       let images = JSON.parse(e.data).fileURLs;
       let prevData = await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`);
-      await setToLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`, {
+      console.log("Local Forage Data ---->", prevData)
+      await setToLocalForage(user.user.id + "_" + startingForm + `${new Date().toISOString().split("T")[0]}`, {
         formData: JSON.parse(e.data).formData,
         imageUrls: { ...prevData?.imageUrls, ...images }
       })
