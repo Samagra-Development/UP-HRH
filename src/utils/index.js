@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import XMLParser from "react-xml-parser";
 import localforage from "localforage";
-import { getMedicalAssessments, getPrefillXML } from "../api";
+import { getMedicalAssessments, getPrefillXML, getSubmissionXML } from "../api";
 
 const ENKETO_URL = process.env.REACT_APP_ENKETO_URL;
 
@@ -47,16 +47,14 @@ export const makeDataForPrefill = (prev, xmlDoc, key, finalObj, formName) => {
   }
 };
 
-export const updateFormData = (name, data) => {
-  let newData = JSON.stringify(data);
-  let images = getCookie(name)
-    ? JSON.parse(getCookie(name))
-    : null;
-  if (images) {
-    images.forEach((el) => (newData = newData.replace(el.name, el.url)));
-    return newData;
+export const updateFormData = async (startingForm) => {
+  try {
+    let data = await getFromLocalForage(startingForm + `${new Date().toISOString().split("T")[0]}`)
+    let prefilledForm = await getSubmissionXML(startingForm, data.formData, data.imageUrls);
+    return prefilledForm;
+  } catch (err) {
+
   }
-  return JSON.stringify(data);
 };
 
 export const setCookie = (cname, cvalue) => {

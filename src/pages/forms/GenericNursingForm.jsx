@@ -80,16 +80,13 @@ const GenericNursingForm = () => {
     longitude: null,
   });
 
-  function afterFormSubmit(e) {
+  async function afterFormSubmit(e) {
     console.log("Form Submit Event ----->", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const updatedFormData = updateFormData(
-          startingForm + `Images${new Date().toISOString().split("T")[0]}`,
-          formData
-        );
+        const updatedFormData = await updateFormData(formSpec.start);
 
         saveFormSubmission({
           schedule_id: scheduleId.current,

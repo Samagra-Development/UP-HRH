@@ -79,16 +79,13 @@ const GenericOdkForm = () => {
     longitude: null,
   });
 
-  function afterFormSubmit(e) {
-    console.log("Trigger Event----->", e.data);
+  async function afterFormSubmit(e) {
+    console.log("Form Submit Event ----->", e.data);
     const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
     try {
       const { nextForm, formData, onSuccessData, onFailureData } = data;
       if (data?.state == "ON_FORM_SUCCESS_COMPLETED") {
-        const updatedFormData = updateFormData(
-          startingForm + `Images${new Date().toISOString().split("T")[0]}`,
-          formData
-        );
+        const updatedFormData = await updateFormData(formSpec.start);
 
         saveFormSubmission({
           schedule_id: scheduleId.current,
@@ -97,8 +94,8 @@ const GenericOdkForm = () => {
           form_name: formSpec.start,
         });
         setTimeout(() => navigate(formName.startsWith('hospital') ? ROUTE_MAP.hospital_forms : ROUTE_MAP.medical_assessment_options), 2000);
-        setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
-        setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
+        // setCookie(startingForm + `${new Date().toISOString().split("T")[0]}`, '');
+        // setCookie(startingForm + `Images${new Date().toISOString().split("T")[0]}`, '');
       }
 
       if (nextForm?.type === "form") {
