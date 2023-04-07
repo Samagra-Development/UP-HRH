@@ -1,5 +1,5 @@
 import axios from "axios";
-import { makeHasuraCalls } from "../utils";
+import { getCookie, makeHasuraCalls } from "../utils";
 
 const BASE_URL = process.env.REACT_APP_USER_SERVICE_URL;
 const applicationId = process.env.REACT_APP_APPLICATION_ID;
@@ -110,7 +110,7 @@ export const getMedicalAssessmentsUpcoming = () => {
   return makeHasuraCalls(query);
 };
 
-export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
+export const getPrefillXML = async (form, onFormSuccessData, prefillXML, imageUrls) => {
   try {
     const res = await axios.post(
       `${ENKETO_MANAGER_URL}/prefillXML?form=${form}&onFormSuccessData=${encodeURI(
@@ -118,13 +118,31 @@ export const getPrefillXML = async (form, onFormSuccessData, prefillXML) => {
       )}`,
       {
         prefillXML,
+        imageUrls
       },
       { headers: {} }
     );
     return res.data;
   } catch (err) {
     console.log(err);
-    return err;
+    return null;
+  }
+};
+
+export const getSubmissionXML = async (form, prefillXML, imageUrls) => {
+  try {
+    const res = await axios.post(
+      `${ENKETO_MANAGER_URL}/submissionXML?form=${form}`,
+      {
+        prefillXML,
+        imageUrls
+      },
+      { headers: {} }
+    );
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return null;
   }
 };
 
